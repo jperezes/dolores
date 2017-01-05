@@ -1,0 +1,34 @@
+{
+  "name": "sparklite",
+  "version": "1.0.42",
+  "description": "A lite node API to access Cisco Spark resources",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/diegobe/sparklite.git"
+  },
+  "keywords": [
+    "spark",
+    "cisco",
+    "lite",
+    "spark",
+    "developers",
+    "node.js"
+  ],
+  "author": "Diego Becerra",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/diegobe/sparklite/issues"
+  },
+  "homepage": "https://github.com/diegobe/sparklite#readme",
+  "dependencies": {
+    "colors": "^1.1.2",
+    "express": "^4.11.0",
+    "body-parser": "1.15.1",
+    "clone": "2.1.0",
+    "async": "2.1.4"
+  }
+}

@@ -1,0 +1,7 @@
+{
+  "name": "WarrenBot",
+  "version": "0.0.1",
+  "dependencies": {
+    "sparklite":"1.0.42"
+  }
+}
