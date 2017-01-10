@@ -3,5 +3,6 @@
   "version": "0.0.1",
   "dependencies": {
     "sparklite":"1.0.42"
-  }
+  },
+    "engines":{"node":"5.10.1"}
 }
