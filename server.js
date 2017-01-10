@@ -1,7 +1,7 @@
 var port = process.env.PORT || 1337;
 var sparklite = require("sparklite");
 var botdomain = 'doloresbot.azurewebsites.net';
-var sparkBot = new sparklite.SparkBot('     ', port, botdomain);
+var sparkBot = new sparklite.SparkBot('MGVkNmMzYTQtYTU3MC00OTViLWI1N2ItMzc3NzMyNTkyNTgyNzRmMjE0NDItMjFi', port, botdomain);
 
 process.env.NODE_TLS_REJECT_UNAUTHORIZED = 0
 
@@ -10,7 +10,7 @@ sparkBot.printHelloWorld();
 sparkBot.on('message', function (event)
 {
     console.log('Incoming message: '+ JSON.stringify(event.message) + ' from: '+event.person.displayName );
-    var sentMessage = 'Hola ' + event.person.displayName;
+    var sentMessage = 'Hello great maker ' + event.message; //+ event.person.displayName;
 
     sparkBot.sendMessage(event.roomId, sentMessage , function(){
       console.log('Message sent from Bot!');
