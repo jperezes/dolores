@@ -1,7 +1,7 @@
 var port = process.env.PORT || 1337;
 var sparklite = require("sparklite");
 var botdomain = 'doloresbot.azurewebsites.net';
-var sparkBot = new sparklite.SparkBot('   ', port, botdomain);
+var sparkBot = new sparklite.SparkBot('     ', port, botdomain);
 
 process.env.NODE_TLS_REJECT_UNAUTHORIZED = 0
 
