@@ -11,7 +11,7 @@ sparkBot.on('message', function (event)
 {
     console.log('Incoming message: '+ JSON.stringify(event.message) + ' from: '+event.person.displayName );
     if (event.person.displayname != 'Juan test') {
-      sentMessage = 'sorry, I can only talk with the great maker' + event.person.displayName;
+      sentMessage = 'sorry, I can only talk with the great maker' + event.person.displayName+'#Alone';
     }
     else {
       var sentMessage = 'Hello great maker ' ; //+ event.person.displayName;
