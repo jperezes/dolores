@@ -11,10 +11,10 @@ sparkBot.on('message', function (event)
 {
     console.log('Incoming message: '+ JSON.stringify(event.message) + ' from: '+event.person.displayName );
     if (event.person.displayname != 'Juan test') {
-      sentMessage = 'sorry, I can only talk with the great maker';
+      sentMessage = 'sorry, I can only talk with the great maker' + event.person.displayName;
     }
     else {
-      var sentMessage = 'Hello great maker'; //+ event.person.displayName;
+      var sentMessage = 'Hello great maker ' ; //+ event.person.displayName;
     }
 
 
