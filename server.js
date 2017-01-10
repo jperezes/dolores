@@ -9,12 +9,14 @@ sparkBot.printHelloWorld();
 
 sparkBot.on('message', function (event)
 {
+  var sentMessage = "";
     console.log('Incoming message: '+ JSON.stringify(event.message) + ' from: '+event.person.displayName );
-    if (event.person.displayname != 'Juan test') {
-      sentMessage = 'sorry, I can only talk with the great maker' + event.person.displayName+'#Alone';
+    if (event.person.displayname === 'Juan test') {
+
+      sentMessage = 'Hello great maker ' ; //+ event.person.displayName;
     }
     else {
-      var sentMessage = 'Hello great maker ' ; //+ event.person.displayName;
+      sentMessage = 'sorry, I can only talk with the great maker' + event.person.displayName+'#Alone';
     }
 
 
