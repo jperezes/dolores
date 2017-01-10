@@ -10,7 +10,14 @@ sparkBot.printHelloWorld();
 sparkBot.on('message', function (event)
 {
     console.log('Incoming message: '+ JSON.stringify(event.message) + ' from: '+event.person.displayName );
-    var sentMessage = 'Hello great maker'; //+ event.person.displayName;
+    if (event.person.displayname != "Joan Perez Esteban") {
+      sentMessage = 'sorry, I can only talk with the great maker';
+    }
+    else {
+      var sentMessage = 'Hello great maker'; //+ event.person.displayName;
+    }
+
+
 
     sparkBot.sendMessage(event.roomId, sentMessage , function(){
       console.log('Message sent from Bot!');
