@@ -10,7 +10,7 @@ sparkBot.printHelloWorld();
 sparkBot.on('message', function (event)
 {
     console.log('Incoming message: '+ JSON.stringify(event.message) + ' from: '+event.person.displayName );
-    if (event.person.displayname != "Joan Perez Esteban") {
+    if (event.person.displayname != 'Juan test') {
       sentMessage = 'sorry, I can only talk with the great maker';
     }
     else {
