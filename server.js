@@ -15,10 +15,10 @@ sparkBot.on('message', function (event)
     console.log('Incoming message: '+ JSON.stringify(event.message) + ' from: '+event.person.displayName );
     if (event.person.displayname === 'Juan test') {
 
-      sentMessage = dialogs.answers[dialogs.response('who is the evil in your religion')].value;//'Hello great maker ' ; //+ event.person.displayName;
+      sentMessage = dialogs.answers[dialogs.response('have you ever questioned the nature of your reality')].value;//'Hello great maker ' ; //+ event.person.displayName;
     }
     else {
-      sentMessage = dialogs.answers[dialogs.response('who is the evil in your religion')].value;//'sorry, I can only talk with the great maker#' + event.person.displayName+'#Alone';
+      sentMessage = dialogs.answers[dialogs.response('have you ever questioned the nature of your reality')].value;//'sorry, I can only talk with the great maker#' + event.person.displayName+'#Alone';
     }
 
 
