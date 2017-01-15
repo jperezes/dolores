@@ -12,7 +12,7 @@ console.log(dialogs.answers[dialogs.response('who is the evil in your religion')
 sparkBot.on('message', function (event)
 {
   var sentMessage = "";
-    console.log(Incoming message: '+ JSON.stringify(event.message) + ' from: '+event.person.displayName );
+    console.log('Incoming message: '+ JSON.stringify(event.message) + ' from: '+event.person.displayName );
     if (event.person.displayname === 'Juan test') {
 
       sentMessage = dialogs.answers[dialogs.response(`${event.message}`)].value;//'Hello great maker ' ; //+ event.person.displayName;
