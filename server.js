@@ -13,13 +13,13 @@ sparkBot.on('message', function (event)
 {
   var sentMessage = "";
     console.log('Incoming message: '+ JSON.stringify(event.message) + ' from: '+event.person.displayName );
-    if (String(event.person.displayname) === 'Juan test') {
+    if (event.person.displayname === 'Juan test') {
 
       sentMessage = dialogs.answers[dialogs.response(`${event.message}`)].value;//'Hello great maker ' ; //+ event.person.displayName;
     }
     else {
       console.log('Incoming message: '+ JSON.stringify(event.message) + ' from: '+event.person.displayName + 'person name not parsed properly');
-      sentMessage = String(event.person.displayname) + "  test";//'sorry, I can only talk with the great maker#' + event.person.displayName+'#Alone';
+      sentMessage = event.person.displayname + "  test";//'sorry, I can only talk with the great maker#' + event.person.displayName+'#Alone';
     }
 
 
