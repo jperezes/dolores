@@ -13,7 +13,7 @@ sparkBot.on('message', function (event)
 {
   var sentMessage = "";
     console.log('Incoming message: '+ JSON.stringify(event.message) + ' from: '+event.person.displayName );
-    if (JSON.stringify(event.person.displayname )=== 'Juan test') {
+    if (JSON.stringify(event.person.displayname )=== "Juan test") {
 
       sentMessage = dialogs.answers[dialogs.response(JSON.stringify(event.message))].value;//'Hello great maker ' ; //+ event.person.displayName;
     }
