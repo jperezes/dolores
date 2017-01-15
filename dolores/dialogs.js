@@ -27,16 +27,16 @@ var answers = [
 
 // returns the entire object inside the arry, need the .id to specify the Id
 var response = function(query){
+  console.log('Question to dolores: ' + query + ' Question cleaned ' + questionClean);
   var foundQuestion = questions.find(function(question){
     var questionClean = query.toLowerCase();
     questionClean = questionClean.replace(" dolores","").replace("dolores ","").replace("?","");
 
-
-    console.log('Question to dolores: ' + question + ' Question cleaned ' + questionClean);
     if (question.value === questionClean){
       return question;
     }
   });
+  console.log('question found: ' + foundQuestion.value + ' with Id ' + questionClean.id);
 
   return foundAnswer = answers.find(function(answer){
     if (answer.id === foundQuestion.id){
