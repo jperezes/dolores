@@ -33,7 +33,7 @@ var response = function(query){
 
     console.log('Question to dolores: ' + query + ' Question cleaned ' + questionClean);
 
-    if (question.value === questionClean){
+    if (questionClean.indexOf(question.value) > -1){
       return question;
     }
   });
