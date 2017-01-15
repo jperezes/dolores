@@ -45,9 +45,6 @@ var response = function(query){
   }).value;
 }
 
-
-console.log(response('who is the evil in your religion'));
-
 // module.exports.response = response;
 // module.exports.answers = answers;
 // module.exports.questions = questions;
