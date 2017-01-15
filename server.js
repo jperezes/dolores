@@ -15,7 +15,7 @@ sparkBot.on('message', function (event)
     console.log('Incoming message: '+ JSON.stringify(event.message) + ' from: '+event.person.displayName );
     if (JSON.stringify(event.person.displayname)=== "Juan test") {
 
-      sentMessage = dialogs.answers[dialogs.response(JSON.stringify(event.message))].value;//'Hello great maker ' ; //+ event.person.displayName;
+      sentMessage = dialogs.answers[dialogs.response(event.message)].value;//'Hello great maker ' ; //+ event.person.displayName;
     }
     else {
       sentMessage = JSON.stringify(event.person.displayname);//'sorry, I can only talk with the great maker#' + event.person.displayName+'#Alone';
