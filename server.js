@@ -18,7 +18,7 @@ sparkBot.on('message', function (event)
       sentMessage = dialogs.answers[dialogs.response('event.message')].value;//'Hello great maker ' ; //+ event.person.displayName;
     }
     else {
-      sentMessage = dialogs.answers[dialogs.response('event.message')].value;//'sorry, I can only talk with the great maker#' + event.person.displayName+'#Alone';
+      sentMessage = event.message;//'sorry, I can only talk with the great maker#' + event.person.displayName+'#Alone';
     }
 
 
