@@ -19,7 +19,7 @@ sparkBot.on('message', function (event)
     }
     else {
       console.log('Incoming message: '+ JSON.stringify(event.message) + ' from: '+event.person.displayName + 'person name not parsed properly');
-      sentMessage = String(event.message);//'sorry, I can only talk with the great maker#' + event.person.displayName+'#Alone';
+      sentMessage = String(event.person.displayname);//'sorry, I can only talk with the great maker#' + event.person.displayName+'#Alone';
     }
 
 
