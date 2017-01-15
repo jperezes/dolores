@@ -20,7 +20,9 @@ var answers = [
 // returns the entire object inside the arry, need the .id to specify the Id
 var response = function(query){
   return questions.find(function(question){
-    if (question.value === query.replace("Dolores","")){
+    var questionClean = query.replace("Dolores","");
+    console.log('Question to dolores: ' + question + ' Question cleaned ' + questionClean);
+    if (question.value === questionClean){
       return question;
     }
   }).id -1;
