@@ -28,7 +28,7 @@ var answers = [
 // returns the entire object inside the arry, need the .id to specify the Id
 var response = function(query){
   var foundQuestion = questions.find(function(question){
-    var questionClean = question.toLowerCase();
+    var questionClean = query.toLowerCase();
     questionClean = questionClean.replace(" dolores","").replace("dolores ","").replace("?","");
 
 
