@@ -15,14 +15,12 @@ sparkBot.on('message', function (event)
     console.log('Incoming message: '+ JSON.stringify(event.message) + ' from: '+event.person.displayName );
     if (('#' + event.person.displayName+'#' == '#Juan test#') || ('#' + event.person.displayName+'#' == '#Joan Perez Esteban#')) {
 
-      sentMessage = dialogs.answers[dialogs.response(`${event.message}`)].value;//'Hello great maker ' ; //+ event.person.displayName;
+      sentMessage = dialogs.response(`${event.message}`);//'Hello great maker ' ; //+ event.person.displayName;
     }
     else {
       console.log('Incoming message: '+ JSON.stringify(event.message) + ' from: '+event.person.displayName + 'person name not parsed properly');
       sentMessage = '#' + event.person.displayName+'#';
     }
-
-
 
     sparkBot.sendMessage(event.roomId, sentMessage , function(){
       console.log('Message sent from Bot!');
