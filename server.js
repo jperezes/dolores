@@ -8,7 +8,6 @@ process.env.NODE_TLS_REJECT_UNAUTHORIZED = 0
 
 sparkBot.printHelloWorld();
 
-console.log(dialogs.answers[dialogs.response('who is the evil in your religion')].value);
 sparkBot.on('message', function (event)
 {
   var sentMessage = "";
