@@ -39,11 +39,12 @@ var response = function(query){
   });
   console.log('question found: ' + foundQuestion.value + ' with Id ' + foundQuestion.id);
 
-  return foundAnswer = answers.find(function(answer){
+  var foundAnswer = answers.find(function(answer){
     if (answer.id === foundQuestion.id){
       return answer;
     }
-  }).value;
+  });
+  console.log('answer found: ' + foundAnswer.value + ' with Id ' + foundAnswer.id);
 }
 
 // module.exports.response = response;
