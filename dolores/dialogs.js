@@ -32,12 +32,12 @@ var response = function(query){
     questionClean = questionClean.replace(" dolores","").replace("dolores ","").replace("?","");
 
     console.log('Question to dolores: ' + query + ' Question cleaned ' + questionClean);
-    
+
     if (question.value === questionClean){
       return question;
     }
   });
-  console.log('question found: ' + foundQuestion.value + ' with Id ' + questionClean.id);
+  console.log('question found: ' + foundQuestion.value + ' with Id ' + foundQuestion.id);
 
   return foundAnswer = answers.find(function(answer){
     if (answer.id === foundQuestion.id){
