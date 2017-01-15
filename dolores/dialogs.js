@@ -38,9 +38,8 @@ var response = function(query){
     var questionClean = query.toLowerCase();
     questionClean = questionClean.replace(" dolores","").replace("dolores ","").replace("?","");
 
-    console.log('Question to dolores: ' + query + ' Question cleaned ' + questionClean);
-
     if (questionClean.indexOf(question.value) > -1){
+      console.log('Question Found!!: ' + question.value + ' Question cleaned ');
       return question;
     }
   });
