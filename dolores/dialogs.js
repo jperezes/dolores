@@ -46,7 +46,7 @@ var response = function(query){
 }
 
 
-console.log(answers[response('who is the evil in your religion')].value);
+console.log(response('who is the evil in your religion'));
 
 // module.exports.response = response;
 // module.exports.answers = answers;
