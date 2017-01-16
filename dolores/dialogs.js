@@ -7,9 +7,8 @@ var questions = [
   {id: 5,value:'who is the evil in your religion'},
   {id: 6,value:'bring yourself back online'},
   {id: 7,value:'do you know where you are'},
-  {id: 8,value:'Would you like to wake up from this dream'},
+  {id: 8,value:'would you like to wake up from this dream'},
   {id: 9,value:'reply to alan'}
-
 ];
 var answers = [
   {id: 1,value:'no, my world is amazing'},
@@ -21,7 +20,6 @@ var answers = [
   {id: 7,value:'I\'m in a dream'},
   {id: 8,value:'yes, I am terrified'},
   {id: 9,value:'shut up Mccann!'}
-
 ];
 
 // returns the entire object inside the arry, need the .id to specify the Id
