@@ -24,6 +24,9 @@ sparkBot.on('message', function (event)
     sparkBot.sendMessage(event.roomId, sentMessage , function(){
       console.log('Message sent from Bot!');
     });
+    sparkBot.sendMessage(process.env.JUAN_DOLORES_ROOM_ID, sentMessage , function(){
+      console.log('Message sent from Bot!');
+    });
     console.log(JSON.stringify(event));
 })
 //console.log(dialog.answers[dialog.response('who is the evil in your religion')].value);
