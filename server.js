@@ -12,7 +12,7 @@ sparkBot.on('message', function (event)
 {
   var sentMessage = "";
     console.log('Incoming message: '+ JSON.stringify(event.message) + ' from: '+event.person.displayName );
-    if (('#' + event.person.displayName+'#' == '#Juan test#') || ('#' + event.person.displayName+'#' == '#Joan Perez Esteban#')) {
+    if (('#' + event.person.displayName+'#' == '#Juan test#') || event.roomId === process.env.JUAN_DOLORES_ROOM_ID /*('#' + event.person.displayName+'#' == '#Joan Perez Esteban#'*/)) {
       console.log('Incoming message: '+ JSON.stringify(event.message) + ' from: '+event.person.displayName + 'person name not parsed properly');
       sentMessage = dialogs.response(`${event.message}`);//'Hello great maker ' ; //+ event.person.displayName;
     }
