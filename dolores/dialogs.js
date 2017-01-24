@@ -49,13 +49,15 @@ var response = function(query){
   if (typeof foundAnswer === 'undefined')
   {
     return "sorry, I didn't understand that";
+    console.log('answer NOT found: ');
   }
   else
   {
     return foundAnswer.value;
+    console.log('answer found: ' + foundAnswer.value + ' with Id ' + foundAnswer.id);
   }
 
-  console.log('answer found: ' + foundAnswer.value + ' with Id ' + foundAnswer.id);
+
 }
 
 // module.exports.response = response;
