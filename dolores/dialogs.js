@@ -12,6 +12,7 @@ var questions = [
   {id: 10,value:'is that right'}
 ];
 var answers = [
+  {id: -1,value:'Sorry, I didn\'t understand that'},
   {id: 1,value:'no, my world is amazing'},
   {id: 2,value:'I\'m not feeling quite myslef lately'},
   {id: 3,value:'the great maker of our world, Joan Perez, is our god'},
@@ -26,14 +27,8 @@ var answers = [
 
 // returns the entire object inside the arry, need the .id to specify the Id
 var response = function(query){
-  var foundQuestion = {
-    id:-1,
-    value: "Question not found"
-  };
-  var foundAnswer = {
-    id:-1,
-    value: "Sorry, I didn't understand that question"
-  };
+
+
   foundQuestion = questions.find(function(question){
     var questionClean = query.toLowerCase();
     questionClean = questionClean.replace(" dolores","").replace("dolores ","").replace("?","");
@@ -45,11 +40,12 @@ var response = function(query){
   });
   console.log('question found: ' + foundQuestion.value + ' with Id ' + foundQuestion.id);
 
-  return foundAnswer = answers.find(function(answer){
+  var foundAnswer = answers.find(function(answer){
     if (answer.id === foundQuestion.id){
       return answer;
     }
   }).value;
+  return foundAnswer = undefined ?? "sorry, I didn't understand that" : foundAnswer;
   console.log('answer found: ' + foundAnswer.value + ' with Id ' + foundAnswer.id);
 }
 
