@@ -12,7 +12,6 @@ var questions = [
   {id: 10,value:'is that right'}
 ];
 var answers = [
-  {id: -1,value:'Sorry, I didn\'t understand that'},
   {id: 1,value:'no, my world is amazing'},
   {id: 2,value:'I\'m not feeling quite myslef lately'},
   {id: 3,value:'the great maker of our world, Joan Perez, is our god'},
