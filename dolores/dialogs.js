@@ -39,22 +39,21 @@ var response = function(query){
     }
   });
 
-  var foundAnswer = answers.find(function(answer){
-    if (answer.id === foundQuestion.id){
-      return answer;
-    }
-  });
-
-  if (typeof foundAnswer === 'undefined')
+  if (typeof question === 'undefined')
   {
     return "sorry, I didn't understand that";
-    console.log('answer NOT found: ');
+    console.log('question NOT found: ');
   }
   else
   {
-    return foundAnswer.value;
+    return foundAnswer = answers.find(function(answer){
+        if (answer.id === foundQuestion.id){
+          return answer;
+        }
+      }).value;
     console.log('answer found: ' + foundAnswer.value + ' with Id ' + foundAnswer.id);
   }
+
 
 
 }
