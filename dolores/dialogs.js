@@ -38,7 +38,6 @@ var response = function(query){
       return question;
     }
   });
-  console.log('question found: ' + foundQuestion.value + ' with Id ' + foundQuestion.id);
 
   var foundAnswer = answers.find(function(answer){
     if (answer.id === foundQuestion.id){
