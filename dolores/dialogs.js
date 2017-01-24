@@ -45,7 +45,7 @@ var response = function(query){
       return answer;
     }
   }).value;
-  return foundAnswer = undefined ? "sorry, I didn't understand that" : foundAnswer;
+  return foundAnswer = 'undefined' ? "sorry, I didn't understand that" : foundAnswer;
   console.log('answer found: ' + foundAnswer.value + ' with Id ' + foundAnswer.id);
 }
 
