@@ -44,7 +44,7 @@ var response = function(query){
     if (answer.id === foundQuestion.id){
       return answer;
     }
-  }).value;
+  });
 
   if (typeof foundAnswer === 'undefined')
   {
@@ -52,9 +52,9 @@ var response = function(query){
   }
   else
   {
-    return foundAnswer;
+    return foundAnswer.value;
   }
-  
+
   console.log('answer found: ' + foundAnswer.value + ' with Id ' + foundAnswer.id);
 }
 
