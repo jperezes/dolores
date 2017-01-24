@@ -21,9 +21,9 @@ sparkBot.on('message', function (event)
       sentMessage = '#' + event.person.displayName+'#';
     }
 
-    // sparkBot.sendMessage(event.roomId, sentMessage , function(){
-    //   console.log('Message sent from Bot!');
-    // });
+    sparkBot.sendMessage(event.roomId, sentMessage , function(){
+      console.log('Message sent from Bot!');
+    });
 
     console.log(JSON.stringify(event));
 })
