@@ -39,7 +39,7 @@ var response = function(query){
     }
   });
 
-  if (typeof question === 'undefined')
+  if (typeof foundQuestion === 'undefined')
   {
     return "sorry, I didn't understand that";
     console.log('question NOT found: ');
