@@ -27,11 +27,11 @@ botModule.prototype.listenForStadistics = function(bot,app){
       console.log('Message sent from Bot!');
     });
 
-    if (req.event == "verification") {
+    if (req.event === "verification") {
       res.status(200).send('Verified');
     }
     else {
-      res.json({message: 'Verification code not understood'});
+      res.json({message: 'Verification code not understood this is what is received ' + req.event});
     }
     console.log('POST RECEIVED !!!');
 
