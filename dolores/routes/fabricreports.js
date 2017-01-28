@@ -17,7 +17,7 @@ reports.prototype.listenForMacReports = function(bot,app){
     next();
   });
   router.route('/fabricreports').post(function(req, res) {
-    bot.sendMessage(process.env.JUAN_DOLORES_ROOM_ID, "New Mac issue received" , function(){
+    bot.sendMessage(process.env.JUAN_DOLORES_ROOM_ID, req.body , function(){
       console.log('Message sent from Bot!');
     });
 
@@ -25,7 +25,7 @@ reports.prototype.listenForMacReports = function(bot,app){
       res.status(200).send('Verified');
     }
     else {
-      res.json({message: 'Verification code not understood this is what is received ', req.body });
+      //res.json({message: 'Verification code not understood this is what is received ', req.body });
     }
     console.log(req.body.event);
 
