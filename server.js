@@ -5,9 +5,10 @@ var botdomain = process.env.DOLORES_URL;
 var sparkBot = new sparklite.SparkBot(process.env.DOLORES_KEY, port, botdomain);
 
 var stadistics = require('./dolores/routes/stadistics');
+var fabricModule = require('./dolores/routes/fabricreports');
 
 var botModule = new stadistics();
-// botModule.setBot(sparkBot, "you should correctly see this");
+var macReports = new fabricModule();
 
 
 process.env.NODE_TLS_REJECT_UNAUTHORIZED = 0
@@ -50,3 +51,4 @@ sparkBot.on('memberships', function (event)
 })
 
 botModule.listenForStadistics(sparkBot, sparkBot.getServer());
+macReports.listenForMacReports(sparkBot,sparkBot.getServer());
