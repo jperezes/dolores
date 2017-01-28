@@ -26,6 +26,11 @@ botModule.prototype.listenForStadistics = function(bot,app){
     bot.sendMessage(process.env.JUAN_DOLORES_ROOM_ID, "I have received a post message" , function(){
       console.log('Message sent from Bot!');
     });
+
+    if (req.event == "verification") {
+      res.status(200).send('Verified');
+    }
+
     res.json({message: 'Welcome to our API from post!'});
     console.log('POST RECEIVED !!!');
 
