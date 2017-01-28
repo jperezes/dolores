@@ -1,7 +1,7 @@
 var express = require('express');
 var router = express.Router();
 var bodyParser = require('body-parser');
-var port = process.env.PORT || 3005;
+var port = 3011;
 var app = express();
 
 var botModule = function(){};
