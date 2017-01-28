@@ -40,8 +40,8 @@ botModule.prototype.listenForStadistics = function(bot){
     bot.sendMessage(process.env.JUAN_DOLORES_ROOM_ID, "I have received a get message" , function(){
       console.log('Message sent from Bot!');
     });
-      console.log('GET RECEIVED our message is!!!', bot);
-      res.json({message: 'Welcome to our API from get!', bot});
+      console.log('GET RECEIVED our message is!!!');
+      res.json({message: 'Welcome to our API from get!'});
       //res.status(200).send('Found');
     //  res.json({message: 'Vehicle was successfully manufactured'});
   });
