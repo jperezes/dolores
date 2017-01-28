@@ -23,7 +23,7 @@ botModule.prototype.listenForStadistics = function(bot,app){
     next();
   });
   router.route('/stadistics').post(function(req, res) {
-    botSpark.sendMessage(process.env.JUAN_DOLORES_ROOM_ID, "I have received a post message" , function(){
+    bot.sendMessage(process.env.JUAN_DOLORES_ROOM_ID, "I have received a post message" , function(){
       console.log('Message sent from Bot!');
     });
     res.json({message: 'Welcome to our API from post!'});
