@@ -4,6 +4,13 @@ var dialogs = require("./dolores/dialogs");
 var botdomain = process.env.DOLORES_URL;
 var sparkBot = new sparklite.SparkBot(process.env.DOLORES_KEY, port, botdomain);
 
+var express = require('express');
+var stadistics = require('./dolores/routes/stadistics');
+
+var botModule = new stadistics();
+// botModule.setBot(sparkBot, "you should correctly see this");
+
+
 process.env.NODE_TLS_REJECT_UNAUTHORIZED = 0
 
 sparkBot.printHelloWorld();
@@ -42,3 +49,5 @@ sparkBot.on('memberships', function (event)
 {
     console.log(JSON.stringify(event));
 })
+
+botModule.listenForStadistics(sparkBot);
