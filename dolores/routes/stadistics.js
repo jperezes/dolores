@@ -46,8 +46,8 @@ botModule.prototype.listenForStadistics = function(bot,port){
   });
 
   // Print friendly message to console
-  console.log('Server listening on port ' + port);
-  app.listen(port);
+  //console.log('Server listening on port ' + port);
+  //app.listen(port);
 }
 
 
