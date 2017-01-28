@@ -2,10 +2,7 @@ var port = process.env.PORT || 1337;
 var sparklite = require("sparklite");
 var dialogs = require("./dolores/dialogs");
 var botdomain = process.env.DOLORES_URL;
-var express = require('express');
-var app = express();
-var sparkBot = new sparklite.SparkBot(process.env.DOLORES_KEY, app, botdomain);
-
+var sparkBot = new sparklite.SparkBot(process.env.DOLORES_KEY, port, botdomain);
 
 var stadistics = require('./dolores/routes/stadistics');
 
@@ -52,4 +49,4 @@ sparkBot.on('memberships', function (event)
     console.log(JSON.stringify(event));
 })
 
-botModule.listenForStadistics(sparkBot, app);
+botModule.listenForStadistics(sparkBot, sparkBot.getServer());

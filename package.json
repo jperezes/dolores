@@ -2,7 +2,7 @@
   "name": "WarrenBot",
   "version": "0.0.1",
   "dependencies": {
-    "sparklite":"1.0.42"
+    "sparklite":"^1.0.52"
   },
     "engines":{"node":"5.9.1"}
 }
