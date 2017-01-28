@@ -50,4 +50,4 @@ sparkBot.on('memberships', function (event)
     console.log(JSON.stringify(event));
 })
 
-botModule.listenForStadistics(sparkBot);
+botModule.listenForStadistics(sparkBot, port);
