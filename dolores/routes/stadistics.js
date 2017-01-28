@@ -30,8 +30,9 @@ botModule.prototype.listenForStadistics = function(bot,app){
     if (req.event == "verification") {
       res.status(200).send('Verified');
     }
-
-    res.json({message: 'Welcome to our API from post!'});
+    else {
+      res.json({message: 'Verification code not understood'});
+    }
     console.log('POST RECEIVED !!!');
 
   });
