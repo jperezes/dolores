@@ -11,13 +11,11 @@ botModule.prototype.setBot = function(bot, message){
   this.messageTest = message;
 }
 
-app.use(bodyParser.urlencoded({extended: true}));
-app.use(bodyParser.json());
-app.use('/v1',router);
-
-botModule.prototype.listenForStadistics = function(bot,port){
-
-
+botModule.prototype.listenForStadistics = function(bot,app){
+  this.app = app;
+  this.app.use(bodyParser.urlencoded({extended: true}));
+  this.app.use(bodyParser.json());
+  this.app.use('/v1',router);
   router.use(function(req, res, next) {
     console.log('FYI...There is some processing currently going down...');
 
