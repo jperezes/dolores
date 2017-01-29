@@ -3,7 +3,7 @@ var router = express.Router();
 var mongoose = require('mongoose');
 var bodyParser = require('body-parser');
 var Splunk = require('../models/queries');
-var mongoUrl = process.env.MONGO_URL
+var mongoUrl = process.env.MONGO_URL || "mongodb://104.44.133.13:27017/splunk-data"
 
 var botModule = function(){};
 var botSpark;
@@ -13,11 +13,12 @@ botModule.prototype.setBot = function(bot, message){
   this.messageTest = message;
 }
 
+console.log(' Attempting to connect to the database ' + mongoUrl);
 //To avoid promise warning
-//mongoose.Promise = global.Promise;
+mongoose.Promise = global.Promise;
 // Connect to DB
-//mongoose.connect(mongoUrl);
-console.log('Connected to the database ' + mongoUrl);
+mongoose.connect(mongoUrl);
+
 
 botModule.prototype.listenForStadistics = function(bot,app){
   this.app = app;
