@@ -1,33 +1,21 @@
 var mongoose = require('mongoose');
 
-var artistSchema = mongoose.Schema({
-	id: {
-		type: Number,
-		required: true
-	},
-	queryName: {
-		type: String,
-		required: true,
-		validate: [
-			function(value) {
-				return value.length <=120;
-			},
-			'Name is too long (120 max)'
-		]
-	},
-	description: String,
-	genre: String,
-	imageUrl: String,
-	location: String,
-	tags: String,
-	categoryId: Number
+var splunkSchema = mongoose.Schema({
+	alertDate: String,
+	 result:
+		{ count: String },
+	  app: String,
+	  results_link: String,
+	  owner: String,
+	  search_name: String,
+	  sid: String
+
 });
 
-
-artistSchema.static({
+splunkSchema.static({
 	list: function(callback) {
 		this.find({}, null, {}, callback);
 	}
 });
 
-module.exports = mongoose.model('Artist', artistSchema);
+module.exports = mongoose.model('Splunk', splunkSchema);

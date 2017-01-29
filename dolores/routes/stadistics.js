@@ -1,6 +1,8 @@
 var express = require('express');
 var router = express.Router();
+var mongoose = require('mongoose');
 var bodyParser = require('body-parser');
+var Splunk = require('../models/queries');
 
 
 var botModule = function(){};
@@ -10,6 +12,12 @@ botModule.prototype.setBot = function(bot, message){
   botSpark = bot;
   this.messageTest = message;
 }
+
+//To avoid promise warning
+mongoose.Promise = global.Promise;
+// Connect to DB
+mongoose.connect('mongodb://localhost:27017/splunkalerts');
+console.log('Connected to the database');
 
 botModule.prototype.listenForStadistics = function(bot,app){
   this.app = app;
@@ -23,27 +31,40 @@ botModule.prototype.listenForStadistics = function(bot,app){
     next();
   });
   router.route('/stadistics').post(function(req, res) {
-    bot.sendMessage(process.env.JUAN_DOLORES_ROOM_ID, "I have received a post message" , function(){
-      console.log('Message sent from Bot!');
+
+    //Save the date when the query arrived
+    var datetime = new Date();
+    console.log(datetime);
+
+    var stats = new Splunk(); // new instance of a Splunk result
+    stats.alertDate = datetime;
+    stats.result.count = req.body.result.count;
+    stats.app = req.body.app;
+    stats.results_link = req.body.results_link;
+    stats.owner = req.body.owner;
+    stats.search_name = req.body.search_name;
+    stats.sid = req.body.sid;
+
+    stats.save(function(err) {
+      if (err) {
+        res.send(err);
+      }
+      res.json({message: 'Splunk result successfully saved to the database'});
     });
 
-    if (req.body.event === "verification") {
-      res.status(200).send('Verified');
-    }
-    else {
-      //res.json({message: 'Verification code not understood this is what is received ' + req.body });
-    }
-    console.log(req.body);
+    var messageToSend = "Splunk Alert!\nAlert Name :" + req.body.search_name +
+                        "\nResult: " + req.body.result.count +
+                        "\nSearch url: " + req.body.results_link;
 
+    //Send result to the room
+    bot.sendMessage(process.env.JUAN_DOLORES_ROOM_ID, messageToSend, function(){
+      console.log('Message sent from Bot!');
+    });
+    console.log(messageToSend);
   });
 
-  console.log('lets see what is this message ' + messageTest);
-
   router.route('/stadistics').get(function(req, res) {
-    bot.sendMessage(process.env.JUAN_DOLORES_ROOM_ID, "I have received a get message" , function(){
-      console.log('Message sent from Bot!');
-    });
-      res.json({message: 'Welcome to our API from get!'});
+    //TODO: Get stadistics saved on the database
   });
 
 }
