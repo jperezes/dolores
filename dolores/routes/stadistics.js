@@ -3,7 +3,7 @@ var router = express.Router();
 var mongoose = require('mongoose');
 var bodyParser = require('body-parser');
 var Splunk = require('../models/queries');
-var mongoUrl = process.env.MONGO_URL;
+var mongoUrl = process.env.MONGO_URL + "/splunkdata";
 
 var botModule = function(){};
 var botSpark;
