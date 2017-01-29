@@ -3,7 +3,7 @@ var router = express.Router();
 var mongoose = require('mongoose');
 var bodyParser = require('body-parser');
 var Splunk = require('../models/queries');
-
+var mongoUrl = process.env.MONGO_URL;
 
 var botModule = function(){};
 var botSpark;
@@ -16,7 +16,7 @@ botModule.prototype.setBot = function(bot, message){
 //To avoid promise warning
 mongoose.Promise = global.Promise;
 // Connect to DB
-mongoose.connect('mongodb://localhost:27017/splunkalerts');
+mongoose.connect(mongoUrl);
 console.log('Connected to the database');
 
 botModule.prototype.listenForStadistics = function(bot,app){
@@ -60,7 +60,6 @@ botModule.prototype.listenForStadistics = function(bot,app){
     bot.sendMessage(process.env.JUAN_DOLORES_ROOM_ID, messageToSend, function(){
       console.log('Message sent from Bot!');
     });
-    console.log(messageToSend);
   });
 
   router.route('/stadistics').get(function(req, res) {
