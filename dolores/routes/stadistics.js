@@ -33,7 +33,7 @@ botModule.prototype.listenForStadistics = function(bot,app){
     else {
       res.json({message: 'Verification code not understood this is what is received ' + req.body });
     }
-    console.log(req.body.event);
+    console.log(req.body);
 
   });
 
@@ -44,13 +44,8 @@ botModule.prototype.listenForStadistics = function(bot,app){
       console.log('Message sent from Bot!');
     });
       res.json({message: 'Welcome to our API from get!'});
-      //res.status(200).send('Found');
-    //  res.json({message: 'Vehicle was successfully manufactured'});
   });
 
-  // Print friendly message to console
-  //console.log('Server listening on port ' + port);
-  //app.listen(port);
 }
 
 
