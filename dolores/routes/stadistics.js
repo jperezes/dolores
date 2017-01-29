@@ -17,7 +17,7 @@ botModule.prototype.setBot = function(bot, message){
 mongoose.Promise = global.Promise;
 // Connect to DB
 mongoose.connect(mongoUrl);
-console.log('Connected to the database');
+console.log('Connected to the database' + mongoUrl);
 
 botModule.prototype.listenForStadistics = function(bot,app){
   this.app = app;
