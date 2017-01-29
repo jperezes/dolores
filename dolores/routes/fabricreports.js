@@ -17,17 +17,32 @@ reports.prototype.listenForMacReports = function(bot,app){
     next();
   });
   router.route('/fabricreports').post(function(req, res) {
-    bot.sendMessage(process.env.JUAN_DOLORES_ROOM_ID, req.body , function(){
-      console.log('Message sent from Bot!');
-    });
+
+    var event = req.body.event;
+    var payloadType = req.body.payload_type;
+    var displayId = req.body.payload.display_id;
+    var title = req.body.payload.title;
+    var methodName = req.body.payload.method;
+
+    var failureReport = "failure received event: " + event +
+                        "\npayload Type: " + req.body.payload_type +
+                        "\ndisplay ID: " + req.body.payload.display_id +
+                        "\ntitle: " + req.body.payload.title +
+                        "\nmethod affected: " + req.body.payload.method +
+                        "\nimpact_level: " + req.body.payload.impact_level  +
+                        "\ncrashes_count: " + req.body.payload.crashes_count +
+                        "\nimpacted_devices_count: " + req.body.payload.impacted_devices_count +
+                        "\nurl to the crash: " + req.body.payload.url;
 
     if (req.body.event === "verification") {
       res.status(200).send('Verified');
     }
     else {
-      //res.json({message: 'Verification code not understood this is what is received ', req.body });
+      bot.sendMessage(process.env.JUAN_DOLORES_ROOM_ID, failureReport , function(){
+        console.log('Message sent from Bot!');
+      });
     }
-    console.log(req.body.event);
+    console.log(failureReport);
 
   });
 
