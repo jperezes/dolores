@@ -50,6 +50,7 @@ botModule.prototype.listenForStadistics = function(bot,app){
         res.send(err);
       }
       res.json({message: 'Splunk result successfully saved to the database'});
+      res.status(200).send('Verified');
     });
 
     var messageToSend = "Splunk Alert!\nAlert Name :" + req.body.search_name +
