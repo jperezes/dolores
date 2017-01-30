@@ -31,7 +31,7 @@ var response = function(query){
     questionClean = questionClean.replace(" dolores","").replace("dolores ","").replace("?","");
 
     if (questionClean.indexOf(question.value) > -1){
-      console.log('Question Found!!: ' + question.value + ' Question cleaned ');
+      console.log('Question Found!!: ' + question.value + ' Question cleaned ' + ' with ID: ' + question.id);
       return question;
     }
   });
