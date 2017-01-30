@@ -60,7 +60,7 @@ reports.prototype.listenForMacReports = function(bot,app){
     }
     else {
       res.status(200).send('Verified');
-      bot.sendMessage(process.env.JUAN_DOLORES_ROOM_ID, failureReport , function(){
+      bot.sendMessage(process.env.JUAN_DOLORES_ROOM_ID, JSON.stringify(macReport) , function(){
         console.log('Message sent from Bot!');
       });
 
@@ -68,7 +68,7 @@ reports.prototype.listenForMacReports = function(bot,app){
         if (err) {
           res.send(err);
         }
-        console.log('Mac Report successfully saved to the database');
+        console.log('Mac Report successfully saved to the database' + JSON.stringify(macReport));
       });
 
     }
