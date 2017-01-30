@@ -60,7 +60,7 @@ reports.prototype.listenForMacReports = function(bot,app){
     }
     else {
       res.status(200).send('Verified');
-      bot.sendMessage(process.env.JUAN_DOLORES_ROOM_ID, JSON.stringify(macReport) , function(){
+      bot.sendMessage(process.env.JUAN_DOLORES_ROOM_ID, failureReport , function(){
         console.log('Message sent from Bot!');
       });
 
