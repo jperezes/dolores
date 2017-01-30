@@ -3,7 +3,7 @@ var router = express.Router();
 var mongoose = require('mongoose');
 var bodyParser = require('body-parser');
 var Splunk = require('../models/queries');
-var mongoUrl = process.env.MONGO_URL || "mongodb://104.44.133.13:27017/splunk-data"
+var mongoUrl = process.env.MONGO_URL || 'mongodb://localhost:27017/stadistics';
 
 var botModule = function(){};
 var botSpark;
@@ -13,7 +13,7 @@ botModule.prototype.setBot = function(bot, message){
   this.messageTest = message;
 }
 
-console.log(' Attempting to connect to the database ' + mongoUrl);
+console.log(' Attempting to connect to the database ');
 //To avoid promise warning
 mongoose.Promise = global.Promise;
 // Connect to DB
@@ -26,8 +26,7 @@ botModule.prototype.listenForStadistics = function(bot,app){
   this.app.use(bodyParser.json());
   this.app.use('/v1',router);
   router.use(function(req, res, next) {
-    console.log('FYI...There is some processing currently going down...');
-
+    //in the future some middleware can be added here.
     // console.log('and it is very weird: ',req);
     next();
   });
