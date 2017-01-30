@@ -26,8 +26,6 @@ var answers = [
 
 // returns the entire object inside the arry, need the .id to specify the Id
 var response = function(query){
-
-
   foundQuestion = questions.find(function(question){
     var questionClean = query.toLowerCase();
     questionClean = questionClean.replace(" dolores","").replace("dolores ","").replace("?","");
@@ -56,10 +54,6 @@ var response = function(query){
 
 
 }
-
-// module.exports.response = response;
-// module.exports.answers = answers;
-// module.exports.questions = questions;
 
 module.exports = {
   response: response,
