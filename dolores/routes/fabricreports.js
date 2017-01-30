@@ -44,7 +44,8 @@ reports.prototype.listenForMacReports = function(bot,app){
     macReport.payload.url = req.body.payload.url;
 
 
-    var failureReport = "failure received event: " + req.body.event +
+    var failureReport = "Mac crash received: " +
+                        "\nevent: " + req.body.event +
                         "\npayload Type: " + req.body.payload_type +
                         "\ndisplay ID: " + req.body.payload.display_id +
                         "\ntitle: " + req.body.payload.title +
