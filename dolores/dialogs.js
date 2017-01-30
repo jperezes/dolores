@@ -41,6 +41,14 @@ var response = function(query){
     return "sorry, I didn't understand that";
     console.log('question NOT found: ');
   }
+  else if (foundQuestion.id === '6')
+  {
+    return questionBack = function(){
+      var _question = confirm('Are you sure about this?');
+      var _response = (_question) ? true : false;
+      return _response;
+    }
+  }
   else
   {
     return foundAnswer = answers.find(function(answer){

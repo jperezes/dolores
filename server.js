@@ -25,7 +25,7 @@ sparkBot.on('message', function (event)
     ('#' + event.person.displayName+'#' == '#Joan Perez Esteban#')) {
 
       console.log('Incoming message: '+ JSON.stringify(event.message) + ' from: '+event.person.displayName + 'person name not parsed properly');
-      sentMessage = dialogs.response(`${event.message}`);//'Hello great maker ' ; //+ event.person.displayName;
+      sentMessage = dialogs.response(`${event.message}`);
 
     }
     else {
