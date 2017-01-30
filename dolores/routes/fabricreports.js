@@ -64,8 +64,8 @@ reports.prototype.listenForMacReports = function(bot,app){
         console.log('Message sent from Bot!');
       });
 
-      bot.sendMessage(process.env.PROTEUS_ROOM_ID, failureReport , function(){
-        console.log('Message sent to proteus');
+      bot.sendMessage(process.env.MAC_REPORTS_ROOM_ID, failureReport , function(){
+        console.log('Message sent to mac reports room');
       });
 
       macReport.save(function(err) {
