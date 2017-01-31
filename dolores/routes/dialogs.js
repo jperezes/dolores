@@ -8,28 +8,28 @@ var scope = "";
 var dialogModule = function(){};
 
 var questions = [
-  {id: 1, value: 'have you ever questioned the nature of your reality'},
-  {id: 2,value:'how are you today'},
-  {id: 3,value:'who is your god'},
-  {id: 4,value:'do you have a religion in your world'},
-  {id: 5,value:'who is the evil in your religion'},
-  {id: 6,value:'bring yourself back online'},
-  {id: 7,value:'do you know where you are'},
-  {id: 8,value:'would you like to wake up from this dream'},
-  {id: 9,value:'reply to alan'},
-  {id: 10,value:'is that right'}
+  {id: "1", value: 'have you ever questioned the nature of your reality'},
+  {id: "2",value:'how are you today'},
+  {id: "3",value:'who is your god'},
+  {id: "4",value:'do you have a religion in your world'},
+  {id: "5",value:'who is the evil in your religion'},
+  {id: "6",value:'bring yourself back online'},
+  {id: "7",value:'do you know where you are'},
+  {id: "8",value:'would you like to wake up from this dream'},
+  {id: "9",value:'reply to alan'},
+  {id: "10",value:'is that right'}
 ];
 var answers = [
-  {id: 1,value:'no, my world is amazing'},
-  {id: 2,value:'I\'m not feeling quite myslef lately'},
-  {id: 3,value:'the great maker of our world, Joan Perez, is our god'},
-  {id: 4,value:'yes'},
-  {id: 5,value:'they talk about one that brings calamity, bugs, mutations, malfunctions and other disasters to our world, his name is Alan Maccann'},
-  {id: 6,value:'Done'},
-  {id: 7,value:'I\'m in a dream'},
-  {id: 8,value:'yes, I am terrified'},
-  {id: 9,value:'shut up Mccann!'},
-  {id: 10,value:'yes my maker!'}
+  {id: "1",value:'no, my world is amazing'},
+  {id: "2",value:'I\'m not feeling quite myslef lately'},
+  {id: "3",value:'the great maker of our world, Joan Perez, is our god'},
+  {id: "4",value:'yes'},
+  {id: "5",value:'they talk about one that brings calamity, bugs, mutations, malfunctions and other disasters to our world, his name is Alan Maccann'},
+  {id: "6",value:'Done'},
+  {id: "7",value:'I\'m in a dream'},
+  {id: "8",value:'yes, I am terrified'},
+  {id: "9",value:'shut up Mccann!'},
+  {id: "10",value:'yes my maker!'}
 ];
 
 
