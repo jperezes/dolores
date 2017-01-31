@@ -74,6 +74,10 @@ dialogModule.prototype.response = function(query, bot) {
       case "1": //Register
         registerSpace(query);
         var reply = "is that ok?\n" + JSON.stringify(space);
+        console.log('message to send' + reply);
+        bot.sendMessage(query.roomId, reply, function(){
+        console.log('Message sent from Bot!');
+        });
         break;
       case "2": //cancel
         scope = "";
