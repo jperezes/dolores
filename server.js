@@ -5,7 +5,7 @@ var sparkBot = new sparklite.SparkBot(process.env.DOLORES_KEY, port, botdomain);
 
 var stadistics = require('./dolores/routes/stadistics');
 var fabricModule = require('./dolores/routes/fabricreports');
-var dialogs = require("./dolores/dialogs");
+var dialog = require("./dolores/dialogs");
 
 var botModule = new stadistics();
 var macReports = new fabricModule();
@@ -25,7 +25,7 @@ sparkBot.on('message', function (event)
     ('#' + event.person.displayName+'#' == '#Diego Becerra#') ||
     ('#' + event.person.displayName+'#' == '#Joan Perez Esteban#')) {
 
-      dialog.updateTempSpace(event);
+    //  dialog.updateTempSpace(event);
 
       console.log('Incoming message: '+ JSON.stringify(event.message) + ' from: '+event.person.displayName + 'person name not parsed properly');
       sentMessage = dialog.response(event,sparkBot);
