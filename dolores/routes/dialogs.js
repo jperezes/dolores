@@ -60,7 +60,7 @@ dialogModule.prototype.response = function(query, bot) {
 
   console.log('After question parsed, question found: ' + foundQuestion + ", scope: " + scope);
   if (typeof foundQuestion === 'undefined' && scope ==="") {
-    reply = "sorry, I didn't understand taht";
+    reply = "sorry, I didn't understand that";
     // bot.sendMessage(query.roomId, "Sorry, I didn't understand that" , function(){
     // console.log('Message sent from Bot!');
     // });
@@ -126,7 +126,7 @@ dialogModule.prototype.response = function(query, bot) {
       answers.find(function(answer){
         if (answer.id === foundQuestion.id){
           reply = answer.value;
-          return;
+          // return;
         }
         else {
           reply = "sorry I didn't understand that"
