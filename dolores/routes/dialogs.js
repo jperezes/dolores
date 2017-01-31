@@ -127,7 +127,7 @@ dialogModule.prototype.response = function(query, bot) {
         if (answer.id === foundQuestion.id){
           reply = answer.value;
           console.log('Value found in da database');
-          // return;
+          return;
         }
         else {
           reply = "sorry I didn't understand which"
