@@ -61,9 +61,9 @@ dialogModule.prototype.response = function(query, bot) {
     console.log('Message sent from Bot!');
     });
     console.log('question NOT found: ');
-  } else if (foundQuestion.id == '6' || scope == "menu") {
+  } else if ((typeof foundQuestion != 'undefined' && foundQuestion.id == '6') || scope == "menu") {
     var messageToSend = "Done, what can I do for you?" + showMenu() + "\n<1><2><3>";
-    scope = "chooseMenu"
+      scope = "chooseMenu"
       bot.sendMessage(query.roomId, messageToSend , function(){
       console.log('Message sent from Bot!');
       });
@@ -83,8 +83,7 @@ dialogModule.prototype.response = function(query, bot) {
     }
   } else if (scope === "delete") {
 
-  }
-  else {
+  } else if (typeof foundQuestion != 'undefined') {
       answers.find(function(answer){
         if (answer.id === foundQuestion.id){
           bot.sendMessage(query.roomId, answer.value , function(){
@@ -98,6 +97,8 @@ dialogModule.prototype.response = function(query, bot) {
         }
       });
     //console.log('answer found: ' + foundAnswer.value + ' with Id ' + foundAnswer.id);
+  } else {
+    console.log('An error ocurred');
   }
 }
 
