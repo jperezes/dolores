@@ -128,7 +128,7 @@ dialogModule.prototype.response = function(query, bot) {
         // bot.sendMessage(query.roomId, intRply, function(){
         // console.log('Message sent from Bot!');
         // });
-        if (answer.id == foundQuestion.id){
+        if (answer.id === foundQuestion.id){
           reply = answer.value;
           console.log('Value found in da database');
           return;
