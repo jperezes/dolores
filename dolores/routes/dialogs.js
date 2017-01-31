@@ -40,7 +40,7 @@ mongoose.Promise = global.Promise;
 // Connect to DB
 mongoose.createConnection(mongoUrl);
 
-
+var space = new Space();
 // returns the entire object inside the arry, need the .id to specify the Id
 dialogModule.prototype.response = function(query, bot) {
 
@@ -122,7 +122,7 @@ function registerSpace(){
 }
 
 var updateTempSpace = function(space, tempSpace){
-  var space = new Space();
+
     space.roomId = tempSpace.roomId;
     space.roomType = tempSpace.roomType;
     space.personId = tempSpace.personId;
