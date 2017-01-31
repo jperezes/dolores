@@ -24,10 +24,27 @@ var answers = [
   {id: 10,value:'yes my maker!'}
 ];
 
+var Space = require('./models/space');
+var mongoose = require('mongoose');
+var bodyParser = require('body-parser');
+var mongoUrl = process.env.MONGO_SPACES_URL || 'mongodb://localhost:27017/spaces';
+
+var space = new Space();
+var scope = "test";
+
+var dialog = function(){};
+
+console.log(' Attempting to connect to the database ');
+//To avoid promise warning
+mongoose.Promise = global.Promise;
+// Connect to DB
+mongoose.createConnection(mongoUrl);
+
+
 // returns the entire object inside the arry, need the .id to specify the Id
-var response = function(query){
+dialog.prototype.response = function(query, bot){
   foundQuestion = questions.find(function(question){
-    var questionClean = query.toLowerCase();
+    var questionClean = query.message.toLowerCase();
     questionClean = questionClean.replace(" dolores","").replace("dolores ","").replace("?","");
 
     if (questionClean.indexOf(question.value) > -1){
@@ -36,35 +53,81 @@ var response = function(query){
     }
   });
 
-  if (typeof foundQuestion === 'undefined')
-  {
+  if (typeof foundQuestion === 'undefined') {
     return "sorry, I didn't understand that";
     console.log('question NOT found: ');
-  }
-  else if (foundQuestion.id == '6')
-  {
-    return questionBack = function(){
-      var _question = confirm('Are you sure about this?');
-      var _response = (_question) ? true : false;
-      return _response;
+  } else if (foundQuestion.id == '6' || scope == "menu") {
+    var messageToSend = "Done, what can I do for you?" + showMenu() + "\n<1><2><3>";
+    scope = "chooseMenu"
+      bot.sendMessage(query.roomId, messageToSend , function(){
+      console.log('Message sent from Bot!');
+      });
+
+  } else if (scope === "chooseMenu") {
+    switch (query.message) {
+      case "1": //Register
+        registerSpace(query);
+        break;
+      case "2": //cancel
+        scope = "";
+        break;
+      case "3": //Delete
+        deleteSpace();
+        break;
     }
+  } else if (scope === "delete") {
+
   }
-  else
-  {
-    return foundAnswer = answers.find(function(answer){
+  else {
+      answers.find(function(answer){
         if (answer.id === foundQuestion.id){
-          return answer;
+          bot.sendMessage(query.roomId, answer.value , function(){
+          console.log('Message sent from Bot!');
+          });
         }
-      }).value;
-    console.log('answer found: ' + foundAnswer.value + ' with Id ' + foundAnswer.id);
+        else {
+          bot.sendMessage(query.roomId, "Sorry, I didnt understand that" , function(){
+          console.log('Message sent from Bot!');
+          });
+        }
+      });
+    //console.log('answer found: ' + foundAnswer.value + ' with Id ' + foundAnswer.id);
   }
+}
 
 
+function showMenu(){
+  return "\n1: Register" + "\n2: cancel" + "\n3: Delete User";
+}
+
+function registerSpace(){
+  console.log(JSON.stringify(space));
+}
+
+function registerSpace(){
+  space.roomId = tempSpace.roomId;
+  space.roomType = tempSpace.roomType;
+  space.personId = tempSpace.personId;
+  space.personName = tempSpace.personName;
+  space.personEmail = tempSpace.personEmail;
+  space.nickName = tempSpace.nickName;
 
 }
 
+var updateTempSpace = function(space, tempSpace){
+    space.roomId = tempSpace.roomId;
+    space.roomType = tempSpace.roomType;
+    space.personId = tempSpace.personId;
+    space.personName = tempSpace.personName;
+    space.personEmail = tempSpace.personEmail;
+    space.nickName = tempSpace.nickName;
+}
+
+
+
 module.exports = {
-  response: response,
   answers: answers,
-  questions: questions
+  questions: questions,
+  updateTempSpace: updateTempSpace,
+  dialog: dialog
 }

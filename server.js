@@ -1,14 +1,15 @@
 var port = process.env.PORT || 1337;
 var sparklite = require("sparklite");
-var dialogs = require("./dolores/dialogs");
 var botdomain = process.env.DOLORES_URL;
 var sparkBot = new sparklite.SparkBot(process.env.DOLORES_KEY, port, botdomain);
 
 var stadistics = require('./dolores/routes/stadistics');
 var fabricModule = require('./dolores/routes/fabricreports');
+var dialogs = require("./dolores/dialogs");
 
 var botModule = new stadistics();
 var macReports = new fabricModule();
+//var dialog = new dialogs();
 
 
 process.env.NODE_TLS_REJECT_UNAUTHORIZED = 0
@@ -24,8 +25,10 @@ sparkBot.on('message', function (event)
     ('#' + event.person.displayName+'#' == '#Diego Becerra#') ||
     ('#' + event.person.displayName+'#' == '#Joan Perez Esteban#')) {
 
+      dialog.updateTempSpace(event);
+
       console.log('Incoming message: '+ JSON.stringify(event.message) + ' from: '+event.person.displayName + 'person name not parsed properly');
-      sentMessage = dialogs.response(`${event.message}`);
+      sentMessage = dialog.response(event,sparkBot);
 
     }
     else {
@@ -33,9 +36,10 @@ sparkBot.on('message', function (event)
       sentMessage = '#' + event.person.displayName+'#';
     }
 
-    sparkBot.sendMessage(event.roomId, sentMessage , function(){
-      console.log('Message sent from Bot!');
-    });
+//send message inside the function now, so no needs of this
+    // sparkBot.sendMessage(event.roomId, sentMessage , function(){
+    //   console.log('Message sent from Bot!');
+    // });
 
     console.log(JSON.stringify(event));
 })
