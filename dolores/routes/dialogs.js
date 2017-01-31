@@ -4,7 +4,7 @@ var bodyParser = require('body-parser');
 var mongoUrl = process.env.MONGO_SPACES_URL || 'mongodb://localhost:27017/spaces';
 
 
-var scope = "test";
+var scope = "";
 var dialogModule = function(){};
 
 var questions = [
@@ -55,7 +55,7 @@ dialogModule.prototype.response = function(query, bot) {
     }
   });
 
-  if (typeof foundQuestion === 'undefined') {
+  if (typeof foundQuestion === 'undefined' && scope !="") {
     bot.sendMessage(query.roomId, "Sorry, I didn't understand that" , function(){
     console.log('Message sent from Bot!');
     });
