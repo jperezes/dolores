@@ -43,8 +43,11 @@ mongoose.createConnection(mongoUrl);
 var space = new Space();
 // returns the entire object inside the arry, need the .id to specify the Id
 dialogModule.prototype.response = function(query, bot) {
-
+  var reply = "";
   console.log('About to parse and incoming message. ');
+
+
+  // This block here needs to go elsewhere
   foundQuestion = questions.find(function(question){
     var questionClean = query.message.toLowerCase();
     questionClean = questionClean.replace(" dolores","").replace("dolores ","").replace("?","");
@@ -57,18 +60,21 @@ dialogModule.prototype.response = function(query, bot) {
 
   console.log('After question parsed, question found: ' + foundQuestion + ", scope: " + scope);
   if (typeof foundQuestion === 'undefined' && scope ==="") {
-    bot.sendMessage(query.roomId, "Sorry, I didn't understand that" , function(){
-    console.log('Message sent from Bot!');
-    });
+    reply = "sorry, I didn't understand taht";
+    // bot.sendMessage(query.roomId, "Sorry, I didn't understand that" , function(){
+    // console.log('Message sent from Bot!');
+    // });
     console.log('question NOT found: ');
-  } else if ((typeof foundQuestion != 'undefined' && foundQuestion.id == '6') || scope == "menu") {
-    var messageToSend = "Done, what can I do for you?" + showMenu() + "\n<1><2><3>";
+  }
+  else if ((typeof foundQuestion != 'undefined' && foundQuestion.id == '6') || scope == "menu") {
+    reply = "Done, what can I do for you?" + showMenu() + "\n<1><2><3>";
       scope = "chooseMenu"
-      bot.sendMessage(query.roomId, messageToSend , function(){
-      console.log('Message sent from Bot!');
-      });
+      // bot.sendMessage(query.roomId, messageToSend , function(){
+      // console.log('Message sent from Bot!');
+      // });
 
-  } else if (scope === "chooseMenu") {
+  }
+  else if (scope === "chooseMenu") {
     console.log('inside menu options about to be switched to the option!!!');
     switch (query.message) {
       case "1": //Register
@@ -85,10 +91,11 @@ dialogModule.prototype.response = function(query, bot) {
         var reply = "User deleted, we'll miss ye";
         break;
     }
-    bot.sendMessage(query.roomId, reply, function(){
-    console.log('Message sent from Bot!');
-    });
-  } else if (scope === "confirmRegistration") {
+    // bot.sendMessage(query.roomId, reply, function(){
+    // console.log('Message sent from Bot!');
+    // });
+  }
+  else if (scope === "confirmRegistration") {
     var reply = "";
     switch (query.message) {
       case "yes": //Register
@@ -110,27 +117,32 @@ dialogModule.prototype.response = function(query, bot) {
         reply = "didn't understand, canelling process..";
         break;
     }
-    bot.sendMessage(query.roomId, reply, function(){
-    console.log('Message sent from Bot!');
-    });
+    // bot.sendMessage(query.roomId, reply, function(){
+    // console.log('Message sent from Bot!');
+    // });
 
-  } else if (typeof foundQuestion != 'undefined') {
+  }
+  else if (typeof foundQuestion != 'undefined') {
       answers.find(function(answer){
         if (answer.id === foundQuestion.id){
-          bot.sendMessage(query.roomId, answer.value , function(){
-          console.log('Message sent from Bot!');
-          });
+          reply = answer.value;
+          return;
         }
         else {
-          bot.sendMessage(query.roomId, "Sorry, I didnt understand that" , function(){
-          console.log('Message sent from Bot!');
-          });
+          reply = "sorry I didn't understand that"
+          // bot.sendMessage(query.roomId, "Sorry, I didnt understand that" , function(){
+          // console.log('Message sent from Bot!');
+          // });
         }
       });
     //console.log('answer found: ' + foundAnswer.value + ' with Id ' + foundAnswer.id);
-  } else {
+  }
+  else {
     console.log('An error ocurred');
   }
+  bot.sendMessage(query.roomId, reply , function(){
+  console.log('Message sent from Bot!');
+  });
 }
 
 
