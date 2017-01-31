@@ -124,11 +124,11 @@ dialogModule.prototype.response = function(query, bot) {
   }
   else if (typeof foundQuestion != 'undefined') {
       answers.find(function(answer){
-        var intRply = 'answer.id: ' + answer.id + ', foundQuestion.id: ' + foundQuestion.id;
-        bot.sendMessage(query.roomId, intRply, function(){
-        console.log('Message sent from Bot!');
-        });
-        if (answer.id === foundQuestion.id){
+        // var intRply = 'answer.id: ' + answer.id + ', foundQuestion.id: ' + foundQuestion.id;
+        // bot.sendMessage(query.roomId, intRply, function(){
+        // console.log('Message sent from Bot!');
+        // });
+        if (answer.id == foundQuestion.id){
           reply = answer.value;
           console.log('Value found in da database');
           return;
