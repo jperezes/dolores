@@ -20,20 +20,15 @@ sparkBot.on('message', function (event)
 {
   var sentMessage = "";
     console.log('Incoming message: '+ JSON.stringify(event.message) + ' from: '+event.person.displayName );
-    if (('#' + event.person.displayName+'#' == '#Juan test#') ||
-    (event.roomId === process.env.JUAN_DOLORES_ROOM_ID) ||
-    ('#' + event.person.displayName+'#' == '#Diego Becerra#') ||
-    ('#' + event.person.displayName+'#' == '#Joan Perez Esteban#')) {
+    if (dialogModule.getUser(event)) {
 
     //  dialog.updateTempSpace(event);
-
       console.log('Incoming message: '+ JSON.stringify(event.message) + ' from: '+event.person.displayName + 'person name not parsed properly');
       dialogModule.response(event,sparkBot);
 
     }
     else {
-      console.log('Incoming message: '+ JSON.stringify(event.message) + ' from: '+event.person.displayName + 'person name not parsed properly');
-      sentMessage = '#' + event.person.displayName+'#';
+      dialogModule.response(event,sparkBot);
     }
 
 //send message inside the function now, so no needs of this
@@ -53,6 +48,8 @@ sparkBot.on('memberships', function (event)
 {
     console.log(JSON.stringify(event));
 })
+var eventual = {"personEmail":"jperezes@cisco.com" };
+
 
 botModule.listenForStadistics(sparkBot, sparkBot.getServer());
 macReports.listenForMacReports(sparkBot,sparkBot.getServer());

@@ -160,6 +160,25 @@ var updateTempSpace = function(space, tempSpace){
     space.nickName = tempSpace.nickName;
 }
 
+dialogModule.prototype.getUser = function(user) {
+
+    var userRegistered;
+    console.log('attempting to find the user in the DB');
+    Space.find({personEmail:user.personEmail}, function(err, space){
+      if (err) {
+        console.log('error retreiving from the database');
+        userRegistered = false;
+      } else if (space.length > 0){
+        console.log('user found in the databasae ');
+        userRegistered=true;
+      } else {
+        console.log('user not registered');
+        userRegistered=false;
+      }
+    }).limit(1);
+    return userRegistered;
+}
+
 module.exports = dialogModule;
 // module.exports = {
 //   answers: answers,

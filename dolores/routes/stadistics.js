@@ -62,8 +62,7 @@ botModule.prototype.listenForStadistics = function(bot,app){
       if (err) {
         res.send(err);
       }
-      res.json({message: 'Splunk result successfully saved to the database'});
-      res.status(200).send('Verified');
+      res.status(200).send('Splunk result successfully saved to the database');
     });
 
     var messageToSend = "Splunk Alert!\nAlert Name :" + req.body.search_name +
@@ -85,9 +84,6 @@ botModule.prototype.listenForStadistics = function(bot,app){
       }
       res.json(space);
     });
-
-    updateTempSpace(tempSpace);
-    registerSpace();
   });
 
   router.route('/stadistics/registerSpace').post(function(req, res) {
@@ -99,7 +95,7 @@ botModule.prototype.listenForStadistics = function(bot,app){
       }
       if (!space.length) {
         var space = new Space();
-        updateTempSpace(space, req.body);
+        registerSpace(space, req.body);
         //res.json({message: 'Space result successfully saved to the database' + req.body.personEmail});
         space.save(function(err) {
           if (err) {
@@ -129,6 +125,21 @@ botModule.prototype.listenForStadistics = function(bot,app){
 
   });
 
+}
+
+function registerSpace(space, tempSpace){
+  space.roomId = tempSpace.roomId;
+  space.roomType = tempSpace.roomType;
+  //space.personName = tempSpace.person.displayName;
+  space.personEmail = tempSpace.personEmail;
+  space.nickName = tempSpace.nickName;
+
+  space.save(function(err) {
+    if (err) {
+      console.log('error saving to the database' + space.personEmail);
+    }
+      console.log('user saved to the database' + space.personEmail);
+  });
 }
 
 function showMenu(){
