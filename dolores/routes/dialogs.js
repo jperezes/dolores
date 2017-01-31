@@ -110,6 +110,9 @@ dialogModule.prototype.response = function(query, bot) {
         reply = "didn't understand, canelling process..";
         break;
     }
+    bot.sendMessage(query.roomId, reply, function(){
+    console.log('Message sent from Bot!');
+    });
 
   } else if (typeof foundQuestion != 'undefined') {
       answers.find(function(answer){
