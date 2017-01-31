@@ -43,6 +43,8 @@ mongoose.createConnection(mongoUrl);
 
 // returns the entire object inside the arry, need the .id to specify the Id
 dialogModule.prototype.response = function(query, bot) {
+
+  console.log('About to parse and incoming message. ');
   foundQuestion = questions.find(function(question){
     var questionClean = query.message.toLowerCase();
     questionClean = questionClean.replace(" dolores","").replace("dolores ","").replace("?","");
@@ -54,7 +56,9 @@ dialogModule.prototype.response = function(query, bot) {
   });
 
   if (typeof foundQuestion === 'undefined') {
-    return "sorry, I didn't understand that";
+    bot.sendMessage(query.roomId, "Sorry, I didn't understand that" , function(){
+    console.log('Message sent from Bot!');
+    });
     console.log('question NOT found: ');
   } else if (foundQuestion.id == '6' || scope == "menu") {
     var messageToSend = "Done, what can I do for you?" + showMenu() + "\n<1><2><3>";
