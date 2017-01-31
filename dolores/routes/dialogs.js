@@ -73,20 +73,43 @@ dialogModule.prototype.response = function(query, bot) {
     switch (query.message) {
       case "1": //Register
         registerSpace(query);
-        var reply = "is that ok?\n" + JSON.stringify(space);
-        console.log('message to send' + reply);
-        bot.sendMessage(query.roomId, reply, function(){
-        console.log('Message sent from Bot!');
-        });
+        var reply = "is that ok? <yes/no>\n" + JSON.stringify(space);
+        scope = "confirmRegistration";
         break;
       case "2": //cancel
         scope = "";
+        var reply = "Goodbye!";
         break;
       case "3": //Delete
         deleteSpace();
+        var reply = "User deleted, we'll miss ye";
         break;
     }
-  } else if (scope === "delete") {
+    bot.sendMessage(query.roomId, reply, function(){
+    console.log('Message sent from Bot!');
+    });
+  } else if (scope === "confirmRegistration") {
+    var reply = "";
+    switch (query.message) {
+      case "yes": //Register
+        scope.save(function(err) {
+          if (err) {
+            console.log('Error saving the message');
+            reply = 'Error saving the message';
+          } else {
+            reply = 'User saved to the DB, welcome!';
+          }
+        });
+        scope = "";
+        break;
+      case "no": //cancel
+        scope = "";
+        reply = "canceling process... try again later";
+        break;
+      default: //Delete
+        reply = "didn't understand, canelling process..";
+        break;
+    }
 
   } else if (typeof foundQuestion != 'undefined') {
       answers.find(function(answer){
@@ -119,11 +142,9 @@ function registerSpace(){
 function registerSpace(tempSpace){
   space.roomId = tempSpace.roomId;
   space.roomType = tempSpace.roomType;
-  space.personId = tempSpace.personId;
-  space.personName = tempSpace.personName;
+  space.personName = tempSpace.person.displayName;
   space.personEmail = tempSpace.personEmail;
-  space.nickName = tempSpace.nickName;
-
+  space.nickName = tempSpace.person.nickName;
 }
 
 var updateTempSpace = function(space, tempSpace){
