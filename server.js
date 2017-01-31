@@ -5,11 +5,11 @@ var sparkBot = new sparklite.SparkBot(process.env.DOLORES_KEY, port, botdomain);
 
 var stadistics = require('./dolores/routes/stadistics');
 var fabricModule = require('./dolores/routes/fabricreports');
-var dialog = require("./dolores/dialogs");
+var Dialog = require('./dolores/routes/dialogs');
 
 var botModule = new stadistics();
 var macReports = new fabricModule();
-//var dialog = new dialogs();
+var dialogModule = new Dialog();
 
 
 process.env.NODE_TLS_REJECT_UNAUTHORIZED = 0
@@ -28,7 +28,7 @@ sparkBot.on('message', function (event)
     //  dialog.updateTempSpace(event);
 
       console.log('Incoming message: '+ JSON.stringify(event.message) + ' from: '+event.person.displayName + 'person name not parsed properly');
-      sentMessage = dialog.response(event,sparkBot);
+      dialogModule.response(event,sparkBot);
 
     }
     else {
@@ -56,3 +56,4 @@ sparkBot.on('memberships', function (event)
 
 botModule.listenForStadistics(sparkBot, sparkBot.getServer());
 macReports.listenForMacReports(sparkBot,sparkBot.getServer());
+//dialogModule.response("event",sparkBot);
