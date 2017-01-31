@@ -92,7 +92,7 @@ dialogModule.prototype.response = function(query, bot) {
     var reply = "";
     switch (query.message) {
       case "yes": //Register
-        scope.save(function(err) {
+        space.save(function(err) {
           if (err) {
             console.log('Error saving the message');
             reply = 'Error saving the message';
