@@ -55,6 +55,7 @@ dialogModule.prototype.response = function(query, bot) {
     }
   });
 
+  console.log('After question parsed, question found: ' + foundQuestion + ", scope: " + scope);
   if (typeof foundQuestion === 'undefined' && scope !="") {
     bot.sendMessage(query.roomId, "Sorry, I didn't understand that" , function(){
     console.log('Message sent from Bot!');
