@@ -73,6 +73,7 @@ dialogModule.prototype.response = function(query, bot) {
     switch (query.message) {
       case "1": //Register
         registerSpace(query);
+        var reply = "is that ok?\n" + JSON.stringify(space);
         break;
       case "2": //cancel
         scope = "";
@@ -111,7 +112,7 @@ function registerSpace(){
   console.log(JSON.stringify(space));
 }
 
-function registerSpace(){
+function registerSpace(tempSpace){
   space.roomId = tempSpace.roomId;
   space.roomType = tempSpace.roomType;
   space.personId = tempSpace.personId;
