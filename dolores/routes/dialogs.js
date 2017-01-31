@@ -69,6 +69,7 @@ dialogModule.prototype.response = function(query, bot) {
       });
 
   } else if (scope === "chooseMenu") {
+    console.log('inside menu options about to be switched to the option!!!');
     switch (query.message) {
       case "1": //Register
         registerSpace(query);
