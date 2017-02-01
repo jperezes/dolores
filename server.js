@@ -20,15 +20,16 @@ sparkBot.on('message', function (event)
 {
   var sentMessage = "";
     console.log('Incoming message: '+ JSON.stringify(event.message) + ' from: '+event.person.displayName );
-    if (dialogModule.getUser(event)) {
-
+    if (event.message === "populate database") {
+      dialogModule.populate(sparkBot);
+      //dialogModule.getUser(event)
     //  dialog.updateTempSpace(event);
       console.log('Incoming message: '+ JSON.stringify(event.message) + ' from: '+event.person.displayName + 'person name not parsed properly');
-      dialogModule.response(event,sparkBot);
+      //dialogModule.response(event,sparkBot);
 
     }
     else {
-      dialogModule.response(event,sparkBot);
+    //  dialogModule.response(event,sparkBot);
     }
 
 //send message inside the function now, so no needs of this
@@ -48,9 +49,11 @@ sparkBot.on('memberships', function (event)
 {
     console.log(JSON.stringify(event));
 })
-var eventual = {"personEmail":"jperezes@cisco.com" };
+var eventual = {"personEmail":"jperezes@cisco.com", "message": "do you know where you are" };
+
 
 botModule.listenForStadistics(sparkBot, sparkBot.getServer());
 macReports.listenForMacReports(sparkBot,sparkBot.getServer());
-dialogModule.getUser(eventual);
+// dialogModule.getUser(eventual);
+// dialogModule.parseQuestion(eventual,sparkBot);
 //dialogModule.response("event",sparkBot);
