@@ -50,7 +50,7 @@ sparkBot.on('memberships', function (event)
 })
 var eventual = {"personEmail":"jperezes@cisco.com" };
 
-
 botModule.listenForStadistics(sparkBot, sparkBot.getServer());
 macReports.listenForMacReports(sparkBot,sparkBot.getServer());
+dialogModule.getUser(eventual);
 //dialogModule.response("event",sparkBot);

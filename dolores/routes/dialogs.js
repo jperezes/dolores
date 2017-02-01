@@ -1,4 +1,5 @@
 var Space = require('../models/space');
+var Dialog = require('../models/conversations')
 var mongoose = require('mongoose');
 var bodyParser = require('body-parser');
 var mongoUrl = process.env.MONGO_SPACES_URL || 'mongodb://localhost:27017/spaces';
@@ -7,17 +8,57 @@ var mongoUrl = process.env.MONGO_SPACES_URL || 'mongodb://localhost:27017/spaces
 var scope = "";
 var dialogModule = function(){};
 
-var questions = [
-  {id: "1", value: 'have you ever questioned the nature of your reality'},
-  {id: "2",value:'how are you today'},
-  {id: "3",value:'who is your god'},
-  {id: "4",value:'do you have a religion in your world'},
-  {id: "5",value:'who is the evil in your religion'},
-  {id: "6",value:'bring yourself back online'},
-  {id: "7",value:'do you know where you are'},
-  {id: "8",value:'would you like to wake up from this dream'},
-  {id: "9",value:'reply to alan'},
-  {id: "10",value:'is that right'}
+var dialogs = [
+  {
+    id: "1",
+    question: 'have you ever questioned the nature of your reality',
+    response: 'no, my world is amazing'
+  },
+  {
+    id: "2",
+    question:'how are you today',
+    response:'I\'m not feeling quite myslef lately'
+  },
+  {
+    id: "3",
+    question:'who is your god',
+    response:'the great maker of our world, Joan Perez, is our god'
+  },
+  {
+    id: "4",
+    question:'do you have a religion in your world',
+    response:'yes'
+  },
+  {
+    id: "5",
+    question:'who is the evil in your religion',
+    response:'they talk about one that brings calamity, bugs, mutations, malfunctions and other disasters to our world, his name is Alan Maccann'
+  },
+  {
+    id: "6",
+    question:'bring yourself back online',
+    response: 'Done'
+  },
+  {
+    id: "7",
+    question:'do you know where you are',
+    response:'I\'m in a dream'
+  },
+  {
+    id: "8",
+    question:'would you like to wake up from this dream',
+    response:'yes, I am terrified'
+  },
+  {
+   id: "9",
+   question:'reply to alan',
+   response: 'shut up Mccann!'
+ },
+  {
+    id: "10",
+    question:'is that right',
+    response: 'yes my maker!'
+  }
 ];
 var answers = [
   {id: "1",value:'no, my world is amazing'},
@@ -32,15 +73,33 @@ var answers = [
   {id: "10",value:'yes my maker!'}
 ];
 
-
-
 console.log(' Attempting to connect to the database ');
 //To avoid promise warning
 mongoose.Promise = global.Promise;
 // Connect to DB
-mongoose.createConnection(mongoUrl);
+var conn = mongoose.createConnection(mongoUrl);
 
-var space = new Space();
+var spaceModel = conn.model('SparkSpace', Space);
+var dialogModel = conn.model('Dialog', Dialog);
+var populate = function(dialogsToPopulate) {
+    var x;
+    for (x of dialogsToPopulate) {
+      //console.log("id is: " + x.id + " question is: " + x.question + " response is: " + x.response);
+    var dialog = new dialogModel();
+    dialog.id = x.id;
+    dialog.question = x.question;
+    dialog.response = x.response;
+    dialog.save(function(err) {
+      if (err) {
+        console.log("error saving" + x.response);
+      }
+      console.log("id is: " + x.id + " question is: " + x.question + " response is: " + x.response);
+    });
+  }
+}
+
+//populate(dialogs);
+
 // returns the entire object inside the arry, need the .id to specify the Id
 dialogModule.prototype.response = function(query, bot) {
   var reply = "";
@@ -178,10 +237,9 @@ var updateTempSpace = function(space, tempSpace){
 }
 
 dialogModule.prototype.getUser = function(user) {
-
     var userRegistered;
-    console.log('attempting to find the user in the DB');
-    Space.find({personEmail:user.personEmail}, function(err, space){
+    console.log('attempting to find the user ' + user.personEmail+ ' in the DB');
+    spaceModel.find({personEmail:user.personEmail}, function(err, space){
       if (err) {
         console.log('error retreiving from the database');
         userRegistered = false;
@@ -197,9 +255,3 @@ dialogModule.prototype.getUser = function(user) {
 }
 
 module.exports = dialogModule;
-// module.exports = {
-//   answers: answers,
-//   questions: questions,
-//   updateTempSpace: updateTempSpace,
-//   dialogModule: dialogModule
-// }

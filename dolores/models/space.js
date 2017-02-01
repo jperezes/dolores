@@ -29,4 +29,5 @@ spaceSchema.static({
 	}
 });
 
-module.exports = mongoose.model('SparkSpace', spaceSchema);
+// module.exports = mongoose.model('SparkSpace', spaceSchema);
+module.exports = spaceSchema;
