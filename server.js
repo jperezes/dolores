@@ -21,7 +21,7 @@ sparkBot.on('message', function (event)
   var sentMessage = "";
     console.log('Incoming message: '+ JSON.stringify(event.message) + ' from: '+event.person.displayName );
     if (event.message === "populate database") {
-      dialogModule.populate(sparkBot);
+      dialogModule.populate(event, sparkBot);
       //dialogModule.getUser(event)
     //  dialog.updateTempSpace(event);
       console.log('Incoming message: '+ JSON.stringify(event.message) + ' from: '+event.person.displayName + 'person name not parsed properly');

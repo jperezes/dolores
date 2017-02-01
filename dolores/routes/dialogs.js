@@ -82,7 +82,7 @@ var conn = mongoose.createConnection(mongoUrl);
 var spaceModel = conn.model('SparkSpace', Space);
 var dialogModel = conn.model('Dialog', Dialog);
 
-dialogModule.prototype.populate = function(bot){
+dialogModule.prototype.populate = function(query, bot){
     dialogsToPopulate = this.dialogs;
     bot.sendMessage(query.roomId, "populating the dialogs database" , function(){
     console.log('Message sent from Bot!');
