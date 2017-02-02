@@ -16,7 +16,8 @@ DialogSchema.static({
  // static method to retrieve the response given a question
 DialogSchema.statics.retrieveResponse = function (question, bot, callback) {
   var cleanQuestion = question.message.toLowerCase().replace(" dolores","").replace("dolores ","").replace("?","");
-  this.find({question: cleanQuestion}).exec(function(err, result) {
+  console.log('question cleaned : ' + cleanQuestion);
+  this.find({question: cleanQuestion}).lean().exec(function(err, result) {
     if (err) {
       console.log('Error retrieving the dialog from the DB');
     }
