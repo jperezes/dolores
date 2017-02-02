@@ -108,8 +108,6 @@ dialogModule.prototype.populate = function(query, bot){
 
 // returns the entire object inside the arry, need the .id to specify the Id
 callbackQuery = function(question, dbMessage, bot) {
-
-  var scope = "";
   var reply = "";
   console.log('After question parsed, question found: ' + dbMessage.question + ", scope: " + scope);
   if (typeof dbMessage === 'undefined' && scope ==="") {
