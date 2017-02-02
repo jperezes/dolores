@@ -8,71 +8,6 @@ var mongoUrl = process.env.MONGO_SPACES_URL || 'mongodb://localhost:27017/spaces
 var scope = "";
 var dialogModule = function(){};
 
-var dialogs = [
-  {
-    id: "1",
-    question: "have you ever questioned the nature of your reality",
-    response: "no, my world is amazing"
-  },
-  {
-    id: "2",
-    question:"how are you today",
-    response:"I\'m not feeling quite myslef lately"
-  },
-  {
-    id: "3",
-    question:"who is your god",
-    response:"the great maker of our world, Joan Perez, is our god"
-  },
-  {
-    id: "4",
-    question:"do you have a religion in your world",
-    response:"yes"
-  },
-  {
-    id: "5",
-    question:"who is the evil in your religion",
-    response:"they talk about one that brings calamity, bugs, mutations, malfunctions and other disasters to our world, his name is Alan Maccann"
-  },
-  {
-    id: "6",
-    question:"bring yourself back online",
-    response: "Done"
-  },
-  {
-    id: "7",
-    question:"do you know where you are",
-    response:"I\'m in a dream"
-  },
-  {
-    id: "8",
-    question:"would you like to wake up from this dream",
-    response:"yes, I am terrified"
-  },
-  {
-   id: "9",
-   question:"reply to alan",
-   response: "shut up Mccann!"
- },
-  {
-    id: "10",
-    question:"is that right",
-    response: "yes my maker!"
-  }
-];
-var answers = [
-  {id: "1",value:'no, my world is amazing'},
-  {id: "2",value:'I\'m not feeling quite myslef lately'},
-  {id: "3",value:'the great maker of our world, Joan Perez, is our god'},
-  {id: "4",value:'yes'},
-  {id: "5",value:'they talk about one that brings calamity, bugs, mutations, malfunctions and other disasters to our world, his name is Alan Maccann'},
-  {id: "6",value:'Done'},
-  {id: "7",value:'I\'m in a dream'},
-  {id: "8",value:'yes, I am terrified'},
-  {id: "9",value:'shut up Mccann!'},
-  {id: "10",value:'yes my maker!'}
-];
-
 console.log(' Attempting to connect to the database ');
 //To avoid promise warning
 mongoose.Promise = global.Promise;
@@ -82,49 +17,17 @@ var conn = mongoose.createConnection(mongoUrl);
 var spaceModel = conn.model('SparkSpace', Space);
 var dialogModel = conn.model('Dialog', Dialog);
 
-dialogModule.prototype.populate = function(query, bot){
-    dialogsToPopulate = dialogs;
-    bot.sendMessage(query.roomId, "populating the dialogs database" , function(){
-    console.log('Message sent from Bot!');
-    });
-
-    var x;
-    for (x of dialogsToPopulate) {
-      //console.log("id is: " + x.id + " question is: " + x.question + " response is: " + x.response);
-    var dialog = new dialogModel();
-    dialog.id = x.id;
-    dialog.question = x.question;
-    dialog.response = x.response;
-    dialog.save(function(err) {
-      if (err) {
-        console.log("error saving" + x.response);
-      }
-      console.log("id is: " + x.id + " question is: " + x.question + " response is: " + x.response);
-    });
-  }
-}
-
-//populate(dialogs);
-
 // returns the entire object inside the arry, need the .id to specify the Id
 callbackQuery = function(question, dbMessage, bot) {
   var reply = "";
 
   if (typeof dbMessage === 'undefined' && scope ==="") {
     reply = "sorry, I didn't understand those";
-    // bot.sendMessage(query.roomId, "Sorry, I didn't understand that" , function(){
-    // console.log('Message sent from Bot!');
-    // });
     console.log('question NOT found: ');
   }
-  //console.log('After question parsed, question found: ' + dbMessage.question + ", scope: " + scope);
   else if ((typeof dbMessage != 'undefined' && dbMessage.id == '6') || scope == "menu")  {
     reply = "Done, what can I do for you?" + showMenu() + "\n<1><2><3>";
       scope = "chooseMenu"
-      // bot.sendMessage(query.roomId, messageToSend , function(){
-      // console.log('Message sent from Bot!');
-      // });
-
   }
   else if (scope === "chooseMenu") {  // once here we have already parsed first message
     console.log('inside menu options about to be switched to the option!!!');
@@ -143,9 +46,6 @@ callbackQuery = function(question, dbMessage, bot) {
         var reply = "User deleted, we'll miss ye";
         break;
     }
-    // bot.sendMessage(query.roomId, reply, function(){
-    // console.log('Message sent from Bot!');
-    // });
   }
   else if (scope === "confirmRegistration") {
     var reply = "";
@@ -169,31 +69,11 @@ callbackQuery = function(question, dbMessage, bot) {
         reply = "didn't understand, canelling process..";
         break;
     }
-    // bot.sendMessage(query.roomId, reply, function(){
-    // console.log('Message sent from Bot!');
-    // });
 
   }
   else if (typeof dbMessage != 'undefined') {
-      // answers.find(function(answer){
-      //   // var intRply = 'answer.id: ' + answer.id + ', foundQuestion.id: ' + foundQuestion.id;
-      //   // bot.sendMessage(query.roomId, intRply, function(){
-      //   // console.log('Message sent from Bot!');
-      //   // });
-      //   if (answer.id === foundQuestion.id){
-      //     reply = answer.value;
-      //     console.log('Value found in da database');
-      //     return;
-      //   }
-      //   else {
-      //     reply = "sorry I didn't understand which"
-      //     // bot.sendMessage(query.roomId, "Sorry, I didnt understand that" , function(){
-      //     // console.log('Message sent from Bot!');
-      //     // });
-      //   }
-      // });
       reply = dbMessage.response;
-    //console.log('answer found: ' + foundAnswer.value + ' with Id ' + foundAnswer.id);
+
   }
   else {
     console.log('An error ocurred');
@@ -208,10 +88,6 @@ callbackQuery = function(question, dbMessage, bot) {
 function showMenu(){
   return "\n1: Register" + "\n2: cancel" + "\n3: Delete User";
 }
-// function(parameter) {
-//   console.log('Inside the Callback: ' + parameter );
-//   this.result = parameter;
-// }
 
 dialogModule.prototype.parseQuestion = function(query, bot){
   dialogModel.retrieveResponse(query, bot, callbackQuery);

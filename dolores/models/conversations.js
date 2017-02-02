@@ -26,16 +26,5 @@ DialogSchema.statics.retrieveResponse = function (question, bot, callback) {
   });
 }
 
-// // Method to find the converstions even if there are minor typos
-// foundQuestion = questions.find(function(question){
-//   var questionClean = query.message.toLowerCase();
-//   questionClean = questionClean.replace(" dolores","").replace("dolores ","").replace("?","");
-//
-//   if (questionClean.indexOf(question.value) > -1){
-//     console.log('Question Found!!: ' + question.value + ' Question cleaned ' + ' with ID: ' + question.id);
-//     return question;
-//   }
-// });
-
 // module.exports = mongoose.model('Dialog', DialogSchema);
 module.exports = DialogSchema;
