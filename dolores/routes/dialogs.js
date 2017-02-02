@@ -26,7 +26,7 @@ callbackQuery = function(question, dbMessage, bot) {
     console.log('question NOT found: ');
   }
   else if ((typeof dbMessage != 'undefined' && dbMessage.id == '6') || scope == "menu")  {
-    reply = "Done, what can I do for you?" + showMenu() + "\n<1><2><3>";
+    reply = "Done, what can I do for you " + question.person.nickName + "?"+ showMenu() + "\n<1><2><3>";
       scope = "chooseMenu"
   }
   else if (scope === "chooseMenu") {  // once here we have already parsed first message
