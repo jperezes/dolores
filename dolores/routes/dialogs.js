@@ -33,13 +33,13 @@ callbackQuery = function(question, dbMessage, bot) {
     console.log('inside menu options about to be switched to the option!!!');
     switch (question.message) {
       case "1": //Register
-        //registerSpace(query);
-        var reply = "is that ok? <yes/no>\n" ;//+ JSON.stringify(space)
-        scope = "confirmRegistration";
+        macReportConfirmation(question);
+        reply = "is that ok? <yes/no>\n" ;//+ JSON.stringify(space)
+        scope = "dataConfirmed";
         break;
       case "2": //cancel
         scope = "";
-        var reply = "Goodbye!";
+        reply = "Goodbye!";
         break;
       case "3": //Delete
         //deleteSpace();
@@ -47,33 +47,85 @@ callbackQuery = function(question, dbMessage, bot) {
         break;
     }
   }
-  else if (scope === "confirmRegistration") {
-    var reply = "";
-    switch (question.message) {
-      case "yes": //Register
-        // space.save(function(err) {
-        //   if (err) {
-        //     console.log('Error saving the message');
-        //     reply = 'Error saving the message';
-        //   } else {
-        //     reply = 'User saved to the DB, welcome!';
-        //   }
-        // });
-        scope = "";
-        break;
-      case "no": //cancel
-        scope = "";
-        reply = "canceling process... try again later";
-        break;
-      default: //Delete
-        reply = "didn't understand, canelling process..";
-        break;
+  else if (scope === "dataConfirmed") {
+    if (question.message === 'yes') {
+      updateTempSpace(question);
+      reply = "do you want me to send you Mac reports (don't worry they are filtered :) )";
+      scope = "askForMacReportOption";
     }
-
+    else {
+      uninitScopeSchema();s
+      reply = "Goodbye " + question.person.nickName + ", if you want to proceed just start again.";
+      scope = "";
+    }
+  }
+  else if (scope === "askForMacReportOption"){
+    if(question.message === 'yes') {
+      space.macReports.receive = "yes";
+      reply = "please write the tags you want to filter the mac reports " +
+              "to receive separated by comma (i.e: whiteboard, auxiliaryDeviceService.cpp,whiteboardView.swift):";
+      scope = "populateMacTagsScope"
+    }
+    else {
+      space.macReports.receive = "no";
+      reply = "No Spark for Mac crash reports will be sent to you " + question.person.nickName;
+      scope = "confirmWindowsOptions";
+    }
+  }
+  else if (scope === "populateMacTagsScope"){
+    space.macReports.tags =[question.message];
+    scope = "confirmWindowsOptions";
+  }
+  else if (scope === "confirmWindowsOptions") {
+    reply = "do you wantme to send you Windows reports (don't worry they are filtered also :) )";
+    scope = "winOptionConfirmation"
+  }
+  else if (scope === "winOptionConfirmation") {
+    if(question.message === 'yes') {
+      space.windowsReports.receive = "yes";
+      reply = "please write the tags you want to filter the mac reports " +
+              "to receive separated by comma (i.e: whiteboard, auxiliaryDeviceService.cpp,whiteboardView.swift):";
+      scope = "populateWinTagsScope"
+    }
+    else {
+      space.windowsReports.receive = "no";
+      reply = "No Spark for Windows crash reports will be sent to you " + question.person.nickName;
+      scope = "confirmSplunkOptions";
+    }
+  }
+  else if (scope === "populateWinTagsScope") {
+    space.windowsReports.tags =[question.message];
+    scope = "confirmSplunkOptions";
+  }
+  else if (scope === "confirmSplunkOptions") {
+    reply = "do you want me to collect and send you your splunk alerts?";
+    scope = "waitForSplunkConfirmation";
+  }
+  else if (scope === "waitForSplunkConfirmation"){
+    if(question.message === yes) {
+      space.splunkReports.receive = "yes";
+    }
+    else {
+      space.splunkReports.receive = "no";
+    }
+    scope = "askForConfirmationScope";
+  }
+  else if (scope = "askForConfirmationScope") {
+    showCurrentOptions();
+    scope = "registrationConfirmed"
+  }
+  else if (scope === "registrationConfirmed") {
+    if (question.message === yes) {
+      saveUserToDB();
+    }
+    else {
+      reply = "sorry if something was wrong, try again please";
+    }
+    scope = "";
+    uninitScopeSchema();
   }
   else if (typeof dbMessage != 'undefined') {
       reply = dbMessage.response;
-
   }
   else {
     console.log('An error ocurred');
@@ -93,7 +145,13 @@ dialogModule.prototype.parseQuestion = function(query, bot){
   dialogModel.retrieveResponse(query, bot, callbackQuery);
 }
 
-function registerSpace(tempSpace){
+function macReportConfirmation(tempSpace){
+
+  var firstConfirmation = "** ·Name:** " + tempSpace.person.displayName +
+                          "\n** ·Email:** " + tempSpace.person.personEmail +
+                          "\n** ·Do you want to receive crash mac Reports? answer <yes/no>";
+
+
   space.roomId = tempSpace.roomId;
   space.roomType = tempSpace.roomType;
   space.personName = tempSpace.person.displayName;
@@ -101,7 +159,40 @@ function registerSpace(tempSpace){
   space.nickName = tempSpace.person.nickName;
 }
 
-var updateTempSpace = function(space, tempSpace){
+function showCurrentOptions() {
+  reply = "** ·Name:** " + space.personName +
+                          "\n** ·Email:** " + space.personEmail +
+                          "\n** ·Receive Spark Mac Reports?** " + space.macReports.receive +
+                          "\n** ·Mac Reports filter tags:** " + space.macReports.tags +
+                          "\n** ·Receive Spark Windows Reports?** " + space.macReports.receive +
+                          "\n** ·Windows Reports filter tags:** " + space.windowsReports.tags +
+                          "\n** ·Receive Splunk Alerts? **" + space.splunkReports.receive +
+                          "\n** Is this data correct? answer <yes/no>**";
+}
+
+function uninitScopeSchema(){
+  space.roomId = "";
+  space.roomType = "";
+  space.personName = "";
+  space.personEmail = "";
+  space.nickName = "";
+  space.macReports.receive = "";
+  space.windowsReports.tags = [];
+  space.macReports.receive = [];
+  space.splunkReports.receive = "";
+}
+function saveUserToDB(){
+  space.save(function(err) {
+    if (err) {
+      console.log('Error saving the message');
+      reply = "There was an error saving your details, please try again later";
+    } else {
+      reply = "Welcome to Westworld " + space.nickName + "!";
+    }
+  });
+}
+
+var updateTempSpace = function(tempSpace){
 
     space.roomId = tempSpace.roomId;
     space.roomType = tempSpace.roomType;
@@ -128,5 +219,7 @@ dialogModule.prototype.getUser = function(user) {
     }).limit(1);
     return userRegistered;
 }
+
+
 
 module.exports = dialogModule;

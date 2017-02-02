@@ -8,16 +8,14 @@ var spaceSchema = mongoose.Schema({
     nickName: String,
     fabricReports: {
       receive: String ,
-      level: String,
-      tags: String
+      tags: [String]
     },
     splunkReports: {
       receive: String
     },
     windowsReports: {
       receive: String,
-      level: String,
-      tags: String
+      tags: [String]
     }
 
 });

@@ -18,7 +18,7 @@ sparkBot.printHelloWorld();
 
 sparkBot.on('message', function (event)
 {
-    dialogModule.parseQuestion(event,sparkBot);    
+    dialogModule.parseQuestion(event,sparkBot);
 
     console.log(JSON.stringify(event));
 })
@@ -37,6 +37,7 @@ var eventual = {"personEmail":"jperezes@cisco.com", "message": "do you know wher
 
 botModule.listenForStadistics(sparkBot, sparkBot.getServer());
 macReports.listenForMacReports(sparkBot,sparkBot.getServer());
+
 // dialogModule.getUser(eventual);
 // dialogModule.parseQuestion(eventual,sparkBot);
 //dialogModule.response("event",sparkBot);
