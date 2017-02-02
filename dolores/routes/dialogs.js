@@ -34,7 +34,6 @@ callbackQuery = function(question, dbMessage, bot) {
     switch (question.message) {
       case "1": //Register
         macReportConfirmation(question);
-        reply = "is that ok? <yes/no>\n" ;//+ JSON.stringify(space)
         scope = "dataConfirmed";
         break;
       case "2": //cancel
@@ -147,7 +146,7 @@ dialogModule.prototype.parseQuestion = function(query, bot){
 
 function macReportConfirmation(tempSpace){
 
-  var firstConfirmation = "** ·Name:** " + tempSpace.person.displayName +
+  reply = "** ·Name:** " + tempSpace.person.displayName +
                           "\n** ·Email:** " + tempSpace.person.personEmail +
                           "\n** ·Do you want to receive crash mac Reports? answer <yes/no>";
 
