@@ -199,9 +199,9 @@ callbackQuery = function(question, dbMessage, bot) {
   else {
     console.log('An error ocurred');
   }
-  // bot.sendMessage(query.roomId, reply , function(){
-  // console.log('Message sent from Bot!');
-  // });
+  bot.sendMessage(question.roomId, reply , function(){
+  console.log('Message sent from Bot!');
+  });
   console.log("At the end of the else if block from DB this is the result:\n" + reply);
 }
 

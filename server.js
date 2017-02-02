@@ -18,24 +18,7 @@ sparkBot.printHelloWorld();
 
 sparkBot.on('message', function (event)
 {
-  var sentMessage = "";
-    console.log('Incoming message: '+ JSON.stringify(event.message) + ' from: '+event.person.displayName );
-    if (event.message === "populate database") {
-      dialogModule.populate(event, sparkBot);
-      //dialogModule.getUser(event)
-    //  dialog.updateTempSpace(event);
-      console.log('Incoming message: '+ JSON.stringify(event.message) + ' from: '+event.person.displayName + 'person name not parsed properly');
-      //dialogModule.response(event,sparkBot);
-
-    }
-    else {
-    //  dialogModule.response(event,sparkBot);
-    }
-
-//send message inside the function now, so no needs of this
-    // sparkBot.sendMessage(event.roomId, sentMessage , function(){
-    //   console.log('Message sent from Bot!');
-    // });
+    dialogModule.parseQuestion(event,sparkBot);    
 
     console.log(JSON.stringify(event));
 })
