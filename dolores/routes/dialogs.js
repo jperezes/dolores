@@ -16,7 +16,7 @@ var conn = mongoose.createConnection(mongoUrl);
 
 var spaceModel = conn.model('SparkSpace', Space);
 var dialogModel = conn.model('Dialog', Dialog);
-
+var space = new spaceModel();
 // returns the entire object inside the arry, need the .id to specify the Id
 callbackQuery = function(question, dbMessage, bot) {
   var reply = "";
