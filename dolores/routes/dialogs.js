@@ -109,7 +109,7 @@ dialogModule.prototype.populate = function(query, bot){
 // returns the entire object inside the arry, need the .id to specify the Id
 callbackQuery = function(question, dbMessage, bot) {
   var reply = "";
-  console.log('After question parsed, question found: ' + dbMessage.question + ", scope: " + scope);
+
   if (typeof dbMessage === 'undefined' && scope ==="") {
     reply = "sorry, I didn't understand those";
     // bot.sendMessage(query.roomId, "Sorry, I didn't understand that" , function(){
@@ -117,6 +117,7 @@ callbackQuery = function(question, dbMessage, bot) {
     // });
     console.log('question NOT found: ');
   }
+  //console.log('After question parsed, question found: ' + dbMessage.question + ", scope: " + scope);
   else if ((typeof dbMessage != 'undefined' && dbMessage.id == '6') || scope == "menu")  {
     reply = "Done, what can I do for you?" + showMenu() + "\n<1><2><3>";
       scope = "chooseMenu"
