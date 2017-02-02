@@ -110,7 +110,7 @@ callbackQuery = function(question, dbMessage, bot) {
     }
     scope = "askForConfirmationScope";
   }
-  else if (scope = "askForConfirmationScope") {
+  else if (scope === "askForConfirmationScope") {
     showCurrentOptions();
     scope = "registrationConfirmed"
   }
