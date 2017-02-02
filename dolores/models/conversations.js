@@ -20,6 +20,7 @@ DialogSchema.statics.retrieveResponse = function (question, bot, callback) {
     if (err) {
       console.log('Error retrieving the dialog from the DB');
     }
+    console.log('question properly parsed, response: ' + result[0]);
     callback(question, result[0], bot);
   });
 }
