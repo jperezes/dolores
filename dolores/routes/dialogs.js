@@ -82,7 +82,8 @@ var updateTempSpace = function(tempSpace,space){
 
 // returns the entire object inside the arry, need the .id to specify the Id
 callbackQuery = function(question, dbMessage, bot) {
-
+  this.space= space;
+  this.reply = reply;
 
   if (typeof dbMessage === 'undefined' && scope ==="") {
     reply = "sorry, I didn't understand those";
@@ -96,7 +97,7 @@ callbackQuery = function(question, dbMessage, bot) {
     console.log('inside menu options about to be switched to the option!!!');
     switch (question.message) {
       case "1": //Register
-        macReportConfirmation(question,reply,space);
+        macReportConfirmation(question,this.reply,this.space);
         scope = "dataConfirmed";
         break;
       case "2": //cancel
