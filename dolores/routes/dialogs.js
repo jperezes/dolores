@@ -105,8 +105,7 @@ var updateTempSpace = function(tempSpace){
 
 // returns the entire object inside the arry, need the .id to specify the Id
 callbackQuery = function(question, dbMessage, bot) {
-
-
+  console.log("Question received" + question.message);
   if (typeof dbMessage === 'undefined' && scope ==="") {
     reply = "sorry, I didn't understand those";
     console.log('question NOT found: ');
@@ -116,13 +115,14 @@ callbackQuery = function(question, dbMessage, bot) {
       scope = "chooseMenu"
   }
   else if (scope !="") {
+    console.log("We are inside an interactive scope, switching to: " + scope);
     // User choosed between 1 Register, 2 - unregister 3 show options
     // Next question is ask if name and email is correct
     switch(scope) {
       // nextQuestion & space update
       var report = confirmNameAndEmail(question);
       case "chooseMenu":
-      console.log("inside of choosing menu, so user has choosed an option first time")
+      console.log("inside of choosing menu, so user has choosed an option first time");
         switch (question.message) {
           case "1":
             reply = report.reply();
@@ -233,6 +233,7 @@ callbackQuery = function(question, dbMessage, bot) {
     }
   }
   else if (typeof dbMessage != 'undefined') {
+      console.log("valid question, searching for reply: ");
       reply = dbMessage.response;
   }
   else {
