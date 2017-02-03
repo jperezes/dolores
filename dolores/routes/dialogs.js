@@ -43,7 +43,7 @@ var macReportConfirmation = function(tempSpace){
   console.log('[macReportConfirmation:] about to go to confirmation if no error ' + space.personName + reply);
 };
 
-function showCurrentOptions() {
+var showCurrentOptions = (function(space) {
   reply = "** ·Name:** " + space.personName +
                           "\n** ·Email:** " + space.personEmail +
                           "\n** ·Receive Spark Mac Reports?** " + space.macReports.receive +
@@ -52,7 +52,12 @@ function showCurrentOptions() {
                           "\n** ·Windows Reports filter tags:** " + space.windowsReports.tags +
                           "\n** ·Receive Splunk Alerts? **" + space.splunkReports.receive +
                           "\n** Is this data correct? answer <yes/no>**";
-}
+  return {
+      reply: function() {
+            return reply;
+      }
+  }
+})();
 
 var uninitScopeSchema = function(space){
   space.roomId = "";
@@ -192,7 +197,7 @@ callbackQuery = function(question, dbMessage, bot) {
     else {
       space.splunkReports.receive = "no";
     }
-    reply = "is the following data correct??\n" + showCurrentOptions();
+    reply = "is the following data correct??\n" + showCurrentOptions(space).reply();
     scope = "registrationConfirmed";
   }
   else if (scope === "registrationConfirmed") {
