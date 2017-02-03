@@ -110,7 +110,9 @@ var updateTempSpace = function(tempSpace){
 
 // returns the entire object inside the arry, need the .id to specify the Id
 callbackQuery = function(question, dbMessage, bot) {
+
   console.log("Question received" + question.message);
+  
   if (typeof dbMessage === 'undefined' && scope ==="") {
     reply = "sorry, I didn't understand those";
     console.log('question NOT found: ');
