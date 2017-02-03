@@ -168,7 +168,7 @@ callbackQuery = function(question, dbMessage, bot) {
           space.macReports.receive = "yes";
           reply = "please write the tags you want to filter the mac reports " +
                   "to receive separated by comma (i.e: whiteboard, auxiliaryDeviceService.cpp,whiteboardView.swift):";
-          scope = "populateMacTagsScope"
+          scope = "populateMacTagsScope";
         }
         else {
           space.macReports.receive = "no";
@@ -197,13 +197,12 @@ callbackQuery = function(question, dbMessage, bot) {
           "Do you want me to send you Splunk reports?";
           scope = "confirmSplunkOptions";
         }
-
       break;
       case "winOptionConfirmation":
         // User confirmed windows options and populated tags. next question for splunk Alerts
         space.windowsReports.tags =[question.message];
         reply = "Do you want me to send you Splunk reports?";
-        scope = "confirmSplunkOptions"
+        scope = "confirmSplunkOptions";
       break;
       case "confirmSplunkOptions":
         // user replied to teh Splunk Option. Next is to show the final confirmation.
@@ -229,7 +228,7 @@ callbackQuery = function(question, dbMessage, bot) {
       break;
       default:
         reply = "Did not understand that, try again later" + question.person.nickName;
-        scope = ""
+        scope = "";
       break;
     }
   }
