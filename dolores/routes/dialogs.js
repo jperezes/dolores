@@ -20,20 +20,30 @@ var dialogModel = conn.model('Dialog', Dialog);
 var space = new spaceModel();
 
 ///
-var macReportConfirmation = function(tempSpace){
+
+var macReportConfirmation = (function(tempSpace){
 
   reply = "** ·Name:** " + tempSpace.person.displayName +
                           "\n** ·Email:** " + tempSpace.personEmail +
                           "\n** ·Do you want to receive crash mac Reports? answer <yes/no>";
-
-
   space.roomId = tempSpace.roomId;
   space.roomType = tempSpace.roomType;
   space.personName = tempSpace.person.displayName;
   space.personEmail = tempSpace.personEmail;
   space.nickName = tempSpace.person.nickName;
+  //Use the module pattern
+  return {
+    space: function() {
+      return space;
+    },
+    reply: function() {
+      return reply;
+    }
+  }
+
+
   console.log('[macReportConfirmation:] about to go to confirmation if no error ' + space.personName + reply);
-}
+})();
 
 var showCurrentOptions = function(reply,space) {
   reply = "** ·Name:** " + space.personName +
@@ -97,7 +107,10 @@ callbackQuery = function(question, dbMessage, bot) {
     console.log('inside menu options about to be switched to the option!!!');
     switch (question.message) {
       case "1": //Register
-        macReportConfirmation.bind(callbackQuery)(question);
+        //macReportConfirmation.bind(callbackQuery)(question);
+        reply = macReportConfirmation.reply(question);
+        space = macReportConfirmation.space(question);
+
         console.log("The reply returned by the function is: " + reply);
         scope = "dataConfirmed";
         break;
