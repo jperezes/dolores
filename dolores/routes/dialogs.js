@@ -20,7 +20,7 @@ var dialogModel = conn.model('Dialog', Dialog);
 var space = new spaceModel();
 
 ///
-var macReportConfirmation = function(tempSpace){
+var macReportConfirmation = function(tempSpace,reply,space){
 
   reply = "** ·Name:** " + tempSpace.person.displayName +
                           "\n** ·Email:** " + tempSpace.person.personEmail +
@@ -32,10 +32,10 @@ var macReportConfirmation = function(tempSpace){
   space.personName = tempSpace.person.displayName;
   space.personEmail = tempSpace.personEmail;
   space.nickName = tempSpace.person.nickName;
-  console.log('[macReportConfirmation:] about to go to confirmation if no error ' + space.personName);
+  console.log('[macReportConfirmation:] about to go to confirmation if no error ' + space.personName + reply);
 }
 
-var showCurrentOptions = function() {
+var showCurrentOptions = function(reply,space) {
   reply = "** ·Name:** " + space.personName +
                           "\n** ·Email:** " + space.personEmail +
                           "\n** ·Receive Spark Mac Reports?** " + space.macReports.receive +
@@ -46,7 +46,7 @@ var showCurrentOptions = function() {
                           "\n** Is this data correct? answer <yes/no>**";
 }
 
-var uninitScopeSchema = function(){
+var uninitScopeSchema = function(space){
   space.roomId = "";
   space.roomType = "";
   space.personName = "";
@@ -57,7 +57,7 @@ var uninitScopeSchema = function(){
   space.macReports.receive = [];
   space.splunkReports.receive = "";
 }
-var saveUserToDB = function(){
+var saveUserToDB = function(space){
   space.save(function(err) {
     if (err) {
       console.log('Error saving the message');
@@ -68,7 +68,7 @@ var saveUserToDB = function(){
   });
 }
 
-var updateTempSpace = function(tempSpace){
+var updateTempSpace = function(tempSpace,space){
 
     space.roomId = tempSpace.roomId;
     space.roomType = tempSpace.roomType;
@@ -96,7 +96,7 @@ callbackQuery = function(question, dbMessage, bot) {
     console.log('inside menu options about to be switched to the option!!!');
     switch (question.message) {
       case "1": //Register
-        macReportConfirmation(question);
+        macReportConfirmation(question,reply,space);
         scope = "dataConfirmed";
         break;
       case "2": //cancel
@@ -173,18 +173,18 @@ callbackQuery = function(question, dbMessage, bot) {
     scope = "askForConfirmationScope";
   }
   else if (scope === "askForConfirmationScope") {
-    showCurrentOptions();
+    showCurrentOptions(reply,space);
     scope = "registrationConfirmed"
   }
   else if (scope === "registrationConfirmed") {
     if (question.message === yes) {
-      saveUserToDB();
+      saveUserToDB(space);
     }
     else {
       reply = "sorry if something was wrong, try again please";
     }
     scope = "";
-    uninitScopeSchema();
+    uninitScopeSchema(space);
   }
   else if (typeof dbMessage != 'undefined') {
       reply = dbMessage.response;
