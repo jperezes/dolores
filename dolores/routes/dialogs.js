@@ -20,7 +20,7 @@ var dialogModel = conn.model('Dialog', Dialog);
 var space = new spaceModel();
 
 ///
-var macReportConfirmation = function(tempSpace,reply,space){
+var macReportConfirmation = function(tempSpace){
 
   reply = "** ·Name:** " + tempSpace.person.displayName +
                           "\n** ·Email:** " + tempSpace.person.personEmail +
@@ -97,7 +97,7 @@ callbackQuery = function(question, dbMessage, bot) {
     console.log('inside menu options about to be switched to the option!!!');
     switch (question.message) {
       case "1": //Register
-        macReportConfirmation(question,this.reply,this.space);
+        macReportConfirmation.bind(callbackQuery).(question);
         scope = "dataConfirmed";
         break;
       case "2": //cancel
