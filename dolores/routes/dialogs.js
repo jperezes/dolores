@@ -97,7 +97,7 @@ callbackQuery = function(question, dbMessage, bot) {
     console.log('inside menu options about to be switched to the option!!!');
     switch (question.message) {
       case "1": //Register
-        macReportConfirmation.bind(callbackQuery).(question);
+        macReportConfirmation.bind(callbackQuery)(question);
         scope = "dataConfirmed";
         break;
       case "2": //cancel
