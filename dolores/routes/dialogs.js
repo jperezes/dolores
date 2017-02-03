@@ -64,6 +64,7 @@ var uninitScopeSchema = function(space){
   space.windowsReports.tags = [];
   space.macReports.receive = [];
   space.splunkReports.receive = "";
+  return space;
 }
 var saveUserToDB = function(space){
   space.save(function(err) {
@@ -102,14 +103,12 @@ callbackQuery = function(question, dbMessage, bot) {
   }
   else if (scope === "chooseMenu") {   // once here we have already parsed first message
     console.log('inside menu options about to be switched to the option!!!');
+    var report = macReportConfirmation(question);
     switch (question.message) {
       case "1": //Register
         //macReportConfirmation.bind(callbackQuery)(question);
-        var report = macReportConfirmation(question);
         reply = report.reply();
         space = report.space();
-
-        console.log("The reply returned by the function is: " + reply);
         scope = "dataConfirmed";
         break;
       case "2": //cancel
@@ -129,7 +128,7 @@ callbackQuery = function(question, dbMessage, bot) {
       scope = "askForMacReportOption";
     }
     else {
-      uninitScopeSchema();s
+      space = uninitScopeSchema();
       reply = "Goodbye " + question.person.nickName + ", if you want to proceed just start again.";
       scope = "";
     }
@@ -197,7 +196,7 @@ callbackQuery = function(question, dbMessage, bot) {
       reply = "sorry if something was wrong, try again please";
     }
     scope = "";
-    uninitScopeSchema(space);
+    space = uninitScopeSchema(space);
   }
   else if (typeof dbMessage != 'undefined') {
       reply = dbMessage.response;
