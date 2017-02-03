@@ -32,6 +32,7 @@ var macReportConfirmation = function(tempSpace){
   space.personName = tempSpace.person.displayName;
   space.personEmail = tempSpace.personEmail;
   space.nickName = tempSpace.person.nickName;
+  console.log('[macReportConfirmation:] about to go to confirmation if no error ' + space.personName);
 }
 
 var showCurrentOptions = function() {
