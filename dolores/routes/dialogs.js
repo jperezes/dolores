@@ -20,11 +20,11 @@ var dialogModel = conn.model('Dialog', Dialog);
 var space = new spaceModel();
 
 ///
-var macReportConfirmation = function(tempSpace){
+var confirmNameAndEmail = function(tempSpace){
 
   reply = "** ·Name:** " + tempSpace.person.displayName +
                           "\n** ·Email:** " + tempSpace.personEmail +
-                          "\n** ·Do you want to receive crash mac Reports? answer <yes/no>";
+                          "\n** ·Is this data correct? answer <yes/no>";
   space.roomId = tempSpace.roomId;
   space.roomType = tempSpace.roomType;
   space.personName = tempSpace.person.displayName;
@@ -120,7 +120,7 @@ callbackQuery = function(question, dbMessage, bot) {
     // Next question is ask if name and email is correct
     switch(scope) {
       // nextQuestion & space update
-      var report = macReportConfirmation(question);
+      var report = confirmNameAndEmail(question);
       case "chooseMenu":
       console.log("inside of choosing menu, so user has choosed an option first time")
         switch (question.message) {
