@@ -43,7 +43,7 @@ var macReportConfirmation = function(tempSpace){
   console.log('[macReportConfirmation:] about to go to confirmation if no error ' + space.personName + reply);
 };
 
-var showCurrentOptions = function(reply,space) {
+function showCurrentOptions() {
   reply = "** ·Name:** " + space.personName +
                           "\n** ·Email:** " + space.personEmail +
                           "\n** ·Receive Spark Mac Reports?** " + space.macReports.receive +
@@ -154,51 +154,46 @@ callbackQuery = function(question, dbMessage, bot) {
     }
     else {
       space.macReports.receive = "no";
-      reply = "No Spark for Mac crash reports will be sent to you " + question.person.nickName;
+      reply = "No Spark for Mac crash reports will be sent to you " + question.person.nickName +
+      " do you want me to send you Windows reports (don't worry they are filtered also :) )";
       scope = "confirmWindowsOptions";
     }
   }
   else if (scope === "populateMacTagsScope"){
     space.macReports.tags =[question.message];
+    reply = "do you want me to send you Windows reports (don't worry they are filtered also :) )";
     scope = "confirmWindowsOptions";
   }
   else if (scope === "confirmWindowsOptions") {
-    reply = "do you wantme to send you Windows reports (don't worry they are filtered also :) )";
-    scope = "winOptionConfirmation"
-  }
-  else if (scope === "winOptionConfirmation") {
     if(question.message === 'yes') {
-      space.windowsReports.receive = "yes";
-      reply = "please write the tags you want to filter the mac reports " +
+      reply = "please write the tags you want to filter the Windows reports " +
               "to receive separated by comma (i.e: whiteboard, auxiliaryDeviceService.cpp,whiteboardView.swift):";
-      scope = "populateWinTagsScope"
+      space.windowsReports.receive = "yes";
+      scope = "winOptionConfirmation";
     }
     else {
-      space.windowsReports.receive = "no";
-      reply = "No Spark for Windows crash reports will be sent to you " + question.person.nickName;
+      reply = "No Spark for Windows crash reports will be sent to you " + question.person.nickName +
+      "do you want me to collect and send you your splunk alerts?";
       scope = "confirmSplunkOptions";
+      space.windowsReports.receive = "no";
     }
+
   }
-  else if (scope === "populateWinTagsScope") {
-    space.windowsReports.tags =[question.message];
-    scope = "confirmSplunkOptions";
+  else if (scope === "winOptionConfirmation") {
+      space.windowsReports.tags =[question.message];
+      reply = "do you want me to collect and send you your splunk alerts?";
+      scope = "confirmSplunkOptions"
+
   }
   else if (scope === "confirmSplunkOptions") {
-    reply = "do you want me to collect and send you your splunk alerts?";
-    scope = "waitForSplunkConfirmation";
-  }
-  else if (scope === "waitForSplunkConfirmation"){
-    if(question.message === yes) {
+    if (question.message = 'yes'){
       space.splunkReports.receive = "yes";
     }
     else {
       space.splunkReports.receive = "no";
     }
-    scope = "askForConfirmationScope";
-  }
-  else if (scope === "askForConfirmationScope") {
-    showCurrentOptions(reply,space);
-    scope = "registrationConfirmed"
+    reply = "is the following data correct??\n" + showCurrentOptions();
+    scope = "registrationConfirmed";
   }
   else if (scope === "registrationConfirmed") {
     if (question.message === yes) {
