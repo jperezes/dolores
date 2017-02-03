@@ -112,7 +112,7 @@ var updateTempSpace = function(tempSpace){
 callbackQuery = function(question, dbMessage, bot) {
 
   console.log("Question received" + question.message);
-  
+
   if (typeof dbMessage === 'undefined' && scope ==="") {
     reply = "sorry, I didn't understand those";
     console.log('question NOT found: ');
@@ -231,7 +231,8 @@ callbackQuery = function(question, dbMessage, bot) {
           reply = "Sorry if something was wrong, please try again later";
         }
         scope = "";
-        space = uninitScopeSchema(space);
+        var uninitSchema = uninitScopeSchema(space);
+        space = uninitSchema.space();
       break;
       default:
         reply = "Did not understand that, try again later" + question.person.nickName;
