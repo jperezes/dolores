@@ -20,7 +20,6 @@ var dialogModel = conn.model('Dialog', Dialog);
 var space = new spaceModel();
 
 ///
-
 var macReportConfirmation = function(tempSpace){
 
   reply = "** ·Name:** " + tempSpace.person.displayName +
