@@ -144,7 +144,7 @@ dialogModule.prototype.parseQuestion = function(query, bot){
   dialogModel.retrieveResponse(query, bot, callbackQuery);
 }
 
-function macReportConfirmation(tempSpace){
+var macReportConfirmation = function(tempSpace){
 
   reply = "** ·Name:** " + tempSpace.person.displayName +
                           "\n** ·Email:** " + tempSpace.person.personEmail +
@@ -158,7 +158,7 @@ function macReportConfirmation(tempSpace){
   space.nickName = tempSpace.person.nickName;
 }
 
-function showCurrentOptions() {
+var showCurrentOptions = function() {
   reply = "** ·Name:** " + space.personName +
                           "\n** ·Email:** " + space.personEmail +
                           "\n** ·Receive Spark Mac Reports?** " + space.macReports.receive +
@@ -169,7 +169,7 @@ function showCurrentOptions() {
                           "\n** Is this data correct? answer <yes/no>**";
 }
 
-function uninitScopeSchema(){
+var uninitScopeSchema = function(){
   space.roomId = "";
   space.roomType = "";
   space.personName = "";
@@ -180,7 +180,7 @@ function uninitScopeSchema(){
   space.macReports.receive = [];
   space.splunkReports.receive = "";
 }
-function saveUserToDB(){
+var saveUserToDB = function(){
   space.save(function(err) {
     if (err) {
       console.log('Error saving the message');
