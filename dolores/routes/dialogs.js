@@ -91,7 +91,7 @@ callbackQuery = function(question, dbMessage, bot) {
     reply = "Done, what can I do for you " + question.person.nickName + "?"+ showMenu() + "\n<1><2><3>";
       scope = "chooseMenu"
   }
-  else if (scope === "chooseMenu") {   conosole.log("on chooseMenu scope");// once here we have already parsed first message
+  else if (scope === "chooseMenu") {   // once here we have already parsed first message
     console.log('inside menu options about to be switched to the option!!!');
     switch (question.message) {
       case "1": //Register
@@ -119,7 +119,7 @@ callbackQuery = function(question, dbMessage, bot) {
       reply = "Goodbye " + question.person.nickName + ", if you want to proceed just start again.";
       scope = "";
     }
-  } conosole.log("on dataConfirmed scope");
+  }
   else if (scope === "askForMacReportOption"){
     if(question.message === 'yes') {
       space.macReports.receive = "yes";
@@ -132,15 +132,15 @@ callbackQuery = function(question, dbMessage, bot) {
       reply = "No Spark for Mac crash reports will be sent to you " + question.person.nickName;
       scope = "confirmWindowsOptions";
     }
-  }conosole.log("on askForMacReportOption scope");
+  }
   else if (scope === "populateMacTagsScope"){
     space.macReports.tags =[question.message];
     scope = "confirmWindowsOptions";
-  }conosole.log("on populateMacTagsScope scope");
+  }
   else if (scope === "confirmWindowsOptions") {
     reply = "do you wantme to send you Windows reports (don't worry they are filtered also :) )";
     scope = "winOptionConfirmation"
-  }conosole.log("on confirmWindowsOptions scope");
+  }
   else if (scope === "winOptionConfirmation") {
     if(question.message === 'yes') {
       space.windowsReports.receive = "yes";
@@ -153,15 +153,15 @@ callbackQuery = function(question, dbMessage, bot) {
       reply = "No Spark for Windows crash reports will be sent to you " + question.person.nickName;
       scope = "confirmSplunkOptions";
     }
-  }conosole.log("on winOptionConfirmation scope");
+  }
   else if (scope === "populateWinTagsScope") {
     space.windowsReports.tags =[question.message];
     scope = "confirmSplunkOptions";
-  }conosole.log("on populateWinTagsScope scope");
+  }
   else if (scope === "confirmSplunkOptions") {
     reply = "do you want me to collect and send you your splunk alerts?";
     scope = "waitForSplunkConfirmation";
-  }conosole.log("on confirmSplunkOptions scope");
+  }
   else if (scope === "waitForSplunkConfirmation"){
     if(question.message === yes) {
       space.splunkReports.receive = "yes";
@@ -170,11 +170,11 @@ callbackQuery = function(question, dbMessage, bot) {
       space.splunkReports.receive = "no";
     }
     scope = "askForConfirmationScope";
-  }conosole.log("on waitForSplunkConfirmation scope");
+  }
   else if (scope === "askForConfirmationScope") {
     showCurrentOptions();
     scope = "registrationConfirmed"
-  }conosole.log("on askForConfirmationScope scope");
+  }
   else if (scope === "registrationConfirmed") {
     if (question.message === yes) {
       saveUserToDB();
@@ -184,10 +184,10 @@ callbackQuery = function(question, dbMessage, bot) {
     }
     scope = "";
     uninitScopeSchema();
-  }conosole.log("on registrationConfirmed scope");
+  }
   else if (typeof dbMessage != 'undefined') {
       reply = dbMessage.response;
-  }conosole.log("on !undefined scope");
+  }
   else {
     console.log('An error ocurred');
   }
