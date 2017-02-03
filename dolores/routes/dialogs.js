@@ -21,7 +21,7 @@ var space = new spaceModel();
 
 ///
 
-var macReportConfirmation = (function(){
+var macReportConfirmation = function(tempSpace){
 
   reply = "** ·Name:** " + tempSpace.person.displayName +
                           "\n** ·Email:** " + tempSpace.personEmail +
@@ -40,10 +40,8 @@ var macReportConfirmation = (function(){
       return reply;
     }
   }
-
-
   console.log('[macReportConfirmation:] about to go to confirmation if no error ' + space.personName + reply);
-})(tempSpace);
+};
 
 var showCurrentOptions = function(reply,space) {
   reply = "** ·Name:** " + space.personName +
@@ -92,8 +90,7 @@ var updateTempSpace = function(tempSpace,space){
 
 // returns the entire object inside the arry, need the .id to specify the Id
 callbackQuery = function(question, dbMessage, bot) {
-  this.space= space;
-  this.reply = reply;
+
 
   if (typeof dbMessage === 'undefined' && scope ==="") {
     reply = "sorry, I didn't understand those";
@@ -108,8 +105,9 @@ callbackQuery = function(question, dbMessage, bot) {
     switch (question.message) {
       case "1": //Register
         //macReportConfirmation.bind(callbackQuery)(question);
-        reply = macReportConfirmation.reply(question);
-        space = macReportConfirmation.space(question);
+        var report = macReportConfirmation();
+        reply = report.reply(question);
+        space = report.space(question);
 
         console.log("The reply returned by the function is: " + reply);
         scope = "dataConfirmed";
