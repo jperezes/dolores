@@ -26,7 +26,7 @@ var confirmNameAndEmail = function(tempSpace){
   reply = "** ·Name:** " + tempSpace.person.displayName +
                           "\n** ·Email:** " + tempSpace.personEmail +
                           "\n** ·Is this data correct? answer <yes/no>";
-                          
+
   space.roomId = tempSpace.roomId;
   space.roomType = tempSpace.roomType;
   space.personName = tempSpace.person.displayName;
@@ -43,7 +43,7 @@ var confirmNameAndEmail = function(tempSpace){
     }
   }
   console.log('[macReportConfirmation:] about to go to confirmation if no error ' + space.personName + reply);
-}
+};
 
 
 var showCurrentOptions = function(space) {
@@ -60,7 +60,7 @@ var showCurrentOptions = function(space) {
             return reply;
       }
   }
-}
+};
 
 var uninitScopeSchema = function(space){
   space.roomId = "";
@@ -78,7 +78,7 @@ var uninitScopeSchema = function(space){
       return space;
     }
   }
-}
+};
 
 var saveUserToDB = function(space){
   space.save(function(err) {
@@ -89,7 +89,7 @@ var saveUserToDB = function(space){
       reply = "Welcome to Westworld " + space.nickName + "!";
     }
   });
-}
+};
 
 var updateTempSpace = function(tempSpace){
 
@@ -104,7 +104,7 @@ var updateTempSpace = function(tempSpace){
         return space;
       }
     }
-}
+};
 ///
 
 
