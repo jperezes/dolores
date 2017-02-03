@@ -23,7 +23,7 @@ var space = new spaceModel();
 var macReportConfirmation = function(tempSpace){
 
   reply = "** ·Name:** " + tempSpace.person.displayName +
-                          "\n** ·Email:** " + tempSpace.person.personEmail +
+                          "\n** ·Email:** " + tempSpace.personEmail +
                           "\n** ·Do you want to receive crash mac Reports? answer <yes/no>";
 
 
@@ -98,6 +98,7 @@ callbackQuery = function(question, dbMessage, bot) {
     switch (question.message) {
       case "1": //Register
         macReportConfirmation.bind(callbackQuery)(question);
+        console.log("The reply returned by the function is: " + reply);
         scope = "dataConfirmed";
         break;
       case "2": //cancel
