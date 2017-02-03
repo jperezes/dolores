@@ -105,9 +105,9 @@ callbackQuery = function(question, dbMessage, bot) {
     switch (question.message) {
       case "1": //Register
         //macReportConfirmation.bind(callbackQuery)(question);
-        var report = macReportConfirmation();
-        reply = report.reply(question);
-        space = report.space(question);
+        var report = macReportConfirmation(question);
+        reply = report.reply();
+        space = report.space();
 
         console.log("The reply returned by the function is: " + reply);
         scope = "dataConfirmed";
