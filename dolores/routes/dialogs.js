@@ -19,17 +19,20 @@ var spaceModel = conn.model('SparkSpace', Space);
 var dialogModel = conn.model('Dialog', Dialog);
 var space = new spaceModel();
 
+
 ///
 var confirmNameAndEmail = function(tempSpace){
 
   reply = "** ·Name:** " + tempSpace.person.displayName +
                           "\n** ·Email:** " + tempSpace.personEmail +
                           "\n** ·Is this data correct? answer <yes/no>";
+                          
   space.roomId = tempSpace.roomId;
   space.roomType = tempSpace.roomType;
   space.personName = tempSpace.person.displayName;
   space.personEmail = tempSpace.personEmail;
   space.nickName = tempSpace.person.nickName;
+
   //Use the module pattern
   return {
     space: function() {
@@ -41,6 +44,7 @@ var confirmNameAndEmail = function(tempSpace){
   }
   console.log('[macReportConfirmation:] about to go to confirmation if no error ' + space.personName + reply);
 }
+
 
 var showCurrentOptions = function(space) {
   reply = "** ·Name:** " + space.personName +
@@ -75,6 +79,7 @@ var uninitScopeSchema = function(space){
     }
   }
 }
+
 var saveUserToDB = function(space){
   space.save(function(err) {
     if (err) {
