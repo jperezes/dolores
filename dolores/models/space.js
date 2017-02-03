@@ -6,7 +6,7 @@ var spaceSchema = mongoose.Schema({
     personName: String,
     personEmail: String,
     nickName: String,
-    fabricReports: {
+    macReports: {
       receive: String ,
       tags: [String]
     },
