@@ -40,7 +40,7 @@ var confirmNameAndEmail = function(tempSpace){
     }
   }
   console.log('[macReportConfirmation:] about to go to confirmation if no error ' + space.personName + reply);
-};
+}
 
 var showCurrentOptions = function(space) {
   reply = "** ·Name:** " + space.personName +
@@ -56,7 +56,7 @@ var showCurrentOptions = function(space) {
             return reply;
       }
   }
-};
+}
 
 var uninitScopeSchema = function(space){
   space.roomId = "";
