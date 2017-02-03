@@ -64,7 +64,12 @@ var uninitScopeSchema = function(space){
   space.windowsReports.tags = [];
   space.macReports.receive = [];
   space.splunkReports.receive = "";
-  return space;
+  //Use the module pattern
+  return {
+    space: function() {
+      return space;
+    }
+  }
 }
 var saveUserToDB = function(space){
   space.save(function(err) {
@@ -128,7 +133,8 @@ callbackQuery = function(question, dbMessage, bot) {
       scope = "askForMacReportOption";
     }
     else {
-      space = uninitScopeSchema();
+      var uninitSchema = uninitScopeSchema();
+      space = uninitSchema.space();
       reply = "Goodbye " + question.person.nickName + ", if you want to proceed just start again.";
       scope = "";
     }
