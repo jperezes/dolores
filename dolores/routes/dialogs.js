@@ -18,6 +18,67 @@ var conn = mongoose.createConnection(mongoUrl);
 var spaceModel = conn.model('SparkSpace', Space);
 var dialogModel = conn.model('Dialog', Dialog);
 var space = new spaceModel();
+
+///
+var macReportConfirmation = function(tempSpace){
+
+  reply = "** ·Name:** " + tempSpace.person.displayName +
+                          "\n** ·Email:** " + tempSpace.person.personEmail +
+                          "\n** ·Do you want to receive crash mac Reports? answer <yes/no>";
+
+
+  space.roomId = tempSpace.roomId;
+  space.roomType = tempSpace.roomType;
+  space.personName = tempSpace.person.displayName;
+  space.personEmail = tempSpace.personEmail;
+  space.nickName = tempSpace.person.nickName;
+}
+
+var showCurrentOptions = function() {
+  reply = "** ·Name:** " + space.personName +
+                          "\n** ·Email:** " + space.personEmail +
+                          "\n** ·Receive Spark Mac Reports?** " + space.macReports.receive +
+                          "\n** ·Mac Reports filter tags:** " + space.macReports.tags +
+                          "\n** ·Receive Spark Windows Reports?** " + space.macReports.receive +
+                          "\n** ·Windows Reports filter tags:** " + space.windowsReports.tags +
+                          "\n** ·Receive Splunk Alerts? **" + space.splunkReports.receive +
+                          "\n** Is this data correct? answer <yes/no>**";
+}
+
+var uninitScopeSchema = function(){
+  space.roomId = "";
+  space.roomType = "";
+  space.personName = "";
+  space.personEmail = "";
+  space.nickName = "";
+  space.macReports.receive = "";
+  space.windowsReports.tags = [];
+  space.macReports.receive = [];
+  space.splunkReports.receive = "";
+}
+var saveUserToDB = function(){
+  space.save(function(err) {
+    if (err) {
+      console.log('Error saving the message');
+      reply = "There was an error saving your details, please try again later";
+    } else {
+      reply = "Welcome to Westworld " + space.nickName + "!";
+    }
+  });
+}
+
+var updateTempSpace = function(tempSpace){
+
+    space.roomId = tempSpace.roomId;
+    space.roomType = tempSpace.roomType;
+    space.personId = tempSpace.personId;
+    space.personName = tempSpace.personName;
+    space.personEmail = tempSpace.personEmail;
+    space.nickName = tempSpace.nickName;
+}
+///
+
+
 // returns the entire object inside the arry, need the .id to specify the Id
 callbackQuery = function(question, dbMessage, bot) {
 
@@ -145,62 +206,6 @@ dialogModule.prototype.parseQuestion = function(query, bot){
   dialogModel.retrieveResponse(query, bot, callbackQuery);
 }
 
-var macReportConfirmation = function(tempSpace){
-
-  reply = "** ·Name:** " + tempSpace.person.displayName +
-                          "\n** ·Email:** " + tempSpace.person.personEmail +
-                          "\n** ·Do you want to receive crash mac Reports? answer <yes/no>";
-
-
-  space.roomId = tempSpace.roomId;
-  space.roomType = tempSpace.roomType;
-  space.personName = tempSpace.person.displayName;
-  space.personEmail = tempSpace.personEmail;
-  space.nickName = tempSpace.person.nickName;
-}
-
-var showCurrentOptions = function() {
-  reply = "** ·Name:** " + space.personName +
-                          "\n** ·Email:** " + space.personEmail +
-                          "\n** ·Receive Spark Mac Reports?** " + space.macReports.receive +
-                          "\n** ·Mac Reports filter tags:** " + space.macReports.tags +
-                          "\n** ·Receive Spark Windows Reports?** " + space.macReports.receive +
-                          "\n** ·Windows Reports filter tags:** " + space.windowsReports.tags +
-                          "\n** ·Receive Splunk Alerts? **" + space.splunkReports.receive +
-                          "\n** Is this data correct? answer <yes/no>**";
-}
-
-var uninitScopeSchema = function(){
-  space.roomId = "";
-  space.roomType = "";
-  space.personName = "";
-  space.personEmail = "";
-  space.nickName = "";
-  space.macReports.receive = "";
-  space.windowsReports.tags = [];
-  space.macReports.receive = [];
-  space.splunkReports.receive = "";
-}
-var saveUserToDB = function(){
-  space.save(function(err) {
-    if (err) {
-      console.log('Error saving the message');
-      reply = "There was an error saving your details, please try again later";
-    } else {
-      reply = "Welcome to Westworld " + space.nickName + "!";
-    }
-  });
-}
-
-var updateTempSpace = function(tempSpace){
-
-    space.roomId = tempSpace.roomId;
-    space.roomType = tempSpace.roomType;
-    space.personId = tempSpace.personId;
-    space.personName = tempSpace.personName;
-    space.personEmail = tempSpace.personEmail;
-    space.nickName = tempSpace.nickName;
-}
 
 dialogModule.prototype.getUser = function(user) {
     var userRegistered;
