@@ -6,6 +6,7 @@ var mongoUrl = process.env.MONGO_SPACES_URL || 'mongodb://localhost:27017/spaces
 
 
 var scope = "";
+var reply = "";
 var dialogModule = function(){};
 
 console.log(' Attempting to connect to the database ');
@@ -19,7 +20,7 @@ var dialogModel = conn.model('Dialog', Dialog);
 var space = new spaceModel();
 // returns the entire object inside the arry, need the .id to specify the Id
 callbackQuery = function(question, dbMessage, bot) {
-  var reply = "";
+
 
   if (typeof dbMessage === 'undefined' && scope ==="") {
     reply = "sorry, I didn't understand those";
