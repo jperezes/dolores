@@ -82,7 +82,7 @@ var saveUserToDB = function(space){
   });
 }
 
-var updateTempSpace = function(tempSpace,space){
+var updateTempSpace = function(tempSpace){
 
     space.roomId = tempSpace.roomId;
     space.roomType = tempSpace.roomType;
@@ -90,6 +90,11 @@ var updateTempSpace = function(tempSpace,space){
     space.personName = tempSpace.personName;
     space.personEmail = tempSpace.personEmail;
     space.nickName = tempSpace.nickName;
+    return {
+      space: function() {
+        return space;
+      }
+    }
 }
 ///
 
@@ -128,7 +133,8 @@ callbackQuery = function(question, dbMessage, bot) {
   }
   else if (scope === "dataConfirmed") {
     if (question.message === 'yes') {
-      updateTempSpace(question);
+      var updateSpace = updateTempSpace(question);
+      space = updateSpace.space();
       reply = "do you want me to send you Mac reports (don't worry they are filtered :) )";
       scope = "askForMacReportOption";
     }
