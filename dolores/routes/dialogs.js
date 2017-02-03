@@ -133,7 +133,7 @@ callbackQuery = function(question, dbMessage, bot) {
       scope = "askForMacReportOption";
     }
     else {
-      var uninitSchema = uninitScopeSchema();
+      var uninitSchema = uninitScopeSchema(space);
       space = uninitSchema.space();
       reply = "Goodbye " + question.person.nickName + ", if you want to proceed just start again.";
       scope = "";
