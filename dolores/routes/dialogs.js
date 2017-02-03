@@ -43,7 +43,7 @@ var macReportConfirmation = function(tempSpace){
   console.log('[macReportConfirmation:] about to go to confirmation if no error ' + space.personName + reply);
 };
 
-var showCurrentOptions = (function(space) {
+var showCurrentOptions = function(space) {
   reply = "** ·Name:** " + space.personName +
                           "\n** ·Email:** " + space.personEmail +
                           "\n** ·Receive Spark Mac Reports?** " + space.macReports.receive +
@@ -57,7 +57,7 @@ var showCurrentOptions = (function(space) {
             return reply;
       }
   }
-})();
+};
 
 var uninitScopeSchema = function(space){
   space.roomId = "";
@@ -197,7 +197,8 @@ callbackQuery = function(question, dbMessage, bot) {
     else {
       space.splunkReports.receive = "no";
     }
-    reply = "is the following data correct??\n" + showCurrentOptions(space).reply();
+    var showSpace = showCurrentOptions(space);
+    reply = "is the following data correct??\n" + showSpace.reply();
     scope = "registrationConfirmed";
   }
   else if (scope === "registrationConfirmed") {
