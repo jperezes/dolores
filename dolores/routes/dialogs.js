@@ -21,7 +21,7 @@ var space = new spaceModel();
 
 ///
 
-var macReportConfirmation = (function(tempSpace){
+var macReportConfirmation = (function(){
 
   reply = "** ·Name:** " + tempSpace.person.displayName +
                           "\n** ·Email:** " + tempSpace.personEmail +
@@ -43,7 +43,7 @@ var macReportConfirmation = (function(tempSpace){
 
 
   console.log('[macReportConfirmation:] about to go to confirmation if no error ' + space.personName + reply);
-})();
+})(tempSpace);
 
 var showCurrentOptions = function(reply,space) {
   reply = "** ·Name:** " + space.personName +
