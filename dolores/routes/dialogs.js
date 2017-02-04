@@ -14,25 +14,22 @@ console.log(' Attempting to connect to the database ');
 mongoose.Promise = global.Promise;
 // Connect to DB
 var conn = mongoose.createConnection(mongoUrl);
-console.log(' Already connected now to the database');
+
 var spaceModel = conn.model('SparkSpace', Space);
 var dialogModel = conn.model('Dialog', Dialog);
 var space = new spaceModel();
 
-
 ///
-var confirmNameAndEmail = function(tempSpace){
+var macReportConfirmation = function(tempSpace){
 
   reply = "** ·Name:** " + tempSpace.person.displayName +
                           "\n** ·Email:** " + tempSpace.personEmail +
-                          "\n** ·Is this data correct? answer <yes/no>";
-
+                          "\n** ·Do you want to receive crash mac Reports? answer <yes/no>";
   space.roomId = tempSpace.roomId;
   space.roomType = tempSpace.roomType;
   space.personName = tempSpace.person.displayName;
   space.personEmail = tempSpace.personEmail;
   space.nickName = tempSpace.person.nickName;
-
   //Use the module pattern
   return {
     space: function() {
@@ -44,7 +41,6 @@ var confirmNameAndEmail = function(tempSpace){
   }
   console.log('[macReportConfirmation:] about to go to confirmation if no error ' + space.personName + reply);
 };
-
 
 var showCurrentOptions = function(space) {
   reply = "** ·Name:** " + space.personName +
@@ -78,8 +74,7 @@ var uninitScopeSchema = function(space){
       return space;
     }
   }
-};
-
+}
 var saveUserToDB = function(space){
   space.save(function(err) {
     if (err) {
@@ -89,7 +84,7 @@ var saveUserToDB = function(space){
       reply = "Welcome to Westworld " + space.nickName + "!";
     }
   });
-};
+}
 
 var updateTempSpace = function(tempSpace){
 
@@ -104,14 +99,13 @@ var updateTempSpace = function(tempSpace){
         return space;
       }
     }
-};
+}
 ///
 
 
 // returns the entire object inside the arry, need the .id to specify the Id
 callbackQuery = function(question, dbMessage, bot) {
 
-  console.log("Question received" + question.message);
 
   if (typeof dbMessage === 'undefined' && scope ==="") {
     reply = "sorry, I didn't understand those";
@@ -121,127 +115,102 @@ callbackQuery = function(question, dbMessage, bot) {
     reply = "Done, what can I do for you " + question.person.nickName + "?"+ showMenu() + "\n<1><2><3>";
       scope = "chooseMenu"
   }
-  else if (scope !="") {
-    console.log("We are inside an interactive scope, switching to: " + scope);
-    // User choosed between 1 Register, 2 - unregister 3 show options
-    // Next question is ask if name and email is correct
-    switch(scope) {
-      // nextQuestion & space update
-      var report = confirmNameAndEmail(question);
-      case "chooseMenu":
-      console.log("inside of choosing menu, so user has choosed an option first time");
-        switch (question.message) {
-          case "1":
-            reply = report.reply();
-            space = report.space();
-            scope = "askForConfirmation";
-          break;
-          case "2":
-           var deleteSpace = uninitScopeSchema(space);
-           space = deleteSpace.space();
-           scope = "";
-           // TODO: hacer el metodo que borra usuario.
-           reply = "Space unregistered, Goodbye!"
-          break;
-          case "3":
-          //TODO: crear el metodo que busca el usuario en la base de datos
-          break;
-          default:
-            var deleteSpace = uninitScopeSchema(space);
-            space = deleteSpace.space();
-            scope = "";
-            reply = "Goodbye" + question.person.nickName + "!";
-          break;
-        }
-      break;
-      case "askForConfirmation":
-        //User confirmed name and email. Next question Mac report option.
-        if (question.message === 'yes') {
-          var updateSpace = updateTempSpace(question);
-          space = updateSpace.space();
-          reply = "Do you want me to send you Mac reports as they happen?";
-          scope = "askForMacReportOption";
-        }
-        else {
-          var uninitSchema = uninitScopeSchema(space);
-          space = uninitSchema.space();
-          reply = "Goodbye " + question.person.nickName + ", if you want to proceed just start again.";
-          scope = "";
-        }
-      break;
-      case "askForMacReportOption":
-        // User confirmed mail/name and replied mac option. Next question is options
-        if(question.message === 'yes') {
-          space.macReports.receive = "yes";
-          reply = "please write the tags you want to filter the mac reports " +
-                  "to receive separated by comma (i.e: whiteboard, auxiliaryDeviceService.cpp,whiteboardView.swift):";
-          scope = "populateMacTagsScope";
-        }
-        else {
-          space.macReports.receive = "no";
-          reply = "No Spark for Mac crash reports will be sent to you " + question.person.nickName +
-          " do you want me to send you Windows reports (don't worry they are filtered also :) )";
-          scope = "confirmWindowsOptions";
-        }
-      break;
-      case "populateMacTagsScope":
-        // User said it wants to get mac reports populating options. Next question for windows option.
-        space.macReports.tags =[question.message];
-        reply = "Do you want me to send you Spark for Windows crash reports ?";
-        scope = "confirmWindowsOptions";
-      break;
-      case "confirmWindowsOptions":
-        // User replied whether to receive windows options.
-        if(question.message === 'yes') {
-          reply = "please write the tags you want to filter the Windows reports " +
-                  "to receive separated by comma (i.e: whiteboard, auxiliaryDeviceService.cpp,whiteboardView.swift):";
-          space.windowsReports.receive = "yes";
-          scope = "winOptionConfirmation";
-        }
-        else {
-          space.windowsReports.receive = "no";
-          reply = "No Windows for Mac crash reports will be sent to you " + question.person.nickName +
-          "Do you want me to send you Splunk reports?";
-          scope = "confirmSplunkOptions";
-        }
-      break;
-      case "winOptionConfirmation":
-        // User confirmed windows options and populated tags. next question for splunk Alerts
-        space.windowsReports.tags =[question.message];
-        reply = "Do you want me to send you Splunk reports?";
-        scope = "confirmSplunkOptions";
-      break;
-      case "confirmSplunkOptions":
-        // user replied to teh Splunk Option. Next is to show the final confirmation.
-        if (question.message = 'yes'){
-          space.splunkReports.receive = "yes";
-        }
-        else {
-          space.splunkReports.receive = "no";
-        }
-        var showSpace = showCurrentOptions(space);
-        reply = "is the following data correct??\n" + showSpace.reply();
-        scope = "registrationConfirmed";
-      break;
-      case "registrationConfirmed":
-        if (question.message === yes) {
-          saveUserToDB(space);
-        }
-        else {
-          reply = "Sorry if something was wrong, please try again later";
-        }
+  else if (scope === "chooseMenu") {   // once here we have already parsed first message
+    console.log('inside menu options about to be switched to the option!!!');
+    var report = macReportConfirmation(question);
+    switch (question.message) {
+      case "1": //Register
+        //macReportConfirmation.bind(callbackQuery)(question);
+        reply = report.reply();
+        space = report.space();
+        scope = "dataConfirmed";
+        break;
+      case "2": //cancel
         scope = "";
-        var uninitSchema = uninitScopeSchema(space);
-        space = uninitSchema.space();
-      break;
-      default:
-        reply = "Did not understand that, try again later" + question.person.nickName;
-        scope = "";
-      break;
+        reply = "Goodbye!";
+        break;
+      case "3": //Delete
+        //deleteSpace();
+        var reply = "User deleted, we'll miss ye";
+        break;
     }
   }
+  else if (scope === "dataConfirmed") {
+    if (question.message === 'yes') {
+      var updateSpace = updateTempSpace(question);
+      space = updateSpace.space();
+      reply = "do you want me to send you Mac reports (don't worry they are filtered :) )";
+      scope = "askForMacReportOption";
+    }
+    else {
+      var uninitSchema = uninitScopeSchema(space);
+      space = uninitSchema.space();
+      reply = "Goodbye " + question.person.nickName + ", if you want to proceed just start again.";
+      scope = "";
+    }
+  }
+  else if (scope === "askForMacReportOption"){
+    if(question.message === 'yes') {
+      space.macReports.receive = "yes";
+      reply = "please write the tags you want to filter the mac reports " +
+              "to receive separated by comma (i.e: whiteboard, auxiliaryDeviceService.cpp,whiteboardView.swift):";
+      scope = "populateMacTagsScope"
+    }
+    else {
+      space.macReports.receive = "no";
+      reply = "No Spark for Mac crash reports will be sent to you " + question.person.nickName +
+      " do you want me to send you Windows reports (don't worry they are filtered also :) )";
+      scope = "confirmWindowsOptions";
+    }
+  }
+  else if (scope === "populateMacTagsScope"){
+    space.macReports.tags =[question.message];
+    reply = "do you want me to send you Windows reports (don't worry they are filtered also :) )";
+    scope = "confirmWindowsOptions";
+  }
+  else if (scope === "confirmWindowsOptions") {
+    if(question.message === 'yes') {
+      reply = "please write the tags you want to filter the Windows reports " +
+              "to receive separated by comma (i.e: whiteboard, auxiliaryDeviceService.cpp,whiteboardView.swift):";
+      space.windowsReports.receive = "yes";
+      scope = "winOptionConfirmation";
+    }
+    else {
+      reply = "No Spark for Windows crash reports will be sent to you " + question.person.nickName +
+      "do you want me to collect and send you your splunk alerts?";
+      scope = "confirmSplunkOptions";
+      space.windowsReports.receive = "no";
+    }
+
+  }
+  else if (scope === "winOptionConfirmation") {
+      space.windowsReports.tags =[question.message];
+      reply = "do you want me to collect and send you your splunk alerts?";
+      scope = "confirmSplunkOptions"
+
+  }
+  else if (scope === "confirmSplunkOptions") {
+    if (question.message = 'yes'){
+      space.splunkReports.receive = "yes";
+    }
+    else {
+      space.splunkReports.receive = "no";
+    }
+    var showSpace = showCurrentOptions(space);
+    reply = "is the following data correct??\n" + showSpace.reply();
+    scope = "registrationConfirmed";
+  }
+  else if (scope === "registrationConfirmed") {
+    if (question.message === yes) {
+      saveUserToDB(space);
+    }
+    else {
+      reply = "sorry if something was wrong, try again please";
+    }
+    scope = "";
+    space = uninitScopeSchema(space);
+  }
   else if (typeof dbMessage != 'undefined') {
-      console.log("valid question, searching for reply: ");
       reply = dbMessage.response;
   }
   else {
@@ -255,7 +224,7 @@ callbackQuery = function(question, dbMessage, bot) {
 
 
 function showMenu(){
-  return "\n1: Register Space" + "\n2: Unregister Space" + "\n3: Show Space options";
+  return "\n1: Register" + "\n2: cancel" + "\n3: Delete User";
 }
 
 dialogModule.prototype.parseQuestion = function(query, bot){
