@@ -74,7 +74,8 @@ var uninitScopeSchema = function(space){
       return space;
     }
   }
-}
+};
+
 var saveUserToDB = function(space){
   space.save(function(err) {
     if (err) {
@@ -84,7 +85,7 @@ var saveUserToDB = function(space){
       reply = "Welcome to Westworld " + space.nickName + "!";
     }
   });
-}
+};
 
 var updateTempSpace = function(tempSpace){
 
@@ -99,7 +100,7 @@ var updateTempSpace = function(tempSpace){
         return space;
       }
     }
-}
+};
 ///
 
 
