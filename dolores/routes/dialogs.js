@@ -116,7 +116,6 @@ callbackQuery = function(question, dbMessage, bot) {
     reply = "Done, what can I do for you " + question.person.nickName + "?"+ showMenu() + "\n<1><2><3>";
       scope = "chooseMenu"
   }
-    var report = macReportConfirmation(question);
   else if (typeof dbMessage != 'undefined') {
       reply = dbMessage.response;
   }
