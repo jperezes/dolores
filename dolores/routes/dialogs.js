@@ -14,7 +14,7 @@ console.log(' Attempting to connect to the database ');
 mongoose.Promise = global.Promise;
 // Connect to DB
 var conn = mongoose.createConnection(mongoUrl);
-
+console.log(' Already connected now to the database');
 var spaceModel = conn.model('SparkSpace', Space);
 var dialogModel = conn.model('Dialog', Dialog);
 var space = new spaceModel();
