@@ -32,8 +32,6 @@ sparkBot.on('memberships', function (event)
 {
     console.log(JSON.stringify(event));
 })
-var eventual = {"personEmail":"jperezes@cisco.com", "message": "do you know where you are" };
-
 
 botModule.listenForStadistics(sparkBot, sparkBot.getServer());
 macReports.listenForMacReports(sparkBot,sparkBot.getServer());
