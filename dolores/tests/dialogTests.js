@@ -3,7 +3,7 @@ var expect = require('expect.js');
 var Dialog = require('../routes/dialogs');
 var dialogModule = new Dialog();
 
-var eventual = {"personEmail":"jperezes@cisco.com", "message": "do you know where you are" };
+
 var dialogs = [
   {
     id: "1",
@@ -56,6 +56,25 @@ var dialogs = [
     response: "yes my maker!"
   }
 ];
+var space = {
+	roomId: "test",
+	roomType: "test",
+	personName: "Joan Perez",
+	personEmail: "joan@fake.com",
+	nickName: "Joan",
+	macReports: {
+		receive: "yes" ,
+		tags: ["whiteboard", "auxiliaryDeviceService", "wirelessShare"]
+	},
+	splunkReports: {
+		receive: "yes"
+	},
+	windowsReports: {
+		receive: "no",
+		tags: []
+	}
+};
+
 
 var question = {
 
@@ -63,16 +82,16 @@ id:"fake_id",
 roomId:"fake_romId",
 roomType:"direct",
 personId:"fake_personId",
-personEmail:"jperezes@cisco.com",
+personEmail:"joan@fake.com",
 created:"2017-02-02T00:55:50.555Z",
 message:"1",
 person:{
 id:"fake_id",
 emails:["fake@fake.com"],
-displayName:"Joan Perez Esteban",
+displayName:"Joan Perez",
 nickName:"Joan",
 firstName:"Joan",
-lastName:"Perez Esteban",
+lastName:"Perez",
 avatar:"https://fakeavatar.com",
 orgId:"fake_orgId",
 created:"2012-06-15T20:51:08.969Z",
@@ -82,6 +101,21 @@ type:"person"
 }
 };
 
+var showCurrentOptions = function(space) {
+  reply = "** ·Name:** " + space.personName +
+                          "\n** ·Email:** " + space.personEmail +
+                          "\n** ·Receive Spark Mac Reports?** " + space.macReports.receive +
+                          "\n** ·Mac Reports filter tags:** " + space.macReports.tags +
+                          "\n** ·Receive Spark Windows Reports?** " + space.windowsReports.receive +
+                          "\n** ·Windows Reports filter tags:** " + space.windowsReports.tags +
+                          "\n** ·Receive Splunk Alerts? **" + space.splunkReports.receive +
+                          "\n** Is this data correct? answer <yes/no>**";
+  return {
+      reply: function() {
+            return reply;
+      }
+  }
+};
 
 describe('server', function() {
 
@@ -145,7 +179,7 @@ describe('server', function() {
 			});
 
 			it('populating mac options', function(done){
-				question.message = "whiteboard, auxiliaryDeviceService, wirelessShare";
+				question.message = "whiteboard,auxiliaryDeviceService,wirelessShare";
 				var expectedReply = "Do you want me to send you Spark for Windows crash reports ?";
 				dialogModule.parseQuestion(question,function(err, res) {
 					expect(err).to.equal(null);
@@ -169,7 +203,17 @@ describe('server', function() {
 
 			it('Saying yes to Splunk Reports', function(done){
 				question.message = "yes";
-				var expectedReply = "is the following data correct??\n" + dialogModule.showCurrentOptions();
+				var expectedReply = "is the following data correct??\n" + showCurrentOptions(space).reply();
+				dialogModule.parseQuestion(question,function(err, res) {
+					expect(err).to.equal(null);
+					expect(res).to.exist;
+					expect(res).to.equal(expectedReply);
+					done();
+				});
+			});
+			it('Saying yes to Splunk Reports', function(done){
+				question.message = "yes";
+				var expectedReply = "is the following data correct??\n" ;
 				dialogModule.parseQuestion(question,function(err, res) {
 					expect(err).to.equal(null);
 					expect(res).to.exist;

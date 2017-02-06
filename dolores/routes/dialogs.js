@@ -47,7 +47,7 @@ var showCurrentOptions = function(space) {
                           "\n** ·Email:** " + space.personEmail +
                           "\n** ·Receive Spark Mac Reports?** " + space.macReports.receive +
                           "\n** ·Mac Reports filter tags:** " + space.macReports.tags +
-                          "\n** ·Receive Spark Windows Reports?** " + space.macReports.receive +
+                          "\n** ·Receive Spark Windows Reports?** " + space.windowsReports.receive +
                           "\n** ·Windows Reports filter tags:** " + space.windowsReports.tags +
                           "\n** ·Receive Splunk Alerts? **" + space.splunkReports.receive +
                           "\n** Is this data correct? answer <yes/no>**";
@@ -93,13 +93,11 @@ var saveUserToDB = function(space){
 };
 
 var updateTempSpace = function(tempSpace){
-
     space.roomId = tempSpace.roomId;
     space.roomType = tempSpace.roomType;
-    space.personId = tempSpace.personId;
-    space.personName = tempSpace.personName;
+    space.personName = tempSpace.person.displayName;
     space.personEmail = tempSpace.personEmail;
-    space.nickName = tempSpace.nickName;
+    space.nickName = tempSpace.person.nickName;
     return {
       space: function() {
         return space;
@@ -225,7 +223,7 @@ callbackQuery = function(question, dbMessage, bot) {
         scope = "registrationConfirmed";
       break;
       case "registrationConfirmed":
-        if (question.message === yes) {
+        if (question.message === 'yes') {
           var saveUser = saveUserToDB(space);
           reply = saveUser.reply();
         }
