@@ -24,7 +24,7 @@ var macReportConfirmation = function(tempSpace){
 
   reply = "** ·Name:** " + tempSpace.person.displayName +
                           "\n** ·Email:** " + tempSpace.personEmail +
-                          "\n** ·Do you want to receive crash mac Reports? answer <yes/no>";
+                          "\n** ·Is this data correct? answer <yes/no>";
   space.roomId = tempSpace.roomId;
   space.roomType = tempSpace.roomType;
   space.personName = tempSpace.person.displayName;
@@ -109,11 +109,11 @@ callbackQuery = function(question, dbMessage, bot) {
 
 
   if (typeof dbMessage === 'undefined' && scope ==="") {
-    reply = "sorry, I didn't understand those";
+    reply = "sorry, I didn't understand that";
     console.log('question NOT found: ');
   }
   else if ((typeof dbMessage != 'undefined' && dbMessage.id == '6') || scope == "menu")  {
-    reply = "Done, what can I do for you " + question.person.nickName + "?"+ showMenu() + "\n<1><2><3>";
+    reply = "Done, what can I do for you " + question.person.nickName + "?"+ showMenu();
       scope = "chooseMenu"
   }
   else if (scope !="") {
@@ -241,15 +241,24 @@ callbackQuery = function(question, dbMessage, bot) {
   else {
     console.log('An error ocurred');
   }
-  bot.sendMessage(question.roomId, reply , function(){
-  console.log('Message sent from Bot!');
-  });
+
+  if (mongoUrl ==='mongodb://localhost:27017/spaces'){
+    var err = null;
+    bot(err,reply);
+  }else {
+    bot.sendMessage(question.roomId, reply , function(){
+    console.log('Message sent from Bot!');
+    });
+  }
+
   console.log("At the end of the else if block from DB this is the result:\n" + reply);
 }
 
-
-function showMenu(){
-  return "\n1: Register Space" + "\n2: Unregister Space" + "\n3: Show Space options";
+var showMenu = function(){
+    return "\n1: Register Space" + "\n2: Unregister Space" + "\n3: Show Space options" + "\n<1><2><3>";
+}
+dialogModule.prototype.showMenu = function(){
+  return showMenu();
 }
 
 dialogModule.prototype.parseQuestion = function(query, bot){
