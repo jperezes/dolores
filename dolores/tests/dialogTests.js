@@ -144,6 +144,40 @@ describe('server', function() {
 				});
 			});
 
+			it('populating mac options', function(done){
+				question.message = "whiteboard, auxiliaryDeviceService, wirelessShare";
+				var expectedReply = "Do you want me to send you Spark for Windows crash reports ?";
+				dialogModule.parseQuestion(question,function(err, res) {
+					expect(err).to.equal(null);
+					expect(res).to.exist;
+					expect(res).to.equal(expectedReply);
+					done();
+				});
+			});
+
+			it('Saying no to windows reports', function(done){
+				question.message = "no";
+				var expectedReply = "No Spark for Windows crash reports will be sent to you " + question.person.nickName +
+				"Do you want me to send you Splunk reports?";
+				dialogModule.parseQuestion(question,function(err, res) {
+					expect(err).to.equal(null);
+					expect(res).to.exist;
+					expect(res).to.equal(expectedReply);
+					done();
+				});
+			});
+
+			it('Saying yes to Splunk Reports', function(done){
+				question.message = "yes";
+				var expectedReply = "is the following data correct??\n" + dialogModule.showCurrentOptions();
+				dialogModule.parseQuestion(question,function(err, res) {
+					expect(err).to.equal(null);
+					expect(res).to.exist;
+					expect(res).to.equal(expectedReply);
+					done();
+				});
+			});
+
 
 		});
 });

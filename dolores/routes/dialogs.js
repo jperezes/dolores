@@ -85,6 +85,11 @@ var saveUserToDB = function(space){
       reply = "Welcome to Westworld " + space.nickName + "!";
     }
   });
+  return {
+    reply: function() {
+      return reply;
+    }
+  }
 };
 
 var updateTempSpace = function(tempSpace){
@@ -195,7 +200,7 @@ callbackQuery = function(question, dbMessage, bot) {
         }
         else {
           space.windowsReports.receive = "no";
-          reply = "No Windows for Mac crash reports will be sent to you " + question.person.nickName +
+          reply = "No Spark for Windows crash reports will be sent to you " + question.person.nickName +
           "Do you want me to send you Splunk reports?";
           scope = "confirmSplunkOptions";
         }
@@ -221,7 +226,8 @@ callbackQuery = function(question, dbMessage, bot) {
       break;
       case "registrationConfirmed":
         if (question.message === yes) {
-          saveUserToDB(space);
+          var saveUser = saveUserToDB(space);
+          reply = saveUser.reply();
         }
         else {
           reply = "Sorry if something was wrong, please try again later";
@@ -259,6 +265,11 @@ var showMenu = function(){
 }
 dialogModule.prototype.showMenu = function(){
   return showMenu();
+}
+
+dialogModule.prototype.showCurrentOptions = function(){
+  var showOptions = showCurrentOptions(space);
+  return showOptions.reply();
 }
 
 dialogModule.prototype.parseQuestion = function(query, bot){
