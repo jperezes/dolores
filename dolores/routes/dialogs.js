@@ -64,9 +64,11 @@ var uninitScopeSchema = function(space){
   space.personName = "";
   space.personEmail = "";
   space.nickName = "";
-  space.macReports.receive = "";
+
+  space.windowsReports.receive = "";
   space.windowsReports.tags = [];
-  space.macReports.receive = [];
+  space.macReports.tags = [];
+  space.macReports.receive = "";
   space.splunkReports.receive = "";
   //Use the module pattern
   return {
@@ -76,7 +78,7 @@ var uninitScopeSchema = function(space){
   }
 };
 
-var saveUserToDB = function(space){
+var saveUserToDB = function(space,bot){
   space.save(function(err) {
     if (err) {
       console.log('Error saving the message');
@@ -84,12 +86,19 @@ var saveUserToDB = function(space){
     } else {
       reply = "Welcome to Westworld " + space.nickName + "!";
     }
+    bot(err,reply);
+    space.roomId = "";
+    space.roomType = "";
+    space.personName = "";
+    space.personEmail = "";
+    space.nickName = "";
+
+    space.windowsReports.receive = "";
+    space.windowsReports.tags = [];
+    space.macReports.tags = [];
+    space.macReports.receive = "";
+    space.splunkReports.receive = "";
   });
-  return {
-    reply: function() {
-      return reply;
-    }
-  }
 };
 
 var updateTempSpace = function(tempSpace){
@@ -224,14 +233,14 @@ callbackQuery = function(question, dbMessage, bot) {
       break;
       case "registrationConfirmed":
         if (question.message === 'yes') {
-          var saveUser = saveUserToDB(space);
-          reply = saveUser.reply();
+          var saveUser = saveUserToDB(space, bot);
+          return;
         }
         else {
           reply = "Sorry if something was wrong, please try again later";
         }
         scope = "";
-        space = uninitScopeSchema(space);
+        //space = uninitScopeSchema(space).space();
       break;
       default:
         reply = "Did not understand that, try again later" + question.person.nickName;
@@ -268,6 +277,10 @@ dialogModule.prototype.showMenu = function(){
 dialogModule.prototype.showCurrentOptions = function(){
   var showOptions = showCurrentOptions(space);
   return showOptions.reply();
+}
+
+dialogModule.prototype.showSchema = function(){
+  return space;
 }
 
 dialogModule.prototype.parseQuestion = function(query, bot){

@@ -123,10 +123,13 @@ describe('server', function() {
 	});
 
 	after(function() {
+		var endSpace = dialogModule.showSchema();
+		expect(endSpace.personEmail).to.equal("");
+		expect(endSpace.macReports.receive).to.equal("");
 	});
 
 	describe('dialogs', function() {
-		it('dialog invalid question invalid question', function(done){
+		it('Test1: dialog invalid question', function(done){
 			dialogModule.parseQuestion(question,function(err, res) {
         expect(err).to.equal(null);
         expect(res).to.exist;
@@ -135,7 +138,7 @@ describe('server', function() {
       });
 		});
 
-			it('bringing dolores online', function(done){
+			it('Test2: bringing dolores online', function(done){
 				question.message = "bring yourself back online";
 				dialogModule.parseQuestion(question,function(err, res) {
 	        expect(err).to.equal(null);
@@ -144,7 +147,7 @@ describe('server', function() {
 	        done();
 	      });
 			});
-			it('answering 1 to register', function(done){
+			it('Test3: answering 1 to register', function(done){
 				question.message = "1";
 				var expectedReply = "** ·Name:** " + question.person.displayName +
 			                          "\n** ·Email:** " + question.personEmail +
@@ -156,7 +159,7 @@ describe('server', function() {
 					done();
 				});
 			});
-			it('answering yes to validate data', function(done){
+			it('Test4: answering yes to validate data', function(done){
 				question.message = "yes";
 				var expectedReply = "Do you want me to send you Mac reports as they happen?";
 				dialogModule.parseQuestion(question,function(err, res) {
@@ -166,7 +169,7 @@ describe('server', function() {
 					done();
 				});
 			});
-			it('answering for mac options', function(done){
+			it('Test5: answering for mac options', function(done){
 				question.message = "yes";
 				var expectedReply = "please write the tags you want to filter the mac reports " +
 								"to receive separated by comma (i.e: whiteboard, auxiliaryDeviceService.cpp,whiteboardView.swift):";
@@ -178,7 +181,7 @@ describe('server', function() {
 				});
 			});
 
-			it('populating mac options', function(done){
+			it('Test6: populating mac options', function(done){
 				question.message = "whiteboard,auxiliaryDeviceService,wirelessShare";
 				var expectedReply = "Do you want me to send you Spark for Windows crash reports ?";
 				dialogModule.parseQuestion(question,function(err, res) {
@@ -189,7 +192,7 @@ describe('server', function() {
 				});
 			});
 
-			it('Saying no to windows reports', function(done){
+			it('Test7: Saying no to windows reports', function(done){
 				question.message = "no";
 				var expectedReply = "No Spark for Windows crash reports will be sent to you " + question.person.nickName +
 				"Do you want me to send you Splunk reports?";
@@ -201,7 +204,7 @@ describe('server', function() {
 				});
 			});
 
-			it('Saying yes to Splunk Reports', function(done){
+			it('Test8: Saying yes to Splunk Reports', function(done){
 				question.message = "yes";
 				var expectedReply = "is the following data correct??\n" + showCurrentOptions(space).reply();
 				dialogModule.parseQuestion(question,function(err, res) {
@@ -211,9 +214,9 @@ describe('server', function() {
 					done();
 				});
 			});
-			it('Saying yes to Splunk Reports', function(done){
+			it('Test9: Validating final data, proceed to save to database', function(done){
 				question.message = "yes";
-				var expectedReply = "is the following data correct??\n" ;
+				var expectedReply = "Welcome to Westworld " + space.nickName + "!";
 				dialogModule.parseQuestion(question,function(err, res) {
 					expect(err).to.equal(null);
 					expect(res).to.exist;
