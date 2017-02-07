@@ -166,7 +166,7 @@ callbackQuery = function(question, dbMessage, bot) {
         if (question.message === 'yes') {
           var updateSpace = updateTempSpace(question);
           space = updateSpace.space();
-          reply = "Do you want me to send you Mac reports as they happen?";
+          reply = "Do you want me to send you Mac reports as they happen? <yes/no>";
           scope = "askForMacReportOption";
         }
         else {
@@ -180,35 +180,35 @@ callbackQuery = function(question, dbMessage, bot) {
         // User confirmed mail/name and replied mac option. Next question is options
         if(question.message === 'yes') {
           space.macReports.receive = "yes";
-          reply = "please write the tags you want to filter the mac reports " +
-                  "to receive separated by comma (i.e: whiteboard, auxiliaryDeviceService.cpp,whiteboardView.swift):";
+          reply = "Please write the tags you want to filter the mac reports " +
+                  "to receive separated by comma. (i.e: whiteboard, auxiliaryDeviceService.cpp,whiteboardView.swift):";
           scope = "populateMacTagsScope";
         }
         else {
           space.macReports.receive = "no";
           reply = "No Spark for Mac crash reports will be sent to you " + question.person.nickName +
-          " do you want me to send you Windows reports (don't worry they are filtered also :) )";
+          "\nDo you want me to send you Windows reports? <yes/no>";
           scope = "confirmWindowsOptions";
         }
       break;
       case "populateMacTagsScope":
         // User said it wants to get mac reports populating options. Next question for windows option.
         space.macReports.tags =[question.message];
-        reply = "Do you want me to send you Spark for Windows crash reports ?";
+        reply = "Do you want me to send you Spark for Windows crash reports? <yes/no>";
         scope = "confirmWindowsOptions";
       break;
       case "confirmWindowsOptions":
         // User replied whether to receive windows options.
         if(question.message === 'yes') {
-          reply = "please write the tags you want to filter the Windows reports " +
-                  "to receive separated by comma (i.e: whiteboard, auxiliaryDeviceService.cpp,whiteboardView.swift):";
+          reply = "Please write the tags you want to filter the Windows reports " +
+                  "to receive separated by comma. (i.e: whiteboard, auxiliaryDeviceService.cpp,whiteboardView.swift):";
           space.windowsReports.receive = "yes";
           scope = "winOptionConfirmation";
         }
         else {
           space.windowsReports.receive = "no";
           reply = "No Spark for Windows crash reports will be sent to you " + question.person.nickName +
-          "Do you want me to send you Splunk reports?";
+          "\nDo you want me to send you Splunk reports? <yes/no>";
           scope = "confirmSplunkOptions";
         }
 
@@ -216,7 +216,7 @@ callbackQuery = function(question, dbMessage, bot) {
       case "winOptionConfirmation":
         // User confirmed windows options and populated tags. next question for splunk Alerts
         space.windowsReports.tags =[question.message];
-        reply = "Do you want me to send you Splunk reports?";
+        reply = "Do you want me to send you Splunk reports? <yes/no>";
         scope = "confirmSplunkOptions";
       break;
       case "confirmSplunkOptions":
@@ -228,7 +228,7 @@ callbackQuery = function(question, dbMessage, bot) {
           space.splunkReports.receive = "no";
         }
         var showSpace = showCurrentOptions(space);
-        reply = "is the following data correct??\n" + showSpace.reply();
+        reply = "Is the following data correct?\n" + showSpace.reply();
         scope = "registrationConfirmed";
       break;
       case "registrationConfirmed":

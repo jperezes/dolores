@@ -161,7 +161,7 @@ describe('server', function() {
 			});
 			it('Test4: answering yes to validate data', function(done){
 				question.message = "yes";
-				var expectedReply = "Do you want me to send you Mac reports as they happen?";
+				var expectedReply = "Do you want me to send you Mac reports as they happen? <yes/no>";
 				dialogModule.parseQuestion(question,function(err, res) {
 					expect(err).to.equal(null);
 					expect(res).to.exist;
@@ -171,8 +171,8 @@ describe('server', function() {
 			});
 			it('Test5: answering for mac options', function(done){
 				question.message = "yes";
-				var expectedReply = "please write the tags you want to filter the mac reports " +
-								"to receive separated by comma (i.e: whiteboard, auxiliaryDeviceService.cpp,whiteboardView.swift):";
+				var expectedReply = "Please write the tags you want to filter the mac reports " +
+								"to receive separated by comma. (i.e: whiteboard, auxiliaryDeviceService.cpp,whiteboardView.swift):";
 				dialogModule.parseQuestion(question,function(err, res) {
 					expect(err).to.equal(null);
 					expect(res).to.exist;
@@ -183,7 +183,7 @@ describe('server', function() {
 
 			it('Test6: populating mac options', function(done){
 				question.message = "whiteboard,auxiliaryDeviceService,wirelessShare";
-				var expectedReply = "Do you want me to send you Spark for Windows crash reports ?";
+				var expectedReply = "Do you want me to send you Spark for Windows crash reports? <yes/no>";
 				dialogModule.parseQuestion(question,function(err, res) {
 					expect(err).to.equal(null);
 					expect(res).to.exist;
@@ -195,7 +195,7 @@ describe('server', function() {
 			it('Test7: Saying no to windows reports', function(done){
 				question.message = "no";
 				var expectedReply = "No Spark for Windows crash reports will be sent to you " + question.person.nickName +
-				"Do you want me to send you Splunk reports?";
+				"\nDo you want me to send you Splunk reports? <yes/no>";
 				dialogModule.parseQuestion(question,function(err, res) {
 					expect(err).to.equal(null);
 					expect(res).to.exist;
@@ -206,7 +206,7 @@ describe('server', function() {
 
 			it('Test8: Saying yes to Splunk Reports', function(done){
 				question.message = "yes";
-				var expectedReply = "is the following data correct??\n" + showCurrentOptions(space).reply();
+				var expectedReply = "Is the following data correct?\n" + showCurrentOptions(space).reply();
 				dialogModule.parseQuestion(question,function(err, res) {
 					expect(err).to.equal(null);
 					expect(res).to.exist;
