@@ -82,7 +82,7 @@ spaceSchema.statics.insertUser = function (space, bot, callback) {
     "question" : "none",
     "response" : ""
   };
-  console.log("ABOUT TO INSERT USER FROM to the DB");
+  console.log("ABOUT TO INSERT USER to the DB");
 
   this.find({personEmail: space.personEmail}, function(err, result) {
     if (result.length>0){
