@@ -128,7 +128,7 @@ describe('server', function() {
 		expect(endSpace.macReports.receive).to.equal("");
 	});
 
-	describe('dialogs', function() {
+	describe('register user to the Database through questionary', function() {
 		it('Test1: dialog invalid question', function(done){
 			dialogModule.parseQuestion(question,function(err, res) {
         expect(err).to.equal(null);
@@ -224,7 +224,48 @@ describe('server', function() {
 					done();
 				});
 			});
-
-
 		});
+
+		describe('Delete previous user from the database', function() {
+
+				it('Test1: bringing dolores online', function(done){
+					question.message = "bring yourself back online";
+					dialogModule.parseQuestion(question,function(err, res) {
+						expect(err).to.equal(null);
+						expect(res).to.exist;
+						expect(res).to.equal("Done, what can I do for you " + question.person.nickName + "?"+ dialogModule.showMenu());
+						done();
+					});
+				});
+				it('Test2: answering 2 check the user is deleted', function(done){
+					question.message = "2";
+					var expectedReply = "User deleted from the database";
+					dialogModule.parseQuestion(question,function(err, res) {
+						expect(err).to.equal(null);
+						expect(res).to.exist;
+						expect(res).to.equal(expectedReply);
+						done();
+					});
+				});
+				it('Test3a: bringing dolores online', function(done){
+					question.message = "bring yourself back online";
+					dialogModule.parseQuestion(question,function(err, res) {
+						expect(err).to.equal(null);
+						expect(res).to.exist;
+						expect(res).to.equal("Done, what can I do for you " + question.person.nickName + "?"+ dialogModule.showMenu());
+						done();
+					});
+				});
+
+				it('Test3: answering 2 check the user i not even registered', function(done){
+					question.message = "2";
+					var expectedReply = "User not present in the database";
+					dialogModule.parseQuestion(question,function(err, res) {
+						expect(err).to.equal(null);
+						expect(res).to.exist;
+						expect(res).to.equal(expectedReply);
+						done();
+					});
+				});
+			});
 });

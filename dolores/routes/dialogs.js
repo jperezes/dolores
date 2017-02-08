@@ -58,61 +58,6 @@ var showCurrentOptions = function(space) {
   }
 };
 
-var uninitScopeSchema = function(space){
-  space.roomId = "";
-  space.roomType = "";
-  space.personName = "";
-  space.personEmail = "";
-  space.nickName = "";
-
-  space.windowsReports.receive = "";
-  space.windowsReports.tags = [];
-  space.macReports.tags = [];
-  space.macReports.receive = "";
-  space.splunkReports.receive = "";
-  //Use the module pattern
-  return {
-    space: function() {
-      return space;
-    }
-  }
-};
-
-var saveUserToDB = function(space,bot){
-  space.save(function(err) {
-    if (err) {
-      console.log('Error saving the message');
-      reply = "There was an error saving your details, please try again later";
-    } else {
-      reply = "Welcome to Westworld " + space.nickName + "!";
-    }
-    bot(err,reply);
-    space.roomId = "";
-    space.roomType = "";
-    space.personName = "";
-    space.personEmail = "";
-    space.nickName = "";
-
-    space.windowsReports.receive = "";
-    space.windowsReports.tags = [];
-    space.macReports.tags = [];
-    space.macReports.receive = "";
-    space.splunkReports.receive = "";
-  });
-};
-
-var updateTempSpace = function(tempSpace){
-    space.roomId = tempSpace.roomId;
-    space.roomType = tempSpace.roomType;
-    space.personName = tempSpace.person.displayName;
-    space.personEmail = tempSpace.personEmail;
-    space.nickName = tempSpace.person.nickName;
-    return {
-      space: function() {
-        return space;
-      }
-    }
-};
 ///
 
 
@@ -144,18 +89,18 @@ callbackQuery = function(question, dbMessage, bot) {
             scope = "askForConfirmation";
           break;
           case "2":
-           var deleteSpace = uninitScopeSchema(space);
-           space = deleteSpace.space();
+           space.unInitSelf();
            scope = "";
+           reply = "About to delete the user from the database"; // cleaning the reply this is a final state.
            // TODO: hacer el metodo que borra usuario.
-           reply = "Space unregistered, Goodbye!";
+           spaceModel.deleteUser(question,bot, this.callbackQuery);
+           return;
           break;
           case "3":
           //TODO: crear el metodo que busca el usuario en la base de datos
           break;
           default:
-            var deleteSpace = uninitScopeSchema(space);
-            space = deleteSpace.space();
+            space.unInitSelf();
             scope = "";
             reply = "Goodbye" + question.person.nickName + "!";
           break;
@@ -164,8 +109,7 @@ callbackQuery = function(question, dbMessage, bot) {
       case "askForConfirmation":
         //User confirmed name and email. Next question Mac report option.
         if (question.message === 'yes') {
-          var updateSpace = updateTempSpace(question);
-          space = updateSpace.space();
+          space.updateTempSpace(question);
           reply = "Do you want me to send you Mac reports as they happen? <yes/no>";
           scope = "askForMacReportOption";
         }
@@ -233,7 +177,8 @@ callbackQuery = function(question, dbMessage, bot) {
       break;
       case "registrationConfirmed":
         if (question.message === 'yes') {
-          var saveUser = saveUserToDB(space, bot);
+          scope="";
+          spaceModel.insertUser(space, bot, this.callbackQuery);
           return;
         }
         else {
