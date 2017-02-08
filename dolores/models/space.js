@@ -86,9 +86,9 @@ spaceSchema.statics.insertUser = function (space, bot, callback) {
 
   this.find({personEmail: space.personEmail}, function(err, result) {
     if (result.length>0){
-      space.unInitSelf();
       reply.response = " Already registered, choose another option";
       callback(space, reply, bot);
+      space.unInitSelf();
       next(new Error("User already registered!"));
     }
     else {

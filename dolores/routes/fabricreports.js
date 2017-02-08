@@ -30,7 +30,10 @@ reports.prototype.listenForMacReports = function(bot,app){
     //Save the date when the query arrived
     var datetime = new Date();
     console.log(datetime);
-
+    if (req.body.event === "verification") {
+      res.status(200).send('Verified');
+    }
+    else {
     var macReport = new MacReport(); // new instance of a fabric report
     macReport.reportDate = datetime;
     macReport.event = req.body.event;
@@ -55,10 +58,7 @@ reports.prototype.listenForMacReports = function(bot,app){
                         "\nimpacted_devices_count: " + req.body.payload.impacted_devices_count +
                         "\nurl to the crash: " + req.body.payload.url;
 
-    if (req.body.event === "verification") {
-      res.status(200).send('Verified');
-    }
-    else {
+
       res.status(200).send('Verified');
       bot.sendMessage(process.env.JUAN_DOLORES_ROOM_ID, failureReport , function(){
         console.log('Message sent from Bot!');

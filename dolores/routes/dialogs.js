@@ -176,15 +176,15 @@ callbackQuery = function(question, dbMessage, bot) {
         scope = "registrationConfirmed";
       break;
       case "registrationConfirmed":
+        scope = "";
         if (question.message === 'yes') {
-          scope="";
           spaceModel.insertUser(space, bot, this.callbackQuery);
           return;
         }
         else {
           reply = "Sorry if something was wrong, please try again later";
         }
-        scope = "";
+
         //space = uninitScopeSchema(space).space();
       break;
       default:
