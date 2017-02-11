@@ -78,27 +78,27 @@ var space = {
 
 var question = {
 
-id:"fake_id",
-roomId:"fake_romId",
-roomType:"direct",
-personId:"fake_personId",
-personEmail:"joan@fake.com",
-created:"2017-02-02T00:55:50.555Z",
-message:"1",
-person:{
-id:"fake_id",
-emails:["fake@fake.com"],
-displayName:"Joan Perez",
-nickName:"Joan",
-firstName:"Joan",
-lastName:"Perez",
-avatar:"https://fakeavatar.com",
-orgId:"fake_orgId",
-created:"2012-06-15T20:51:08.969Z",
-lastActivity:"2017-02-02T00:55:20.737Z",
-status:"active",
-type:"person"
-}
+  id:"fake_id",
+  roomId:"fake_romId",
+  roomType:"direct",
+  personId:"fake_personId",
+  personEmail:"joan@fake.com",
+  created:"2017-02-02T00:55:50.555Z",
+  message:"1",
+  person:{
+  id:"fake_id",
+  emails:["fake@fake.com"],
+  displayName:"Joan Perez",
+  nickName:"Joan",
+  firstName:"Joan",
+  lastName:"Perez",
+  avatar:"https://fakeavatar.com",
+  orgId:"fake_orgId",
+  created:"2012-06-15T20:51:08.969Z",
+  lastActivity:"2017-02-02T00:55:20.737Z",
+  status:"active",
+  type:"person"
+  }
 };
 
 var showCurrentOptions = function(space) {
