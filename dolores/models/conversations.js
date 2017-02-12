@@ -43,9 +43,9 @@ var answers = [
 
 DialogSchema.statics.populate = function(dialog, bot){
 
-    bot.sendMessage(query.roomId, "populating the dialogs database" , function(){
-    console.log('Message sent from Bot!');
-    });
+    // bot.sendMessage(query.roomId, "populating the dialogs database" , function(){
+    // console.log('Message sent from Bot!');
+    // });
 
     dialog.save(function(err) {
       if (err) {
