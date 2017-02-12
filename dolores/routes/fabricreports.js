@@ -21,7 +21,9 @@ if (mongoUrl === 'mongodb://localhost:27017/reports'){
   var spaceModel = conn.model('SparkSpace', Space);
   var space = new spaceModel();
 } else {
-  mongoose.createConnection(mongoUrl);
+  var conn = mongoose.createConnection(mongoUrl);
+  var spaceModel = conn.model('SparkSpace', Space);
+  var space = new spaceModel();
 }
 
 var userIds=[];
