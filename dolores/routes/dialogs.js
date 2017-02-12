@@ -58,9 +58,6 @@ var showCurrentOptions = function(space) {
   }
 };
 
-///
-
-
 // returns the entire object inside the arry, need the .id to specify the Id
 callbackQuery = function(question, dbMessage, bot) {
 
@@ -137,7 +134,10 @@ callbackQuery = function(question, dbMessage, bot) {
       break;
       case "populateMacTagsScope":
         // User said it wants to get mac reports populating options. Next question for windows option.
-        space.macReports.tags =[question.message];
+        var array = question.message.split(',');
+        for (var i in array) {
+          space.macReports.tags[i] =array[i];
+        }
         reply = "Do you want me to send you Spark for Windows crash reports? <yes/no>";
         scope = "confirmWindowsOptions";
       break;

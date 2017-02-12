@@ -3,6 +3,7 @@ var router = express.Router();
 var bodyParser = require('body-parser');
 var mongoose = require('mongoose');
 var MacReport = require('../models/macreports');
+var Space = require('../models/space');
 var mongoUrl = process.env.MONGO_URL_FABRIC || 'mongodb://localhost:27017/reports';
 
 var reports = function(){};
@@ -11,14 +12,19 @@ var reports = function(){};
 console.log(' Attempting to connect to the database ');
 //To avoid promise warning
 mongoose.Promise = global.Promise;
+//mongoose.Promise = require('bluebird');
+
 // Connect to DB
 if (mongoUrl === 'mongodb://localhost:27017/reports'){
   mongoose.connect(mongoUrl);
+  var conn = mongoose.createConnection('mongodb://localhost:27017/spaces');
+  var spaceModel = conn.model('SparkSpace', Space);
+  var space = new spaceModel();
 } else {
   mongoose.createConnection(mongoUrl);
 }
 
-
+var userIds=[];
 var macReport = new MacReport(); // new instance of a fabric report
 var saveReport = function(req) {
   var datetime = new Date();
@@ -58,17 +64,6 @@ reports.prototype.listenForMacReports = function(bot,app){
       res.status(200).send('Verified');
     }
     else {
-      var failureReport = "Mac crash received: " +
-                        "\nevent: " + req.body.event +
-                        "\npayload Type: " + req.body.payload_type +
-                        "\ndisplay ID: " + req.body.payload.display_id +
-                        "\ntitle: " + req.body.payload.title +
-                        "\nmethod affected: " + req.body.payload.method +
-                        "\nimpact_level: " + req.body.payload.impact_level  +
-                        "\ncrashes_count: " + req.body.payload.crashes_count +
-                        "\nimpacted_devices_count: " + req.body.payload.impacted_devices_count +
-                        "\nurl to the crash: " + req.body.payload.url;
-
       res.status(200).send('Verified');
       // if we are in a test environment we don't send the message to the bot
       //saveReport(req);
@@ -77,14 +72,17 @@ reports.prototype.listenForMacReports = function(bot,app){
       if (mongoUrl === 'mongodb://localhost:27017/reports'){
         var err = null;
         bot(err,macReport);
-      }else{
-        bot.sendMessage(process.env.JUAN_DOLORES_ROOM_ID, failureReport , function(){
-          console.log('Message sent from Bot!');
-        });
+        //spaceModel.getMacReportSubscribers(req,bot,function(){});
 
-        bot.sendMessage(process.env.MAC_REPORTS_ROOM_ID, failureReport , function(){
-          console.log('Message sent to mac reports room');
-        });
+      }else{
+        // bot.sendMessage(process.env.JUAN_DOLORES_ROOM_ID, failureReport , function(){
+        //   console.log('Message sent from Bot!');
+        // });
+        //
+        // bot.sendMessage(process.env.MAC_REPORTS_ROOM_ID, failureReport , function(){
+        //   console.log('Message sent to mac reports room');
+        // });
+        spaceModel.getMacReportSubscribers(req,bot,function(){});
       }
     }
   });

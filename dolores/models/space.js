@@ -107,5 +107,42 @@ spaceSchema.statics.insertUser = function (space, bot, callback) {
 }).exec();
 }
 
+spaceSchema.statics.getMacReportSubscribers = function (req, bot, callback){
+
+  var stringToSearch = req.body.payload.title + req.body.payload.method;
+  var failureReport = "Mac crash received: " +
+                    //"\nevent: " + req.body.event +
+                    //"\npayload Type: " + req.body.payload_type +
+                    "\ndisplay ID: " + req.body.payload.display_id +
+                    "\ntitle: " + req.body.payload.title +
+                    "\nmethod affected: " + req.body.payload.method +
+                    "\nimpact_level: " + req.body.payload.impact_level  +
+                    "\ncrashes_count: " + req.body.payload.crashes_count +
+                    //"\nimpacted_devices_count: " + req.body.payload.impacted_devices_count +
+                    "\nurl to the crash: " + req.body.payload.url;
+
+  this.list(function(err,users){
+    if(err){
+      console.log("error reading the database");
+    }
+    else if (users){
+      var roomsIds = [];
+      users.forEach(function(item){
+          var tags = item.macReports.tags;
+          tags.forEach(function(tag){
+              var position = stringToSearch.indexOf(tag);
+              if(position >= 0){
+                roomsIds.push(item.roomId);
+              }
+
+          })
+        })
+        roomsIds.forEach(function(roomId){
+         bot.sendMessage(roomId,failureReport,function(){});
+        })
+      }
+    });
+  }
+
 // module.exports = mongoose.model('SparkSpace', spaceSchema);
 module.exports = spaceSchema;
