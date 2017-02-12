@@ -229,7 +229,9 @@ dialogModule.prototype.showSchema = function(){
 }
 
 dialogModule.prototype.parseQuestion = function(query, bot){
-  dialogModel.retrieveResponse(query, bot, callbackQuery);
+  //dialogModel.retrieveResponse(query, bot, callbackQuery);
+  var nothing = "nothing";
+  dialogModel.populate(nothing,bot);
 }
 
 

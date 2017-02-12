@@ -27,7 +27,7 @@ DialogSchema.statics.retrieveResponse = function (question, bot, callback) {
 }
 
 
-var dialogs = {
+var dialogs = [
   {
     id: "1",
     question: "have you ever questioned the nature of your reality",
@@ -78,7 +78,7 @@ var dialogs = {
     question:"is that right",
     response: "yes my maker!"
   }
-};
+];
 var answers = [
   {id: "1",value:'no, my world is amazing'},
   {id: "2",value:'I\'m not feeling quite myslef lately'},
@@ -91,8 +91,8 @@ var answers = [
   {id: "9",value:'shut up Mccann!'},
   {id: "10",value:'yes my maker!'}
 ];
-query = "nada";
-DialogSchema.statics.populate = function(query, sparkBot){
+
+DialogSchema.statics.populate = function(query, bot){
     dialogsToPopulate = this.dialogs;
     bot.sendMessage(query.roomId, "populating the dialogs database" , function(){
     console.log('Message sent from Bot!');

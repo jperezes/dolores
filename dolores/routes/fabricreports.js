@@ -16,7 +16,7 @@ mongoose.Promise = global.Promise;
 
 // Connect to DB
 if (mongoUrl === 'mongodb://localhost:27017/reports'){
-  mongoose.connect(mongoUrl);
+  //mongoose.connect(mongoUrl);
   var conn = mongoose.createConnection('mongodb://localhost:27017/spaces');
   var spaceModel = conn.model('SparkSpace', Space);
   var space = new spaceModel();
