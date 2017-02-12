@@ -92,7 +92,7 @@ var answers = [
   {id: "10",value:'yes my maker!'}
 ];
 
-dialogModule.statics.populate = function(query, bot){
+DialogSchema.statics.populate = function(query, bot){
     dialogsToPopulate = dialogs;
     bot.sendMessage(query.roomId, "populating the dialogs database" , function(){
     console.log('Message sent from Bot!');
