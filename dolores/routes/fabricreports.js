@@ -22,7 +22,8 @@ if (mongoUrl === 'mongodb://localhost:27017/reports'){
   var space = new spaceModel();
 } else {
   var conn = mongoose.createConnection(mongoUrl);
-  var spaceModel = conn.model('SparkSpace', Space);
+  var conn2 = mongoose.createConnection(process.env.MONGO_SPACES_URL)
+  var spaceModel = conn2.model('SparkSpace', Space);
   var space = new spaceModel();
 }
 
@@ -73,9 +74,8 @@ reports.prototype.listenForMacReports = function(bot,app){
       saveReport(req);
       if (mongoUrl === 'mongodb://localhost:27017/reports'){
         var err = null;
-        bot(err,macReport);
+        bot(err,macReport); // maybe we can use this as a callback function.
         //spaceModel.getMacReportSubscribers(req,bot,function(){});
-
       }else{
         // bot.sendMessage(process.env.JUAN_DOLORES_ROOM_ID, failureReport , function(){
         //   console.log('Message sent from Bot!');
