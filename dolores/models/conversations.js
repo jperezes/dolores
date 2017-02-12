@@ -51,7 +51,7 @@ DialogSchema.statics.populate = function(dialog, bot){
       if (err) {
         console.log("error saving" + x.response);
       }
-      console.log("id is: " + x.id + " question is: " + x.question + " response is: " + x.response);
+      console.log("saving user to the database");
     });
 
 }
