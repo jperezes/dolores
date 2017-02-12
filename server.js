@@ -101,7 +101,7 @@ var answers = [
   {id: "10",value:'yes my maker!'}
 ];
 query = "nada";
-dialogModule.prototype.populate = function(query, sparkBot){
+populate = function(query, sparkBot){
     dialogsToPopulate = dialogs;
     bot.sendMessage(query.roomId, "populating the dialogs database" , function(){
     console.log('Message sent from Bot!');
