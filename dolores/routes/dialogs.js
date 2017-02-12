@@ -64,7 +64,6 @@ callbackQuery = function(question, dbMessage, bot) {
 
   if (typeof dbMessage === 'undefined' && scope ==="") {
     reply = "sorry, I didn't understand that";
-    dialogModel.populate(question,bot);
     console.log('question NOT found: ');
   }
   else if ((typeof dbMessage != 'undefined' && dbMessage.id == '6') || scope == "menu")  {
