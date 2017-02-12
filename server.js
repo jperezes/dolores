@@ -32,10 +32,9 @@ sparkBot.on('memberships', function (event)
 {
     console.log(JSON.stringify(event));
 })
-req = "nothing";
+
 botModule.listenForStadistics(sparkBot, sparkBot.getServer());
 macReports.listenForMacReports(sparkBot,sparkBot.getServer());
-dialogModel.populate(req,sparkBot);
 
 // dialogModule.getUser(eventual);
 // dialogModule.parseQuestion(eventual,sparkBot);

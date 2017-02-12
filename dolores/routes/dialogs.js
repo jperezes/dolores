@@ -1,5 +1,5 @@
 var Space = require('../models/space');
-var Dialog = require('../models/conversations');
+var Dialog = require('../models/conversations')
 var mongoose = require('mongoose');
 var bodyParser = require('body-parser');
 var mongoUrl = process.env.MONGO_SPACES_URL || 'mongodb://localhost:27017/spaces';
