@@ -108,7 +108,7 @@ spaceSchema.statics.insertUser = function (space, bot, callback) {
 }
 
 spaceSchema.statics.getMacReportSubscribers = function (req, bot, callback){
-
+  console.log("about to parse and send a message to found users");
   var stringToSearch = req.body.payload.title + req.body.payload.method;
   var failureReport = "Mac crash received: " +
                     //"\nevent: " + req.body.event +
@@ -132,13 +132,16 @@ spaceSchema.statics.getMacReportSubscribers = function (req, bot, callback){
           tags.forEach(function(tag){
               var position = stringToSearch.indexOf(tag);
               if(position >= 0){
+                console.log("USER FOUND SAVING THE ROOM ID INTO AN ARRAY");
                 roomsIds.push(item.roomId);
               }
 
           })
         })
         roomsIds.forEach(function(roomId){
-         bot.sendMessage(roomId,failureReport,function(){});
+         bot.sendMessage(roomId,failureReport,function(){
+           console.log("user found about to send him a message");
+         });
         })
       }
     });
