@@ -52,8 +52,10 @@ botModule.prototype.listenForStadistics = function(bot,app){
     stats.save(function(err) {
       if (err) {
         res.send(err);
+      } else {
+        res.status(200).send('Splunk result successfully saved to the database');
       }
-      res.status(200).send('Splunk result successfully saved to the database');
+
     });
 
     var messageToSend = "Splunk Alert!\nAlert Name :" + req.body.search_name +
