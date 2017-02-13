@@ -147,5 +147,33 @@ spaceSchema.statics.getMacReportSubscribers = function (req, bot, callback){
     });
   }
 
+spaceSchema.statics.getSplunkSubscribers = function (req, bot, callback){
+    console.log("about to parse and send a message to found users");
+
+    var splunkReport = "Splunk Report received: " +
+                      "\nResult: " + req.body.result.count +
+                      "\nSearch Name: " + req.body.search_name +
+                      "\nResult link: " + req.body.results_link;
+    this.list(function(err,users){
+      if(err){
+        console.log("error reading the database");
+      }
+      else if (users){
+        var roomsIds = [];
+        users.forEach(function(item){
+            if(item.splunkReports.receive = "yes"){
+              roomsIds.push(item.roomId);
+            }
+          })
+       roomsIds.forEach(function(roomId){
+           bot.sendMessage(roomId,splunkReport,function(){
+             console.log("user found about to send him a message");
+           });
+       })
+     }
+  });
+}
+
+
 // module.exports = mongoose.model('SparkSpace', spaceSchema);
 module.exports = spaceSchema;

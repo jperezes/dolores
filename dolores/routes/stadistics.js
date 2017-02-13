@@ -14,24 +14,14 @@ botModule.prototype.setBot = function(bot, message){
 }
 
 
-//// TODO: DELETE THIS BLOCK AS IS JUST FOR TESTING
-
-var Space = require('../models/space');
-var tempSpace = { "Id": "Test rooom ID",
-    "isRoom": "Yes",
-    "isone2one": "no",
-    "personId": "jperezes",
-    "personName": "joan perez",
-    "personEmail": "test@gmail.com"};
-//////////////
-
-
 console.log(' Attempting to connect to the database ');
 //To avoid promise warning
 mongoose.Promise = global.Promise;
-// Connect to DB
+// Connect to DBs
 mongoose.connect(mongoUrl);
-
+var conn = mongoose.createConnection(process.env.MONGO_SPACES_URL)
+var spaceModel = conn.model('SparkSpace', Space);
+var space = new spaceModel();
 
 botModule.prototype.listenForStadistics = function(bot,app){
   this.app = app;
@@ -69,62 +59,13 @@ botModule.prototype.listenForStadistics = function(bot,app){
                         "\nResult: " + req.body.result.count +
                         "\nSearch url: " + req.body.results_link;
 
+    spaceModel.getMacReportSubscribers(req,bot,function(){});
+
     //Send result to the room
-    bot.sendMessage(process.env.JUAN_DOLORES_ROOM_ID, messageToSend, function(){
-      console.log('Message sent from Bot!');
-    });
+    // bot.sendMessage(process.env.JUAN_DOLORES_ROOM_ID, messageToSend, function(){
+    //   console.log('Message sent from Bot!');
+    // });
   });
-
-  router.route('/stadistics/:personEmail').get(function(req, res) {
-    //TODO: Get stadistics saved on the database
-
-    Space.find({make:req.params.personEmail}, function(err, space) {
-      if (err) {
-        res.send(err);
-      }
-      res.json(space);
-    });
-  });
-
-  router.route('/stadistics/registerSpace').post(function(req, res) {
-    //TODO: Get stadistics saved on the database
-    console.log('Trying to retrieve bot info from the database');
-    Space.find({personEmail:req.body.personEmail}, function(err, space) {
-      if (err) {
-        res.send(err);
-      }
-      if (!space.length) {
-        var space = new Space();
-        registerSpace(space, req.body);
-        //res.json({message: 'Space result successfully saved to the database' + req.body.personEmail});
-        space.save(function(err) {
-          if (err) {
-            res.send(err);
-          }
-          res.json({message: 'Space result successfully saved to the database' +  req.body.personEmail});
-          //res.status(200).send('Verified');
-        });
-
-      }
-      else {
-        res.json({message: 'Space already registered'});
-      }
-    });
-
-  });
-
-  router.route('/stadistics/deleteSpace/:email').get(function(req, res) {
-    //TODO: Get stadistics saved on the database
-    console.log('Trying to delete bot info from the database' + req.params.email);
-    Space.find({personEmail:req.params.email}).remove(function(err,removed){
-      if (err) {
-        res.send(err);
-      }
-      res.json({message: 'Space result successfully saved to the database ' +  removed});
-    });
-
-  });
-
 }
 
 function registerSpace(space, tempSpace){
