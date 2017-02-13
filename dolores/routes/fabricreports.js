@@ -4,7 +4,7 @@ var bodyParser = require('body-parser');
 var mongoose = require('mongoose');
 var MacReport = require('../models/macreports');
 var Space = require('../models/space');
-var mongoUrl = process.env.MONGO_URL_FABRIC || 'mongodb://localhost:27017/reports';
+var mongoUrl = process.env.MONGO_URL || 'mongodb://localhost:27017/reports';
 
 var reports = function(){};
 
