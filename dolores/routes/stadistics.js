@@ -62,7 +62,7 @@ botModule.prototype.listenForStadistics = function(bot,app){
                         "\nResult: " + req.body.result.count +
                         "\nSearch url: " + req.body.results_link;
 
-    spaceModel.getMacReportSubscribers(req,bot,function(){});
+    spaceModel.getSplunkSubscribers(req,bot,function(){});
 
     //Send result to the room
     // bot.sendMessage(process.env.JUAN_DOLORES_ROOM_ID, messageToSend, function(){
