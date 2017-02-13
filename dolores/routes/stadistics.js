@@ -3,6 +3,7 @@ var router = express.Router();
 var mongoose = require('mongoose');
 var bodyParser = require('body-parser');
 var Splunk = require('../models/queries');
+var Space = require('../models/space');
 var mongoUrl = process.env.MONGO_URL || 'mongodb://localhost:27017/spaces';
 
 var botModule = function(){};
