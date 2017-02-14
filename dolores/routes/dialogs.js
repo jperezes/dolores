@@ -21,15 +21,20 @@ var space = new spaceModel();
 
 ///
 var macReportConfirmation = function(tempSpace){
-
-  reply = "** ·Name:** " + tempSpace.person.displayName +
-                          "\n** ·Email:** " + tempSpace.personEmail +
-                          "\n** ·Is this data correct? answer <yes/no>";
+  if (tempSpace.roomType === "group") {
+    reply = "** ·Your name:** " + tempSpace.person.displayName +
+                            "\n** ·Room is not one to one:** " +
+                            "\n** ·Is this data correct? answer <yes/no>";
+  } else {
+    reply = "** ·Name:** " + tempSpace.person.displayName +
+                            "\n** ·Email:** " + tempSpace.personEmail +
+                            "\n** ·Is this data correct? answer <yes/no>";
+    space.personName = tempSpace.person.displayName;
+    space.nickName = tempSpace.person.nickName;
+  }
+  space.personEmail = tempSpace.personEmail;
   space.roomId = tempSpace.roomId;
   space.roomType = tempSpace.roomType;
-  space.personName = tempSpace.person.displayName;
-  space.personEmail = tempSpace.personEmail;
-  space.nickName = tempSpace.person.nickName;
   //Use the module pattern
   return {
     space: function() {

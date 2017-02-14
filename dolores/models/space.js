@@ -84,7 +84,7 @@ spaceSchema.statics.insertUser = function (space, bot, callback) {
   };
   console.log("ABOUT TO INSERT USER to the DB");
 
-  this.find({personEmail: space.personEmail}, function(err, result) {
+  this.find({roomId: space.roomId}, function(err, result) {
     if (result.length>0){
       reply.response = " Already registered, choose another option";
       callback(space, reply, bot);
