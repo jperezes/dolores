@@ -89,7 +89,7 @@ spaceSchema.statics.insertUser = function (space, bot, callback) {
       reply.response = " Already registered, choose another option";
       callback(space, reply, bot);
       space.unInitSelf();
-      next(new Error("User already registered!"));
+      console.log("User already registered!");
     }
     else {
       space.save(function(err){
