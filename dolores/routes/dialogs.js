@@ -171,7 +171,7 @@ callbackQuery = function(question, dbMessage, bot) {
       break;
       case "confirmSplunkOptions":
         // user replied to teh Splunk Option. Next is to show the final confirmation.
-        if (cleanQuestion = 'yes'){
+        if (cleanQuestion === 'yes'){
           space.splunkReports.receive = "yes";
         }
         else {
