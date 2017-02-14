@@ -73,12 +73,13 @@ callbackQuery = function(question, dbMessage, bot) {
   else if (scope !="") {
     // User choosed between 1 Register, 2 - unregister 3 show options
     // Next question is ask if name and email is correct
+    var cleanQuestion = question.message.toLowerCase().replace(" dolores","").replace("dolores ","").replace("?","");
     switch(scope) {
       // nextQuestion & space update
 
       case "chooseMenu":
       console.log("inside of choosing menu, so user has choosed an option first time")
-        switch (question.message) {
+        switch (cleanQuestion) {
           case "1":
             var report = macReportConfirmation(question);
             reply = report.reply();
@@ -105,7 +106,7 @@ callbackQuery = function(question, dbMessage, bot) {
       break;
       case "askForConfirmation":
         //User confirmed name and email. Next question Mac report option.
-        if (question.message === 'yes') {
+        if (cleanQuestion === 'yes') {
           space.updateTempSpace(question);
           reply = "Do you want me to send you Mac reports as they happen? <yes/no>";
           scope = "askForMacReportOption";
@@ -119,7 +120,7 @@ callbackQuery = function(question, dbMessage, bot) {
       break;
       case "askForMacReportOption":
         // User confirmed mail/name and replied mac option. Next question is options
-        if(question.message === 'yes') {
+        if(cleanQuestion === 'yes') {
           space.macReports.receive = "yes";
           reply = "Please write the tags you want to filter the mac reports " +
                   "to receive separated by comma. (i.e: whiteboard, auxiliaryDeviceService.cpp,whiteboardView.swift):";
@@ -143,7 +144,7 @@ callbackQuery = function(question, dbMessage, bot) {
       break;
       case "confirmWindowsOptions":
         // User replied whether to receive windows options.
-        if(question.message === 'yes') {
+        if(cleanQuestion === 'yes') {
           reply = "Please write the tags you want to filter the Windows reports " +
                   "to receive separated by comma. (i.e: whiteboard, auxiliaryDeviceService.cpp,whiteboardView.swift):";
           space.windowsReports.receive = "yes";
@@ -165,7 +166,7 @@ callbackQuery = function(question, dbMessage, bot) {
       break;
       case "confirmSplunkOptions":
         // user replied to teh Splunk Option. Next is to show the final confirmation.
-        if (question.message = 'yes'){
+        if (cleanQuestion = 'yes'){
           space.splunkReports.receive = "yes";
         }
         else {
@@ -177,7 +178,7 @@ callbackQuery = function(question, dbMessage, bot) {
       break;
       case "registrationConfirmed":
         scope = "";
-        if (question.message === 'yes') {
+        if (cleanQuestion === 'yes') {
           spaceModel.insertUser(space, bot, this.callbackQuery);
           return;
         }
