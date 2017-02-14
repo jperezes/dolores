@@ -5,6 +5,7 @@ var bodyParser = require('body-parser');
 var Splunk = require('../models/queries');
 var Space = require('../models/space');
 var mongoUrl = process.env.MONGO_URL || 'mongodb://localhost:27017/spaces';
+var spaceUrl = process.env.MONGO_SPACES_URL || 'mongodb://localhost:27017/spaces';
 
 var botModule = function(){};
 var botSpark;
@@ -20,7 +21,7 @@ console.log(' Attempting to connect to the database ');
 mongoose.Promise = global.Promise;
 // Connect to DBs
 mongoose.connect(mongoUrl);
-var conn = mongoose.createConnection(process.env.MONGO_SPACES_URL)
+var conn = mongoose.createConnection(spaceUrl)
 var spaceModel = conn.model('SparkSpace', Space);
 var space = new spaceModel();
 

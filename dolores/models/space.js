@@ -127,22 +127,26 @@ spaceSchema.statics.getMacReportSubscribers = function (req, bot, callback){
     }
     else if (users){
       var roomsIds = [];
+      var roomsIdSet = new Set();
       users.forEach(function(item){
           var tags = item.macReports.tags;
+          if (tags[0] === "everything"){
+            roomsIdSet.add(item.roomId);
+          }
           tags.forEach(function(tag){
               var position = stringToSearch.indexOf(tag);
               if(position >= 0){
                 console.log("USER FOUND SAVING THE ROOM ID INTO AN ARRAY");
-                roomsIds.push(item.roomId);
+                roomsIdSet.add(item.roomId);
               }
 
           })
         })
-        roomsIds.forEach(function(roomId){
+        for(var roomId of roomsIdSet.values()){
          bot.sendMessage(roomId,failureReport,function(){
            console.log("user found about to send him a message");
          });
-        })
+        }
       }
     });
   }
