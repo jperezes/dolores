@@ -140,7 +140,7 @@ callbackQuery = function(question, dbMessage, bot) {
       break;
       case "populateMacTagsScope":
         // User said it wants to get mac reports populating options. Next question for windows option.
-        var array = question.message.split(',');
+        var array = cleanQuestion.split(',');
         for (var i in array) {
           space.macReports.tags[i] =array[i];
         }
