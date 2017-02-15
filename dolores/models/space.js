@@ -178,14 +178,18 @@ spaceSchema.statics.getSplunkSubscribers = function (req, bot, callback){
                       "\nResult: " + req.body.result.count +
                       "\nSearch Name: " + req.body.search_name +
                       "\nResult link: " + req.body.results_link;
+
+    var owner = req.body.owner;
+    var emailTo = cleanQuestion.split(',');
     this.list(function(err,users){
       if(err){
         console.log("error reading the database");
       }
       else if (users){
         var roomsIds = [];
+        var splunkOwner = users.personEmail.split('@');
         users.forEach(function(item){
-            if(item.splunkReports.receive = "yes"){
+            if(item.splunkReports.receive === "yes" && splunkOwner[0] === owner){
               roomsIds.push(item.roomId);
             }
           })
