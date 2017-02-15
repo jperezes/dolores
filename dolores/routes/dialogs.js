@@ -20,7 +20,7 @@ var dialogModel = conn.model('Dialog', Dialog);
 var space = new spaceModel();
 
 ///
-var macReportConfirmation = function(tempSpace){
+var populateTempSpace = function(tempSpace){
   if (tempSpace.roomType === "group") {
     reply = "** ·Your name:** " + tempSpace.person.displayName +
                             "\n** ·Room is not one to one:** " +
@@ -44,7 +44,7 @@ var macReportConfirmation = function(tempSpace){
       return reply;
     }
   }
-  console.log('[macReportConfirmation:] about to go to confirmation if no error ' + space.personName + reply);
+  console.log('[populateTempSpace:] about to go to confirmation if no error ' + space.personName + reply);
 }
 
 var showCurrentOptions = function(space) {
@@ -91,7 +91,7 @@ callbackQuery = function(question, dbMessage, bot) {
       console.log("inside of choosing menu, so user has choosed an option first time")
         switch (cleanQuestion) {
           case "1":
-            var report = macReportConfirmation(question);
+            var report = populateTempSpace(question);
             reply = report.reply();
             space = report.space();
             scope = "askForConfirmation";
@@ -106,6 +106,10 @@ callbackQuery = function(question, dbMessage, bot) {
           break;
           case "3":
           //TODO: crear el metodo que busca el usuario en la base de datos
+            scope="";
+            space = populateTempSpace(question).space();
+            spaceModel.showUserOptions(space, bot, this.callbackQuery);
+            return;
           break;
           default:
             space.unInitSelf();

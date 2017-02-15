@@ -106,6 +106,26 @@ spaceSchema.statics.insertUser = function (space, bot, callback) {
   }
 }).exec();
 }
+spaceSchema.statics.showUserOptions = function (space, bot, callback) {
+  var reply = {};
+  this.find({roomId: space.roomId}, function(err, result, next) {
+    if (result.length>0){
+      reply.response = "These are currently your registration options: " + result[0].nickName + 
+                              "\n** ·Name:** " + result[0].personName +
+                              "\n** ·Email:** " + result[0].personEmail +
+                              "\n** ·Receive Spark Mac Reports?** " + result[0].macReports.receive +
+                              "\n** ·Mac Reports filter tags:** " + result[0].macReports.tags +
+                              "\n** ·Receive Spark Windows Reports?** " + result[0].windowsReports.receive +
+                              "\n** ·Windows Reports filter tags:** " + result[0].windowsReports.tags +
+                              "\n** ·Receive Splunk Alerts? **" + result[0].splunkReports.receive;
+      callback(space, reply, bot);
+    }
+    else {
+      reply.response = "You are not yet registered";
+      callback(space, reply, bot);
+  }
+}).exec();
+}
 
 spaceSchema.statics.getMacReportSubscribers = function (req, bot, callback){
   console.log("about to parse and send a message to found users");

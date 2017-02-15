@@ -64,7 +64,7 @@ var space = {
 	nickName: "Joan",
 	macReports: {
 		receive: "yes" ,
-		tags: ["whiteboard", "auxiliaryDeviceService", "wirelessShare"]
+		tags: ["whiteboard", "auxiliarydeviceservice", "wirelessshare"]
 	},
 	splunkReports: {
 		receive: "yes"
@@ -108,14 +108,15 @@ var showCurrentOptions = function(space) {
                           "\n** ·Mac Reports filter tags:** " + space.macReports.tags +
                           "\n** ·Receive Spark Windows Reports?** " + space.windowsReports.receive +
                           "\n** ·Windows Reports filter tags:** " + space.windowsReports.tags +
-                          "\n** ·Receive Splunk Alerts? **" + space.splunkReports.receive +
-                          "\n** Is this data correct? answer <yes/no>**";
+                          "\n** ·Receive Splunk Alerts? **" + space.splunkReports.receive;
+
   return {
       reply: function() {
             return reply;
       }
   }
 };
+
 
 describe('server', function() {
 
@@ -206,7 +207,8 @@ describe('server', function() {
 
 			it('Test8: Saying yes to Splunk Reports', function(done){
 				question.message = "yes";
-				var expectedReply = "Is the following data correct?\n" + showCurrentOptions(space).reply();
+				var expectedReply = "Is the following data correct?\n" + showCurrentOptions(space).reply() +
+                            "\n** Is this data correct? answer <yes/no>**";
 				dialogModule.parseQuestion(question,function(err, res) {
 					expect(err).to.equal(null);
 					expect(res).to.exist;
@@ -228,7 +230,29 @@ describe('server', function() {
 
 		describe('Delete previous user from the database', function() {
 
-				it('Test1: bringing dolores online', function(done){
+        //From here we start again and then show the user options saved on the database
+        it('Test1: bringing dolores online again', function(done){
+          question.message = "bring yourself back online";
+          dialogModule.parseQuestion(question,function(err, res) {
+            expect(err).to.equal(null);
+            expect(res).to.exist;
+            expect(res).to.equal("Done, what can I do for you " + question.person.nickName + "?"+ dialogModule.showMenu());
+            done();
+          });
+        });
+        it('Test2: answering 3 to show the options', function(done){
+          question.message = "3";
+          var expectedReply = "These are currently your registration options: " + question.person.nickName + "\n" + showCurrentOptions(space).reply();
+          dialogModule.parseQuestion(question,function(err, res) {
+            expect(err).to.equal(null);
+            expect(res).to.exist;
+            expect(res).to.equal(expectedReply);
+            done();
+          });
+        });
+
+        //Finally proceed to delete the user from the database
+				it('Test3: bringing dolores online', function(done){
 					question.message = "bring yourself back online";
 					dialogModule.parseQuestion(question,function(err, res) {
 						expect(err).to.equal(null);
@@ -237,7 +261,7 @@ describe('server', function() {
 						done();
 					});
 				});
-				it('Test2: answering 2 check the user is deleted', function(done){
+				it('Test4: answering 2 check the user is deleted', function(done){
 					question.message = "2";
 					var expectedReply = "User deleted from the database";
 					dialogModule.parseQuestion(question,function(err, res) {
@@ -247,7 +271,7 @@ describe('server', function() {
 						done();
 					});
 				});
-				it('Test3a: bringing dolores online', function(done){
+				it('Test5a: bringing dolores online', function(done){
 					question.message = "bring yourself back online";
 					dialogModule.parseQuestion(question,function(err, res) {
 						expect(err).to.equal(null);
@@ -257,7 +281,7 @@ describe('server', function() {
 					});
 				});
 
-				it('Test3: answering 2 check the user i not even registered', function(done){
+				it('Test5: answering 2 check the user i not even registered', function(done){
 					question.message = "2";
 					var expectedReply = "User not present in the database";
 					dialogModule.parseQuestion(question,function(err, res) {
