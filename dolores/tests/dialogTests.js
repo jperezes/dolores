@@ -102,13 +102,13 @@ var question = {
 };
 
 var showCurrentOptions = function(space) {
-  reply = "** ·Name:** " + space.personName +
-                          "\n** ·Email:** " + space.personEmail +
-                          "\n** ·Receive Spark Mac Reports?** " + space.macReports.receive +
-                          "\n** ·Mac Reports filter tags:** " + space.macReports.tags +
-                          "\n** ·Receive Spark Windows Reports?** " + space.windowsReports.receive +
-                          "\n** ·Windows Reports filter tags:** " + space.windowsReports.tags +
-                          "\n** ·Receive Splunk Alerts? **" + space.splunkReports.receive;
+  reply = "** ·Name: " + space.personName +
+                          "\n** ·Email: " + space.personEmail +
+                          "\n** ·Receive Spark Mac Reports? " + space.macReports.receive +
+                          "\n** ·Mac Reports filter tags: " + space.macReports.tags +
+                          "\n** ·Receive Spark Windows Reports? " + space.windowsReports.receive +
+                          "\n** ·Windows Reports filter tags: " + space.windowsReports.tags +
+                          "\n** ·Receive Splunk Alerts? " + space.splunkReports.receive;
 
   return {
       reply: function() {
@@ -150,8 +150,8 @@ describe('server', function() {
 			});
 			it('Test3: answering 1 to register', function(done){
 				question.message = "1";
-				var expectedReply = "** ·Name:** " + question.person.displayName +
-			                          "\n** ·Email:** " + question.personEmail +
+				var expectedReply = "** ·Name: " + question.person.displayName +
+			                          "\n** ·Email: " + question.personEmail +
 			                          "\n** ·Is this data correct? answer <yes/no>";
 				dialogModule.parseQuestion(question,function(err, res) {
 					expect(err).to.equal(null);
@@ -208,7 +208,7 @@ describe('server', function() {
 			it('Test8: Saying yes to Splunk Reports', function(done){
 				question.message = "yes";
 				var expectedReply = "Is the following data correct?\n" + showCurrentOptions(space).reply() +
-                            "\n** Is this data correct? answer <yes/no>**";
+                            "\n** Is this data correct? answer <yes/no>";
 				dialogModule.parseQuestion(question,function(err, res) {
 					expect(err).to.equal(null);
 					expect(res).to.exist;
@@ -242,7 +242,7 @@ describe('server', function() {
         });
         it('Test2: answering 3 to show the options', function(done){
           question.message = "3";
-          var expectedReply = "These are currently your registration options: " + question.person.nickName + "\n" + showCurrentOptions(space).reply();
+          var expectedReply = "These are currently your registration options " + question.person.nickName + ":\n\n" + showCurrentOptions(space).reply();
           dialogModule.parseQuestion(question,function(err, res) {
             expect(err).to.equal(null);
             expect(res).to.exist;

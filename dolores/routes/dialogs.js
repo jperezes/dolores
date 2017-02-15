@@ -22,12 +22,12 @@ var space = new spaceModel();
 ///
 var populateTempSpace = function(tempSpace){
   if (tempSpace.roomType === "group") {
-    reply = "** ·Your name:** " + tempSpace.person.displayName +
-                            "\n** ·Room is not one to one:** " +
+    reply = "** ·Your name: " + tempSpace.person.displayName +
+                            "\n** ·Room is not one to one: " +
                             "\n** ·Is this data correct? answer <yes/no>";
   } else {
-    reply = "** ·Name:** " + tempSpace.person.displayName +
-                            "\n** ·Email:** " + tempSpace.personEmail +
+    reply = "** ·Name: " + tempSpace.person.displayName +
+                            "\n** ·Email: " + tempSpace.personEmail +
                             "\n** ·Is this data correct? answer <yes/no>";
     space.personName = tempSpace.person.displayName;
     space.nickName = tempSpace.person.nickName;
@@ -50,16 +50,16 @@ var populateTempSpace = function(tempSpace){
 var showCurrentOptions = function(space) {
   var userData = "";
   if(space.roomType === "direct") {
-    userData = "** ·Name:** " + space.personName +
-                            "\n** ·Email:** " + space.personEmail;
+    userData = "** ·Name: " + space.personName +
+                            "\n** ·Email: " + space.personEmail;
 
   }
-  reply = userData + "\n** ·Receive Spark Mac Reports?** " + space.macReports.receive +
-                          "\n** ·Mac Reports filter tags:** " + space.macReports.tags +
-                          "\n** ·Receive Spark Windows Reports?** " + space.windowsReports.receive +
-                          "\n** ·Windows Reports filter tags:** " + space.windowsReports.tags +
-                          "\n** ·Receive Splunk Alerts? **" + space.splunkReports.receive +
-                          "\n** Is this data correct? answer <yes/no>**";
+  reply = userData + "\n** ·Receive Spark Mac Reports? " + space.macReports.receive +
+                          "\n** ·Mac Reports filter tags: " + space.macReports.tags +
+                          "\n** ·Receive Spark Windows Reports? " + space.windowsReports.receive +
+                          "\n** ·Windows Reports filter tags: " + space.windowsReports.tags +
+                          "\n** ·Receive Splunk Alerts? " + space.splunkReports.receive +
+                          "\n** Is this data correct? answer <yes/no>";
 
   return {
       reply: function() {
