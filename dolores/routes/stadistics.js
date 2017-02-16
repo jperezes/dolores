@@ -65,10 +65,6 @@ botModule.prototype.listenForStadistics = function(bot,app){
 
     spaceModel.getSplunkSubscribers(req,bot,function(){});
 
-    //Send result to the room
-    // bot.sendMessage(process.env.JUAN_DOLORES_ROOM_ID, messageToSend, function(){
-    //   console.log('Message sent from Bot!');
-    // });
   });
 }
 

@@ -73,8 +73,9 @@ callbackQuery = function(question, dbMessage, bot) {
 
 
   if (typeof dbMessage === 'undefined' && scope ==="") {
-    reply = "sorry, I didn't understand that";
+    //reply = "sorry, I didn't understand that";
     console.log('question NOT found: ');
+    return
   }
   else if ((typeof dbMessage != 'undefined' && dbMessage.id == '6') || scope == "menu")  {
     reply = "Done, what can I do for you " + question.person.nickName + "?"+ showMenu();

@@ -75,15 +75,9 @@ reports.prototype.listenForMacReports = function(bot,app){
       if (mongoUrl === 'mongodb://localhost:27017/reports'){
         var err = null;
         bot(err,macReport); // maybe we can use this as a callback function.
-        //spaceModel.getMacReportSubscribers(req,bot,function(){});
+
       }else{
-        // bot.sendMessage(process.env.JUAN_DOLORES_ROOM_ID, failureReport , function(){
-        //   console.log('Message sent from Bot!');
-        // });
-        //
-        // bot.sendMessage(process.env.MAC_REPORTS_ROOM_ID, failureReport , function(){
-        //   console.log('Message sent to mac reports room');
-        // });
+
         spaceModel.getMacReportSubscribers(req,bot,function(){});
       }
     }

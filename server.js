@@ -22,7 +22,6 @@ sparkBot.on('message', function (event)
 
     console.log(JSON.stringify(event));
 })
-//console.log(dialog.answers[dialog.response('who is the evil in your religion')].value);
 sparkBot.on('rooms', function (event)
 {
     console.log(JSON.stringify(event));
@@ -35,7 +34,3 @@ sparkBot.on('memberships', function (event)
 
 botModule.listenForStadistics(sparkBot, sparkBot.getServer());
 macReports.listenForMacReports(sparkBot,sparkBot.getServer());
-
-// dialogModule.getUser(eventual);
-// dialogModule.parseQuestion(eventual,sparkBot);
-//dialogModule.response("event",sparkBot);
