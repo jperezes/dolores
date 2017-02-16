@@ -134,7 +134,7 @@ describe('server', function() {
 			dialogModule.parseQuestion(question,function(err, res) {
         expect(err).to.equal(null);
         expect(res).to.exist;
-        expect(res).to.equal("sorry, I didn't understand that");
+        expect(res).to.equal("sorry, I dn't understand that");
         done();
       });
 		});

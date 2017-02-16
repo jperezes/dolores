@@ -56,19 +56,19 @@ spaceSchema.statics.deleteUser = function (user, bot, callback) {
     "response" : ""
   };
 
-  this.find({personEmail: user.personEmail}).remove().exec(function(err, data){
+  this.find({roomId: user.roomId}).remove().exec(function(err, data){
     if(err) {
       reply.response = "Error deleting the user, please try again later";
       callback(user, reply, bot);
       next(new Error("Error deleteing the user"));
     }
     else if(data.result.n === 0) {
-      reply.response = "User not present in the database";
+      reply.response = "Space not registered in the database";
       callback(user, reply, bot);
       next(new Error("User not registered!"));
     }
     else {
-      reply.response = "User deleted from the database";
+      reply.response = "Room deleted from the database";
       callback(user, reply, bot);
     }
   });
@@ -140,7 +140,7 @@ spaceSchema.statics.getMacReportSubscribers = function (req, bot, callback){
                     "\ncrashes_count: " + req.body.payload.crashes_count +
                     //"\nimpacted_devices_count: " + req.body.payload.impacted_devices_count +
                     "\nurl to the crash: " + req.body.payload.url;
-
+  stringToSearch = stringToSearch.toLowerCase();
   this.list(function(err,users){
     if(err){
       console.log("error reading the database");
@@ -185,7 +185,7 @@ spaceSchema.statics.getSplunkSubscribers = function (req, bot, callback){
         console.log("error reading the database");
       }
       else if (users){
-        var roomsIds = [];    
+        var roomsIds = [];
         users.forEach(function(item){
             var splunkOwner = item.personEmail.split('@');
             if(item.splunkReports.receive === "yes" && splunkOwner[0] === owner){
