@@ -39,7 +39,7 @@ botModule.prototype.listenForStadistics = function(bot,app){
 
     //Save the date when the query arrived
     var datetime = new Date();
-    console.log("slunk data received: " + JSON.stringify(req));
+    console.log("slunk data received: " + req);
 
     var stats = new Splunk(); // new instance of a Splunk result
     stats.alertDate = datetime;
