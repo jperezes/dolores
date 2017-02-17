@@ -130,7 +130,7 @@ describe('server', function() {
 	});
 
 	describe('register user to the Database through questionary', function() {
-		it('Test1: dialog invalid question', function(done){
+		xit('Test1: dialog invalid question', function(done){
 			dialogModule.parseQuestion(question,function(err, res) {
         expect(err).to.equal(null);
         expect(res).to.exist;
@@ -263,7 +263,7 @@ describe('server', function() {
 				});
 				it('Test4: answering 2 check the user is deleted', function(done){
 					question.message = "2";
-					var expectedReply = "User deleted from the database";
+					var expectedReply = "Room deleted from the database";
 					dialogModule.parseQuestion(question,function(err, res) {
 						expect(err).to.equal(null);
 						expect(res).to.exist;
@@ -283,7 +283,7 @@ describe('server', function() {
 
 				it('Test5: answering 2 check the user i not even registered', function(done){
 					question.message = "2";
-					var expectedReply = "User not present in the database";
+					var expectedReply = "Space not registered in the database";
 					dialogModule.parseQuestion(question,function(err, res) {
 						expect(err).to.equal(null);
 						expect(res).to.exist;

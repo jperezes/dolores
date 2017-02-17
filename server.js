@@ -18,9 +18,15 @@ sparkBot.printHelloWorld();
 
 sparkBot.on('message', function (event)
 {
-    dialogModule.parseQuestion(event,sparkBot);
+   var mail = event.personEmail.split('@');
 
-    console.log(JSON.stringify(event));
+   if (mail[1] === "cisco.com"){
+     dialogModule.parseQuestion(event,sparkBot);
+   } else {
+     sparkBot.sendMessage(event.roomId, "Hi, sorry to tell you that but you're not allowed to proceed",function(){});
+   }
+  console.log(JSON.stringify(event));
+  
 })
 sparkBot.on('rooms', function (event)
 {
