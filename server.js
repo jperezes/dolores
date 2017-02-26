@@ -1,15 +1,15 @@
-var port = process.env.PORT || 1337;
-var sparklite = require("sparklite");
-var botdomain = process.env.DOLORES_URL;
-var sparkBot = new sparklite.SparkBot(process.env.DOLORES_KEY, port, botdomain);
+let port = process.env.PORT || 1337;
+let sparklite = require("sparklite");
+let botdomain = process.env.DOLORES_URL;
+let sparkBot = new sparklite.SparkBot(process.env.DOLORES_KEY, port, botdomain);
 
-var stadistics = require('./dolores/routes/stadistics');
-var fabricModule = require('./dolores/routes/fabricreports');
-var Dialog = require('./dolores/routes/dialogs');
+let stadistics = require('./dolores/routes/stadistics');
+let fabricModule = require('./dolores/routes/fabricreports');
+let Dialog = require('./dolores/routes/dialogs');
 
-var botModule = new stadistics();
-var macReports = new fabricModule();
-var dialogModule = new Dialog();
+let botModule = new stadistics();
+let macReports = new fabricModule();
+let dialogModule = new Dialog();
 
 
 process.env.NODE_TLS_REJECT_UNAUTHORIZED = 0
@@ -26,7 +26,7 @@ sparkBot.on('message', function (event)
      sparkBot.sendMessage(event.roomId, "Hi, sorry to tell you that but you're not allowed to proceed",function(){});
    }
   console.log(JSON.stringify(event));
-  
+
 })
 sparkBot.on('rooms', function (event)
 {

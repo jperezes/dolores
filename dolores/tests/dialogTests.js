@@ -1,10 +1,10 @@
 
-var expect = require('expect.js');
-var Dialog = require('../routes/dialogs');
-var dialogModule = new Dialog();
+let expect = require('expect.js');
+let Dialog = require('../routes/dialogs');
+let dialogModule = new Dialog();
 
 
-var dialogs = [
+let dialogs = [
   {
     id: "1",
     question: "have you ever questioned the nature of your reality",
@@ -131,7 +131,7 @@ describe('server', function() {
 
 	describe('register user to the Database through questionary', function() {
 		xit('Test1: dialog invalid question', function(done){
-			dialogModule.parseQuestion(question,function(err, res) {
+			dialogModule.parseQuestion(question,(err, res) => {
         expect(err).to.equal(null);
         expect(res).to.exist;
         expect(res).to.equal("sorry, I dn't understand that");
@@ -139,21 +139,21 @@ describe('server', function() {
       });
 		});
 
-			it('Test2: bringing dolores online', function(done){
+			it('Test2: bringing dolores online', (done) => {
 				question.message = "bring yourself back online";
-				dialogModule.parseQuestion(question,function(err, res) {
+				dialogModule.parseQuestion(question,(err, res) => {
 	        expect(err).to.equal(null);
 	        expect(res).to.exist;
 	        expect(res).to.equal("Done, what can I do for you " + question.person.nickName + "?"+ dialogModule.showMenu());
 	        done();
 	      });
 			});
-			it('Test3: answering 1 to register', function(done){
+			it('Test3: answering 1 to register', (done) => {
 				question.message = "1";
 				var expectedReply = "** ·Name: " + question.person.displayName +
 			                          "\n** ·Email: " + question.personEmail +
 			                          "\n** ·Is this data correct? answer <yes/no>";
-				dialogModule.parseQuestion(question,function(err, res) {
+				dialogModule.parseQuestion(question,(err, res) => {
 					expect(err).to.equal(null);
 					expect(res).to.exist;
 					expect(res).to.equal(expectedReply);

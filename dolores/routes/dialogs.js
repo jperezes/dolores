@@ -1,26 +1,26 @@
-var Space = require('../models/space');
-var Dialog = require('../models/conversations')
-var mongoose = require('mongoose');
-var bodyParser = require('body-parser');
-var mongoUrl = process.env.MONGO_SPACES_URL || 'mongodb://localhost:27017/spaces';
+let Space = require('../models/space');
+let Dialog = require('../models/conversations')
+let mongoose = require('mongoose');
+let bodyParser = require('body-parser');
+let mongoUrl = process.env.MONGO_SPACES_URL || 'mongodb://localhost:27017/spaces';
 
 
-var scope = "";
-var reply = "";
-var dialogModule = function(){};
+let scope = "";
+let reply = "";
+let dialogModule = function(){};
 
 console.log(' Attempting to connect to the database ');
 //To avoid promise warning
 mongoose.Promise = global.Promise;
 // Connect to DB
-var conn = mongoose.createConnection(mongoUrl);
+let conn = mongoose.createConnection(mongoUrl);
 
-var spaceModel = conn.model('SparkSpace', Space);
-var dialogModel = conn.model('Dialog', Dialog);
-var space = new spaceModel();
+let spaceModel = conn.model('SparkSpace', Space);
+let dialogModel = conn.model('Dialog', Dialog);
+let space = new spaceModel();
 
 ///
-var populateTempSpace = function(tempSpace){
+let populateTempSpace = function(tempSpace){
   if (tempSpace.roomType === "group") {
     reply = "** ·Your name: " + tempSpace.person.displayName +
                             "\n** ·Room is not one to one: " +
@@ -249,8 +249,8 @@ dialogModule.prototype.parseQuestion = function(query, bot){
 }
 
 
-dialogModule.prototype.getUser = function(user) {
-    var userRegistered;
+dialogModule.prototype.getUser = (user) =>{
+    let userRegistered;
     console.log('attempting to find the user ' + user.personEmail+ ' in the DB');
     spaceModel.find({personEmail:user.personEmail}, function(err, space){
       if (err) {
