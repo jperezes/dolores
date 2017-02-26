@@ -4,5 +4,5 @@
   "dependencies": {
     "sparklite":"^1.0.52"
   },
-    "engines":{"node":"5.9.1"}
+    "engines":{"node":"7.6.0"}
 }
