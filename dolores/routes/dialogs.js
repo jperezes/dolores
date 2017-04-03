@@ -245,7 +245,9 @@ dialogModule.prototype.showSchema = function(){
 }
 
 dialogModule.prototype.parseQuestion = function(query, bot){
-  dialogModel.retrieveResponse(query, bot, callbackQuery);
+  //dialogModel.retrieveResponse(query, bot, callbackQuery);
+  //this promise returns the result and it passes it to the function to process it, then name is still callbackQuery.
+  dialogModel.retrieveResponsePromised(query).then(data => callbackQuery(query,data,bot));
 }
 
 

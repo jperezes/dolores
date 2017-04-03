@@ -2,7 +2,10 @@
   "name": "DoloresBot",
   "version": "0.0.1",
   "dependencies": {
-    "sparklite":"^1.0.52"
+    "promise": "^7.1.1",
+    "sparklite": "^1.0.52"
   },
-    "engines":{"node":"7.6.0"}
+  "engines": {
+    "node": "7.6.0"
+  }
 }
