@@ -243,11 +243,38 @@ dialogModule.prototype.showCurrentOptions = function(){
 dialogModule.prototype.showSchema = function(){
   return space;
 }
+let isSpaceRegistered = space => {
+  return new Promise((resolve,reject) =>{
+    spaceModel.find({roomId:space.roomId}, function(err, space){
+      if (err) {
+        console.log('error retreiving from the database');
+        userRegistered = false;
+      } else if (space.length > 0){
+        console.log('user found in the databasae ');
+        resolve(true);
+      } else {
+        // if the scope is different than null it means we are registering a space
+        resolve(scope !== "");
+      }
+    }).limit(1);
+  });
+}
 
 dialogModule.prototype.parseQuestion = function(query, bot){
   //dialogModel.retrieveResponse(query, bot, callbackQuery);
   //this promise returns the result and it passes it to the function to process it, then name is still callbackQuery.
-  dialogModel.retrieveResponsePromised(query).then(data => callbackQuery(query,data,bot));
+  //dialogModel.retrieveResponsePromised(query).then(data => callbackQuery(query,data,bot));
+  isSpaceRegistered(query).then(result => {
+    if(result) return dialogModel.retrieveResponsePromised(query);
+    else{
+      data ={
+        id:"6",
+        response:"Done",
+        question:"bring yourself back online"
+      };
+      return Promise.resolve(data);
+    }
+  }).then(data => callbackQuery(query,data,bot)).catch("error");
 }
 
 
@@ -268,6 +295,7 @@ dialogModule.prototype.getUser = (user) =>{
     }).limit(1);
     return userRegistered;
 }
+
 
 
 
