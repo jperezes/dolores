@@ -112,12 +112,9 @@ spaceSchema.statics.showUserOptions = function (space, bot, callback) {
     if (result.length>0){
       reply.response = "These are currently your registration options " + result[0].nickName + ":" +
                               "\n\n** ·Name: " + result[0].personName +
-                              "\n** ·Email: " + result[0].personEmail +
-                              "\n** ·Receive Spark Mac Reports? " + result[0].macReports.receive +
-                              "\n** ·Mac Reports filter tags: " + result[0].macReports.tags +
-                              "\n** ·Receive Spark Windows Reports? " + result[0].windowsReports.receive +
-                              "\n** ·Windows Reports filter tags: " + result[0].windowsReports.tags +
-                              "\n** ·Receive Splunk Alerts? " + result[0].splunkReports.receive;
+                              "\n** ·Receive Spark client crash reports real time: " + result[0].macReports.receive +
+                              "\n** ·Crash Reports filter keywords: " + result[0].macReports.tags +
+                              "\n** ·You can use this room to display Splunk Alerts (default option)";
       callback(space, reply, bot);
     }
     else {
@@ -163,7 +160,6 @@ spaceSchema.statics.getMacReportSubscribers = function (req, bot, callback){
 
             })
           }
-
         })
         for(var roomId of roomsIdSet.values()){
          bot.sendMessage(roomId,failureReport,function(){

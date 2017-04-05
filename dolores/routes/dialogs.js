@@ -50,16 +50,11 @@ let populateTempSpace = function(tempSpace){
 var showCurrentOptions = function(space) {
   var userData = "";
   if(space.roomType === "direct") {
-    userData = "** ·Name: " + space.personName +
-                            "\n** ·Email: " + space.personEmail;
-
+    userData = "** ·Name: " + space.personName;
   }
-  reply = userData + "\n** ·Receive Spark Mac Reports? " + space.macReports.receive +
-                          "\n** ·Mac Reports filter tags: " + space.macReports.tags +
-                          "\n** ·Receive Spark Windows Reports? " + space.windowsReports.receive +
-                          "\n** ·Windows Reports filter tags: " + space.windowsReports.tags +
-                          "\n** ·Receive Splunk Alerts? " + space.splunkReports.receive +
-                          "\n** Is this data correct? answer <yes/no>";
+  reply = userData + "\n** ·Receive Spark client crash reports real time: " + space.macReports.receive +
+                     "\n** ·Crash Reports filter keywords: " + space.macReports.tags +
+                     "\n** ·You can use this room to display Splunk Alerts (default option)";
 
   return {
       reply: function() {
@@ -96,8 +91,11 @@ callbackQuery = function(question, dbMessage, bot) {
             //reply = report.reply();
             space = report.space();
             space.updateTempSpace(question);
-            reply = "Please write the tags you want to filter the mac reports " +
-                    "to receive separated by comma. (i.e: whiteboard, auxiliaryDeviceService.cpp,whiteboardView.swift):";
+            reply = "Please write the tags you want to filter the crash reports separated by comma " +
+                    "\n(i.e: whiteboard, auxiliaryDeviceService,roomsView), so I will sent you only the ones you are interested at." +
+                    "\nIf you want to receive all the crashes reported type \"everything\"" +
+                    "\nIf you don't want to receive any reporte type \"none\"" +
+                    "\nYou can update these options at any time by typing \"Bring yourself back online\"";
             scope = "populateMacTagsScope";
           break;
           case "2":
@@ -109,7 +107,6 @@ callbackQuery = function(question, dbMessage, bot) {
            return;
           break;
           case "3":
-          //TODO: crear el metodo que busca el usuario en la base de datos
             scope="";
             space = populateTempSpace(question).space();
             spaceModel.showUserOptions(space, bot, this.callbackQuery);
@@ -163,9 +160,9 @@ callbackQuery = function(question, dbMessage, bot) {
         for (var i in array) {
           space.macReports.tags[i] =array[i];
           space.windowsReports.tags[i] =array[i];
-        }      
+        }
         var showSpace = showCurrentOptions(space);
-        reply = "Is the following data correct?\n" + showSpace.reply();
+        reply = "This room will be registered with the following options " + space.nickName +":\n" + showSpace.reply() + "\n\nAre they correct?<yes/no>";
         scope = "registrationConfirmed";
       break;
       case "confirmWindowsOptions":
@@ -199,7 +196,7 @@ callbackQuery = function(question, dbMessage, bot) {
           space.splunkReports.receive = "no";
         }
         var showSpace = showCurrentOptions(space);
-        reply = "Is the following data correct?\n" + showSpace.reply();
+        reply = "This room will be registered with the following options " + space.nickName +":\n" + showSpace.reply() + +"\n\nAre they correct?<yes/no>";
         scope = "registrationConfirmed";
       break;
       case "registrationConfirmed":

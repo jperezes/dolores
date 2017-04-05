@@ -103,13 +103,9 @@ var question = {
 
 var showCurrentOptions = function(space) {
   reply = "** ·Name: " + space.personName +
-                          "\n** ·Email: " + space.personEmail +
-                          "\n** ·Receive Spark Mac Reports? " + space.macReports.receive +
-                          "\n** ·Mac Reports filter tags: " + space.macReports.tags +
-                          "\n** ·Receive Spark Windows Reports? " + space.windowsReports.receive +
-                          "\n** ·Windows Reports filter tags: " + space.windowsReports.tags +
-                          "\n** ·Receive Splunk Alerts? " + space.splunkReports.receive;
-
+          "\n** ·Receive Spark client crash reports real time: " + space.macReports.receive +
+          "\n** ·Crash Reports filter keywords: " + space.macReports.tags +
+          "\n** ·You can use this room to display Splunk Alerts (default option)";
   return {
       reply: function() {
             return reply;
@@ -140,7 +136,7 @@ describe('server', function() {
 		});
 
 			it('Test2: bringing dolores online', (done) => {
-				question.message = "bring yourself back online";
+				question.message = "Hello Dolores how are ye";
 				dialogModule.parseQuestion(question,(err, res) => {
 	        expect(err).to.equal(null);
 	        expect(res).to.exist;
@@ -150,9 +146,11 @@ describe('server', function() {
 			});
 			it('Test3: answering 1 to register', (done) => {
 				question.message = "1";
-				var expectedReply = "** ·Name: " + question.person.displayName +
-			                          "\n** ·Email: " + question.personEmail +
-			                          "\n** ·Is this data correct? answer <yes/no>";
+				var expectedReply = "Please write the tags you want to filter the crash reports separated by comma " +
+                            "\n(i.e: whiteboard, auxiliaryDeviceService,roomsView), so I will sent you only the ones you are interested at." +
+                            "\nIf you want to receive all the crashes reported type \"everything\"" +
+                            "\nIf you don't want to receive any reporte type \"none\"" +
+                            "\nYou can update these options at any time by typing \"Bring yourself back online\"";
 				dialogModule.parseQuestion(question,(err, res) => {
 					expect(err).to.equal(null);
 					expect(res).to.exist;
@@ -160,7 +158,7 @@ describe('server', function() {
 					done();
 				});
 			});
-			it('Test4: answering yes to validate data', function(done){
+			xit('Test4: answering yes to validate data', function(done){
 				question.message = "yes";
 				var expectedReply = "Do you want me to send you Mac reports as they happen? <yes/no>";
 				dialogModule.parseQuestion(question,function(err, res) {
@@ -170,7 +168,7 @@ describe('server', function() {
 					done();
 				});
 			});
-			it('Test5: answering for mac options', function(done){
+			xit('Test5: answering for mac options', function(done){
 				question.message = "yes";
 				var expectedReply = "Please write the tags you want to filter the mac reports " +
 								"to receive separated by comma. (i.e: whiteboard, auxiliaryDeviceService.cpp,whiteboardView.swift):";
@@ -184,7 +182,7 @@ describe('server', function() {
 
 			it('Test6: populating mac options', function(done){
 				question.message = "whiteboard,auxiliaryDeviceService,wirelessShare";
-				var expectedReply = "Do you want me to send you Spark for Windows crash reports? <yes/no>";
+				var expectedReply =  "This room will be registered with the following options " + question.person.nickName +":\n" + showCurrentOptions(space).reply() + "\n\nAre they correct?<yes/no>";
 				dialogModule.parseQuestion(question,function(err, res) {
 					expect(err).to.equal(null);
 					expect(res).to.exist;
@@ -193,7 +191,7 @@ describe('server', function() {
 				});
 			});
 
-			it('Test7: Saying no to windows reports', function(done){
+			xit('Test7: Saying no to windows reports', function(done){
 				question.message = "no";
 				var expectedReply = "No Spark for Windows crash reports will be sent to you " + question.person.nickName +
 				"\nDo you want me to send you Splunk reports? <yes/no>";
@@ -205,7 +203,7 @@ describe('server', function() {
 				});
 			});
 
-			it('Test8: Saying yes to Splunk Reports', function(done){
+			xit('Test8: Saying yes to Splunk Reports', function(done){
 				question.message = "yes";
 				var expectedReply = "Is the following data correct?\n" + showCurrentOptions(space).reply() +
                             "\n** Is this data correct? answer <yes/no>";
@@ -236,7 +234,7 @@ describe('server', function() {
           dialogModule.parseQuestion(question,function(err, res) {
             expect(err).to.equal(null);
             expect(res).to.exist;
-            expect(res).to.equal("Done, what can I do for you " + question.person.nickName + "?"+ dialogModule.showMenu());
+            expect(res).to.equal("What can I do for you " + question.person.nickName + "?"+ dialogModule.showMenu());
             done();
           });
         });
@@ -257,7 +255,7 @@ describe('server', function() {
 					dialogModule.parseQuestion(question,function(err, res) {
 						expect(err).to.equal(null);
 						expect(res).to.exist;
-						expect(res).to.equal("Done, what can I do for you " + question.person.nickName + "?"+ dialogModule.showMenu());
+						expect(res).to.equal("What can I do for you " + question.person.nickName + "?"+ dialogModule.showMenu());
 						done();
 					});
 				});
@@ -276,7 +274,7 @@ describe('server', function() {
 					dialogModule.parseQuestion(question,function(err, res) {
 						expect(err).to.equal(null);
 						expect(res).to.exist;
-						expect(res).to.equal("Done, what can I do for you " + question.person.nickName + "?"+ dialogModule.showMenu());
+						expect(res).to.equal("What can I do for you " + question.person.nickName + "?"+ dialogModule.showMenu());
 						done();
 					});
 				});
