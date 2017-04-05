@@ -78,7 +78,7 @@ callbackQuery = function(question, dbMessage, bot) {
     return
   }
   else if ((typeof dbMessage != 'undefined' && dbMessage.id == '6') || scope == "menu")  {
-    reply = "Done, what can I do for you " + question.person.nickName + "?"+ showMenu();
+    reply = "What can I do for you " + question.person.nickName + "?"+ showMenu();
       scope = "chooseMenu"
   }
   else if (scope !="") {
@@ -93,9 +93,11 @@ callbackQuery = function(question, dbMessage, bot) {
         switch (cleanQuestion) {
           case "1":
             var report = populateTempSpace(question);
-            reply = report.reply();
+            //reply = report.reply();
             space = report.space();
-            scope = "askForConfirmation";
+            reply = "Please write the tags you want to filter the mac reports " +
+                    "to receive separated by comma. (i.e: whiteboard, auxiliaryDeviceService.cpp,whiteboardView.swift):";
+            scope = "populateMacTagsScope";
           break;
           case "2":
            space.unInitSelf();
@@ -127,8 +129,8 @@ callbackQuery = function(question, dbMessage, bot) {
           scope = "askForMacReportOption";
         }
         else {
-          var uninitSchema = uninitScopeSchema(space);
-          space = uninitSchema.space();
+          // var uninitSchema = uninitScopeSchema(space);
+          // space = uninitSchema.space();
           reply = "Goodbye " + question.person.nickName + ", if you want to proceed just start again.";
           scope = "";
         }
@@ -149,13 +151,17 @@ callbackQuery = function(question, dbMessage, bot) {
         }
       break;
       case "populateMacTagsScope":
+        space.macReports.receive = "yes";
+        space.windowsReports.receive="yes";
+        space.splunkReports.receive = "yes";
         // User said it wants to get mac reports populating options. Next question for windows option.
         var array = cleanQuestion.split(',');
         for (var i in array) {
           space.macReports.tags[i] =array[i];
+          space.windowsReports.tags[i] =array[i];
         }
         reply = "Do you want me to send you Spark for Windows crash reports? <yes/no>";
-        scope = "confirmWindowsOptions";
+        scope = "registrationConfirmed";
       break;
       case "confirmWindowsOptions":
         // User replied whether to receive windows options.

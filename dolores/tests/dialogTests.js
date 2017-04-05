@@ -144,7 +144,7 @@ describe('server', function() {
 				dialogModule.parseQuestion(question,(err, res) => {
 	        expect(err).to.equal(null);
 	        expect(res).to.exist;
-	        expect(res).to.equal("Done, what can I do for you " + question.person.nickName + "?"+ dialogModule.showMenu());
+	        expect(res).to.equal("What can I do for you " + question.person.nickName + "?"+ dialogModule.showMenu());
 	        done();
 	      });
 			});
