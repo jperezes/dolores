@@ -216,7 +216,7 @@ describe('server', function() {
 			});
 			it('Test9: Validating final data, proceed to save to database', function(done){
 				question.message = "yes";
-				var expectedReply = "Welcome to Westworld " + space.nickName + "!";
+				var expectedReply = "Welcome to SparkWorld " + space.nickName + "!";
 				dialogModule.parseQuestion(question,function(err, res) {
 					expect(err).to.equal(null);
 					expect(res).to.exist;

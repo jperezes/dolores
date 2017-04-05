@@ -92,7 +92,7 @@ callbackQuery = function(question, dbMessage, bot) {
             space = report.space();
             space.updateTempSpace(question);
             reply = "Please write the tags you want to filter the crash reports separated by comma " +
-                    "\n(i.e: whiteboard, auxiliaryDeviceService,roomsView), so I will sent you only the ones you are interested at." +
+                    "for example: \*\*whiteboard\*\*, \_auxiliaryDeviceService\_,roomsView, so I will sent you only the ones you are interested at." +
                     "\nIf you want to receive all the crashes reported type \"everything\"" +
                     "\nIf you don't want to receive any reporte type \"none\"" +
                     "\nYou can update these options at any time by typing \"Bring yourself back online\"";

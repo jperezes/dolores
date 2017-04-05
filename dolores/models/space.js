@@ -98,7 +98,11 @@ spaceSchema.statics.insertUser = function (space, bot, callback) {
           callback(space, reply, bot);
         }
         else {
-          reply.response = "Welcome to Westworld " + space.nickName + "!";
+          if (space.roomType === "group") {
+            reply.response = "Welcome to SparkWorld!";
+          } else {
+            reply.response = "Welcome to SparkWorld " + space.nickName + "!";
+          }
           callback(space, reply, bot);
         }
           space.unInitSelf();
