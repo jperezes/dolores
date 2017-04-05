@@ -139,6 +139,8 @@ callbackQuery = function(question, dbMessage, bot) {
         // User confirmed mail/name and replied mac option. Next question is options
         if(cleanQuestion === 'yes') {
           space.macReports.receive = "yes";
+          space.windowsReports.receive="yes";
+          space.splunkReports.receive = "yes";
           reply = "Please write the tags you want to filter the mac reports " +
                   "to receive separated by comma. (i.e: whiteboard, auxiliaryDeviceService.cpp,whiteboardView.swift):";
           scope = "populateMacTagsScope";
@@ -151,16 +153,13 @@ callbackQuery = function(question, dbMessage, bot) {
         }
       break;
       case "populateMacTagsScope":
-        space.macReports.receive = "yes";
-        space.windowsReports.receive="yes";
-        space.splunkReports.receive = "yes";
         // User said it wants to get mac reports populating options. Next question for windows option.
         var array = cleanQuestion.split(',');
         for (var i in array) {
           space.macReports.tags[i] =array[i];
           space.windowsReports.tags[i] =array[i];
         }
-        reply = "Do you want me to send you Spark for Windows crash reports? <yes/no>";
+        reply = "Is the following data correct?\n" + showSpace.reply();
         scope = "registrationConfirmed";
       break;
       case "confirmWindowsOptions":
