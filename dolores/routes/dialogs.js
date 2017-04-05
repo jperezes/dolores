@@ -237,7 +237,7 @@ callbackQuery = function(question, dbMessage, bot) {
 }
 
 var showMenu = function(){
-    return "\n1: Register Space" + "\n2: Unregister Space" + "\n3: Show Space options" + "\n<1><2><3>";
+    return "1. Register Space 2. Unregister Space" + "3. Show Space options" + "\n<1><2><3>";
 }
 dialogModule.prototype.showMenu = function(){
   return showMenu();
