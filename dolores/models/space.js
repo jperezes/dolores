@@ -166,7 +166,7 @@ spaceSchema.statics.getMacReportSubscribers = function (req, bot, callback){
           }
         })
         for(var roomId of roomsIdSet.values()){
-         bot.sendMessage(roomId,failureReport,function(){
+         bot.sendRichTextMessage(roomId,failureReport,function(){
            console.log("user found about to send him a message");
          });
         }
@@ -196,7 +196,7 @@ spaceSchema.statics.getSplunkSubscribers = function (req, bot, callback){
             }
           })
        roomsIds.forEach(function(roomId){
-           bot.sendMessage(roomId,splunkReport,function(){
+           bot.sendRichTextMessage(roomId,splunkReport,function(){
              console.log("user found about to send him a message");
            });
        })
