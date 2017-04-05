@@ -159,6 +159,7 @@ callbackQuery = function(question, dbMessage, bot) {
           space.macReports.tags[i] =array[i];
           space.windowsReports.tags[i] =array[i];
         }
+        var showSpace = showCurrentOptions(space);
         reply = "Is the following data correct?\n" + showSpace.reply();
         scope = "registrationConfirmed";
       break;
