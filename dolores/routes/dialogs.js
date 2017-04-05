@@ -95,6 +95,7 @@ callbackQuery = function(question, dbMessage, bot) {
             var report = populateTempSpace(question);
             //reply = report.reply();
             space = report.space();
+            space.updateTempSpace(question);
             reply = "Please write the tags you want to filter the mac reports " +
                     "to receive separated by comma. (i.e: whiteboard, auxiliaryDeviceService.cpp,whiteboardView.swift):";
             scope = "populateMacTagsScope";
@@ -155,10 +156,14 @@ callbackQuery = function(question, dbMessage, bot) {
         space.splunkReports.receive = "yes";
         // User said it wants to get mac reports populating options. Next question for windows option.
         var array = cleanQuestion.split(',');
+        if (array[0].toLowerCase() === "none") {
+          space.macReports.receive = "no";
+          space.windowsReports.receive="no";
+        }
         for (var i in array) {
           space.macReports.tags[i] =array[i];
           space.windowsReports.tags[i] =array[i];
-        }
+        }      
         var showSpace = showCurrentOptions(space);
         reply = "Is the following data correct?\n" + showSpace.reply();
         scope = "registrationConfirmed";
