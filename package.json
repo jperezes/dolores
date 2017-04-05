@@ -3,7 +3,7 @@
   "version": "0.0.1",
   "dependencies": {
     "promise": "^7.1.1",
-    "sparklite": "^1.0.52"
+    "sparklite": "^1.0.53"
   },
   "engines": {
     "node": "7.6.0"
