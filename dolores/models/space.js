@@ -235,7 +235,7 @@ spaceSchema.statics.getSplunkUsers = (owner) => {
           console.log("users found but no with splunk option into the database");
        }
        console.log("users found but no with splunk option into the database");
-       resolve(roomsIds);
+       return roomsIds;
     });
   })
 }
