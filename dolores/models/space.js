@@ -216,7 +216,7 @@ spaceSchema.statics.getSplunkSubscribers = function (req, bot, callback){
 
 spaceSchema.statics.getSplunkUsers = function(owner){
     console.log("about a non saved query on" + owner);
-    return new Promise.then(function(resolve,reject){
+    return new Promise(function(resolve,reject){
       this.list(function(err,users){
         let roomsIds = [];
         if(err){
