@@ -74,7 +74,7 @@ botModule.prototype.listenForStadistics = function(bot,app){
           });
       })
       res.status(200).send('Splunk result successfully saved to the database');
-    }).catch(err => {res.send(err)});
+    }).catch(err => {res.status(204).send(err)});
 
   });
 }
