@@ -232,6 +232,7 @@ spaceSchema.statics.getSplunkUsers = (owner) => {
                 console.log("user found about to send him a message");
               }
           })
+          console.log("users not found into the database");
           resolve(roomsIds);
        }
 
