@@ -40,7 +40,6 @@ DialogSchema.statics.retrieveResponsePromised = function (question) {
       resolve(result[0]);
     });
   })
-
 }
 
 // module.exports = mongoose.model('Dialog', DialogSchema);
