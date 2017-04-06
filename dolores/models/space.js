@@ -217,8 +217,8 @@ spaceSchema.statics.getSplunkSubscribers = function (req, bot, callback){
 spaceSchema.statics.getSplunkUsers = (owner) => {
     console.log("about a non saved query on" + owner);
     return new Promise((resolve,reject) =>{
-      console.log("the type of this inside promise: " + typeof(this))
-      this.find({}).exec(function(err,users){
+      console.log("the type of this inside promise: " + JSON.stringify(this))
+      list(function(err,users){
         let roomsIds = [];
         if(err){
           console.log("error reading the database");
@@ -235,7 +235,7 @@ spaceSchema.statics.getSplunkUsers = (owner) => {
           console.log("users found but no with splunk option into the database");
        }
        console.log("users found but no with splunk option into the database");
-       return roomsIds;
+       resolve(roomsIds);
     });
   })
 }
