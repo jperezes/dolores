@@ -60,9 +60,10 @@ botModule.prototype.listenForStadistics = function(bot,app){
     });
     spaceModel.getSplunkSubscribers(req,bot,function(){});
   });
-  
+
   router.route('/faststats').post(function(req, res) {
-    spaceModel.getSplunkUsers().then(subscribers =>{
+
+    spaceModel.getSplunkUsers(req.body.owner).then(subscribers =>{
       let splunkReport = "Splunk Alert: " +
                         "\n\n- **Search Name:** " + req.body.search_name +
                         "\n\n- **Result:** " + req.body.result.count +
