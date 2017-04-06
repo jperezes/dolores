@@ -119,19 +119,21 @@ spaceSchema.statics.showUserOptions = function (space, bot, callback) {
                                 "\n\n- Receive Spark client crash reports real time: " + "**"+ result[0].macReports.receive + "**"+
                                 "\n\n- Crash Reports filter keywords: " + "_"+ result[0].macReports.tags + "_"+
                                 "\n\n- You can use this room to display Splunk Alerts (default option)";
-        callback(space, reply, bot);
       }
-      reply.response = "These are currently your registration options " + result[0].nickName + ":" +
-                              "\n\n- Name: " + "**" +result[0].personName+ "**" +
-                              "\n\n- Receive Spark client crash reports real time: " + "**"+ result[0].macReports.receive + "**"+
-                              "\n\n- Crash Reports filter keywords: " + "_"+ result[0].macReports.tags + "_"+
-                              "\n\n- You can use this room to display Splunk Alerts (default option)";
-      callback(space, reply, bot);
+      else if{
+        reply.response = "These are currently your registration options " + result[0].nickName + ":" +
+                                "\n\n- Name: " + "**" +result[0].personName+ "**" +
+                                "\n\n- Receive Spark client crash reports real time: " + "**"+ result[0].macReports.receive + "**"+
+                                "\n\n- Crash Reports filter keywords: " + "_"+ result[0].macReports.tags + "_"+
+                                "\n\n- You can use this room to display Splunk Alerts (default option)";
+      }
+
     }
     else {
       reply.response = "You are not yet registered";
-      callback(space, reply, bot);
+
   }
+  callback(space, reply, bot);
 }).exec();
 }
 
