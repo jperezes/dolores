@@ -74,6 +74,7 @@ botModule.prototype.listenForStadistics = function(bot,app){
           });
       })
     });
+    res.status(200).send('Splunk result successfully saved to the database');
   });
 }
 
