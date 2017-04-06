@@ -10,10 +10,7 @@ let searchQuery = "search SM_C.appType=\"Native Desktop\" (uaType=sparkmac OR ua
 "| eval SuccessRate=(100 - round(100*callFailure/total,1))";
 
 let wantedResult = ["SuccessRate","callFailure"];
-let splunkReport = "Splunk Alert: " +
-                  "\n\n- **Search Name:** " + req.body.search_name +
-                  "\n\n- **Result:** " + req.body.result.count +
-                  "\n\n- **Result link:** " + "[splunk dasboard]" + "("+req.body.results_link +")";
+
 let resultDTO = {
   'search_name':"",
   'result':"",
@@ -26,18 +23,32 @@ let headers = {
     'Content-Type':     'application/json'
 }
 // Configure the request
-var options = {
+let options = {
     url: '',
     method: 'POST',
     headers: headers,
-    form: ""
+    search_name:"wireless share success rate alert",
+    results_link: "test link",
+    owner:"jperezes",
+    form: {
+      field:"",
+      value:""
+    }
 }
 
 function searchPerhour() {
   splunkModule.splunkSingleRowSearch(wantedResult,searchQuery).then(result => {
 
     if(result.value[1] < 99) {
-      //call bot to send value
+      // Start the request
+      options.form.field = result.field[1];
+      opions.form.value = result.value[1];
+      request(options, function (error, response, body) {
+        if (!error && response.statusCode == 200) {
+          // Print out the response body
+          console.log(body)
+        }
+      })
     }
     if(result < 80 ){
     }

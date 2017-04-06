@@ -215,12 +215,10 @@ spaceSchema.statics.getSplunkSubscribers = function (req, bot, callback){
 }
 
 spaceSchema.statics.getSplunkUsers = function(owner){
-    console.log("about a non saved query on" + owner);
     return new Promise((resolve,reject)=>{
       this.list(function(err,users){
         let roomsIds = [];
         if(err){
-          console.log("error reading the database");
           reject(error);
         }
         else if (users){
@@ -228,12 +226,9 @@ spaceSchema.statics.getSplunkUsers = function(owner){
               var splunkOwner = item.personEmail.split('@');
               if(item.splunkReports.receive === "yes" && splunkOwner[0] === owner){
                 roomsIds.push(item.roomId);
-                console.log("user found about to send him a message");
               }
           })
-          console.log("users found but no with splunk option into the database");
        }
-       console.log("users found but no with splunk option into the database");
        resolve(roomsIds);
     });
   })

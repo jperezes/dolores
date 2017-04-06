@@ -66,7 +66,7 @@ botModule.prototype.listenForStadistics = function(bot,app){
     spaceModel.getSplunkUsers(req.body.owner).then(subscribers =>{
       let splunkReport = "Splunk Alert: " +
                         "\n\n- **Search Name:** " + req.body.search_name +
-                        "\n\n- **Result:** " + req.body.result.count +
+                        "\n\n- **Result:** " + req.body.form.field + " " + req.body.form.value +
                         "\n\n- **Result link:** " + "[splunk dasboard]" + "("+req.body.results_link +")";
       subscribers.forEach((roomId) => {
           bot.sendRichTextMessage(roomId,splunkReport,function(){
