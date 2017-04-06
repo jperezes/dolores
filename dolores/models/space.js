@@ -189,7 +189,7 @@ spaceSchema.statics.getSplunkSubscribers = function (req, bot, callback){
     var splunkReport = "Splunk Report received: " +
                       "\n\n- **Result:** " + req.body.result.count +
                       "\n\n- **Search Name:** " + req.body.search_name +
-                      "\n\n- **Result link:** " + req.body.results_link;
+                      "\n\n- **Result link:** " + "[splunk dasboard]" + "("+req.body.results_link +")";
 
     var owner = req.body.owner;
     this.list(function(err,users){
