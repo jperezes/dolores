@@ -219,6 +219,7 @@ spaceSchema.statics.getSplunkUsers = (owner) => {
     let that = this;
     console.log("the type of this: " + typeof(this))
     return new Promise((resolve,reject) =>{
+      console.log("the type of this inside promise: " + typeof(this))
       that.list(function(err,users){
         let roomsIds = [];
         if(err){
