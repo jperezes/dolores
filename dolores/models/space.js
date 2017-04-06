@@ -229,10 +229,12 @@ spaceSchema.statics.getSplunkUsers = (owner) => {
               var splunkOwner = item.personEmail.split('@');
               if(item.splunkReports.receive === "yes" && splunkOwner[0] === owner){
                 roomsIds.push(item.roomId);
+                console.log("user found about to send him a message");
               }
           })
+          resolve(roomsIds);
        }
-       resolve(roomsIds);
+
     });
   })
 }
