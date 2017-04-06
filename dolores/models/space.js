@@ -115,10 +115,10 @@ spaceSchema.statics.showUserOptions = function (space, bot, callback) {
   this.find({roomId: space.roomId}, function(err, result, next) {
     if (result.length>0){
       reply.response = "These are currently your registration options " + result[0].nickName + ":" +
-                              "\n\n** ·Name: " + result[0].personName +
-                              "\n** ·Receive Spark client crash reports real time: " + result[0].macReports.receive +
-                              "\n** ·Crash Reports filter keywords: " + result[0].macReports.tags +
-                              "\n** ·You can use this room to display Splunk Alerts (default option)";
+                              "\n\n* **Name:** " + result[0].personName +
+                              "\n\n* **Receive Spark client crash reports real time:** " + result[0].macReports.receive +
+                              "\n\n* **Crash Reports filter keywords:** " + result[0].macReports.tags +
+                              "\n\n* **You can use this room to display Splunk Alerts (default option)**";
       callback(space, reply, bot);
     }
     else {
@@ -134,13 +134,13 @@ spaceSchema.statics.getMacReportSubscribers = function (req, bot, callback){
   var failureReport = "Mac crash received: " +
                     //"\nevent: " + req.body.event +
                     //"\npayload Type: " + req.body.payload_type +
-                    "\ndisplay ID: " + req.body.payload.display_id +
-                    "\ntitle: " + req.body.payload.title +
-                    "\nmethod affected: " + req.body.payload.method +
-                    "\nimpact_level: " + req.body.payload.impact_level  +
-                    "\ncrashes_count: " + req.body.payload.crashes_count +
+                    "\n\n**display ID:** " + req.body.payload.display_id +
+                    "\n\n**title:** " + req.body.payload.title +
+                    "\n\n**method affected:** " + req.body.payload.method +
+                    "\n\n**impact_level:** " + req.body.payload.impact_level  +
+                    "\n\n**crashes_count:** " + req.body.payload.crashes_count +
                     //"\nimpacted_devices_count: " + req.body.payload.impacted_devices_count +
-                    "\nurl to the crash: " + req.body.payload.url;
+                    "\n\n**url to the crash:** " + req.body.payload.url;
   stringToSearch = stringToSearch.toLowerCase();
   this.list(function(err,users){
     if(err){
@@ -178,9 +178,9 @@ spaceSchema.statics.getSplunkSubscribers = function (req, bot, callback){
     console.log("about to parse and send a message to found users");
 
     var splunkReport = "Splunk Report received: " +
-                      "\nResult: " + req.body.result.count +
-                      "\nSearch Name: " + req.body.search_name +
-                      "\nResult link: " + req.body.results_link;
+                      "\n\n* **Result:** " + req.body.result.count +
+                      "\n\n* **Search Name:** " + req.body.search_name +
+                      "\n\n* **Result link:** " + req.body.results_link;
 
     var owner = req.body.owner;
     this.list(function(err,users){
