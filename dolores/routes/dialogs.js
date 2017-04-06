@@ -52,9 +52,9 @@ var showCurrentOptions = function(space) {
   if(space.roomType === "direct") {
     userData = "** ·Name: " + space.personName;
   }
-  reply = userData + "\n** ·Receive Spark client crash reports real time: " + space.macReports.receive +
-                     "\n** ·Crash Reports filter keywords: " + space.macReports.tags +
-                     "\n** ·You can use this room to display Splunk Alerts (default option)";
+  reply = userData + "\n\n** ·Receive Spark client crash reports real time: " + space.macReports.receive +
+                     "\n\n** ·Crash Reports filter keywords: " + space.macReports.tags +
+                     "\n\n** ·You can use this room to display Splunk Alerts (default option)";
 
   return {
       reply: function() {
@@ -92,10 +92,10 @@ callbackQuery = function(question, dbMessage, bot) {
             space = report.space();
             space.updateTempSpace(question);
             reply = "Please write the tags you want to filter the crash reports separated by comma " +
-                    "for example: **whiteboard**, _auxiliaryDeviceService_,roomsView, so I will sent you only the ones you are interested at." +
-                    "\nIf you want to receive all the crashes reported type \"everything\"" +
-                    "\nIf you don't want to receive any reporte type \"none\"" +
-                    "\nYou can update these options at any time by typing \"Bring yourself back online\"";
+                    "for example: *whiteboard*, _auxiliaryDeviceService_,*roomsView*, so I will sent you only the ones you are interested at." +
+                    "\n\n\n\nIf you want to receive all the crashes reported type **everything**" +
+                    "\n\n\n\nIf you don't want to receive any reporte type **none**" +
+                    "\n\n\n\nYou can update these options at any time by typing **Bring yourself back online**";
             scope = "populateMacTagsScope";
           break;
           case "2":
@@ -237,7 +237,7 @@ callbackQuery = function(question, dbMessage, bot) {
 }
 
 var showMenu = function(){
-    return "1. Register Space 2. Unregister Space" + "3. Show Space options" + "\n<1><2><3>";
+    return "\n\n1. Register Space \n\n2. Unregister Space" + "\n\n3. Show Space options" + "\n\n\n Select <1><2><3>";
 }
 dialogModule.prototype.showMenu = function(){
   return showMenu();
