@@ -1,5 +1,5 @@
 var mongoose = require('mongoose');
-let Promise = require('promise');
+let Promise = require('bluebird');
 
 var spaceSchema = mongoose.Schema({
     roomId: String,
