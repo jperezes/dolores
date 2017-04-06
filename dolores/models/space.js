@@ -214,11 +214,11 @@ spaceSchema.statics.getSplunkSubscribers = function (req, bot, callback){
   });
 }
 
-
 spaceSchema.statics.getSplunkUsers = (owner) => {
     console.log("about a non saved query on" + owner);
+    let that = this;
     return new Promise((resolve,reject) =>{
-      this.find({}, null, {},function(err,users){
+      that.list(function(err,users){
         let roomsIds = [];
         if(err){
           console.log("error reading the database");
