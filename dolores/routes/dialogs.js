@@ -52,9 +52,9 @@ var showCurrentOptions = function(space) {
   if(space.roomType === "direct") {
     userData = "** ·Name: " + space.personName;
   }
-  reply = userData + "\n\n** ·Receive Spark client crash reports real time: " + space.macReports.receive +
-                     "\n\n** ·Crash Reports filter keywords: " + space.macReports.tags +
-                     "\n\n** ·You can use this room to display Splunk Alerts (default option)";
+  reply = userData + "\n\n*Receive Spark client crash reports real time: " + space.macReports.receive +
+                     "\n*Crash Reports filter keywords: " + space.macReports.tags +
+                     "\n*You can use this room to display Splunk Alerts (default option)";
 
   return {
       reply: function() {
