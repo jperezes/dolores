@@ -73,8 +73,9 @@ botModule.prototype.listenForStadistics = function(bot,app){
             console.log("user found about to send him a message");
           });
       })
-    });
-    res.status(200).send('Splunk result successfully saved to the database');
+      res.status(200).send('Splunk result successfully saved to the database');
+    }).catch(err => {res.send(err)});
+
   });
 }
 
