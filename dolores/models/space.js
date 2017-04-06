@@ -216,11 +216,9 @@ spaceSchema.statics.getSplunkSubscribers = function (req, bot, callback){
 
 spaceSchema.statics.getSplunkUsers = (owner) => {
     console.log("about a non saved query on" + owner);
-    let that = this;
-    console.log("the type of this: " + typeof(this))
     return new Promise((resolve,reject) =>{
       console.log("the type of this inside promise: " + typeof(this))
-      that.list(function(err,users){
+      this.find({}).exec(function(err,users){
         let roomsIds = [];
         if(err){
           console.log("error reading the database");
