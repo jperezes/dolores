@@ -50,11 +50,11 @@ let populateTempSpace = function(tempSpace){
 var showCurrentOptions = function(space) {
   var userData = "";
   if(space.roomType === "direct") {
-    userData = "** ·Name: " + space.personName;
+    userData = "\n\n* Name: " + "**"+ space.personName +"**";
   }
-  reply = userData + "\n\n*Receive Spark client crash reports real time: " + space.macReports.receive +
-                     "\n*Crash Reports filter keywords: " + space.macReports.tags +
-                     "\n*You can use this room to display Splunk Alerts (default option)";
+  reply = userData + "\n\n*Receive Spark client crash reports real time: " + "**"+ space.macReports.receive +"**"+
+                     "\n\n*Crash Reports filter keywords: " + "**"+ space.macReports.tags + "**"+
+                     "\n\n*You can use this room to display Splunk Alerts (default option)";
 
   return {
       reply: function() {
@@ -93,9 +93,9 @@ callbackQuery = function(question, dbMessage, bot) {
             space.updateTempSpace(question);
             reply = "Please write the tags you want to filter the crash reports separated by comma " +
                     "for example: *whiteboard*, _auxiliaryDeviceService_,*roomsView*, so I will sent you only the ones you are interested at." +
-                    "\n\n\n\nIf you want to receive all the crashes reported type **everything**" +
-                    "\n\n\n\nIf you don't want to receive any reporte type **none**" +
-                    "\n\n\n\nYou can update these options at any time by typing **Bring yourself back online**";
+                    "\n\nIf you want to receive all the crashes reported type \"**everything**\"." +
+                    "\n\nIf you don't want to receive any reporte type \"**none**\"." +
+                    "\n\nYou can update these options at any time by typing \"**Bring yourself back online**\".";
             scope = "populateMacTagsScope";
           break;
           case "2":
