@@ -1,4 +1,5 @@
 var mongoose = require('mongoose');
+let Promise = require('promise');
 
 var spaceSchema = mongoose.Schema({
     roomId: String,
@@ -211,6 +212,29 @@ spaceSchema.statics.getSplunkSubscribers = function (req, bot, callback){
        })
      }
   });
+}
+
+
+spaceSchema.statics.getSplunkUsers = () => {
+    console.log("about a non saved query");
+    return new Promise((resolve,reject) =>{
+      this.list(function(err,users){
+        if(err){
+          console.log("error reading the database");
+          reject(error);
+        }
+        else if (users){
+          var roomsIds = [];
+          users.forEach(function(item){
+              var splunkOwner = item.personEmail.split('@');
+              if(item.splunkReports.receive === "yes" && splunkOwner[0] === owner){
+                roomsIds.push(item.roomId);
+              }
+          })
+       }
+       resolve(roomsIds);
+    });
+  })
 }
 
 

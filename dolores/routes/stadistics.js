@@ -58,13 +58,21 @@ botModule.prototype.listenForStadistics = function(bot,app){
       }
 
     });
-
-    var messageToSend = "Splunk Alert!\nAlert Name :" + req.body.search_name +
-                        "\nResult: " + req.body.result.count +
-                        "\nSearch url: " + req.body.results_link;
-
     spaceModel.getSplunkSubscribers(req,bot,function(){});
-
+  });
+  
+  router.route('/faststats').post(function(req, res) {
+    spaceModel.getSplunkUsers().then(subscribers =>{
+      let splunkReport = "Splunk Alert: " +
+                        "\n\n- **Search Name:** " + req.body.search_name +
+                        "\n\n- **Result:** " + req.body.result.count +
+                        "\n\n- **Result link:** " + "[splunk dasboard]" + "("+req.body.results_link +")";
+      subscribers.forEach((roomId) => {
+          bot.sendRichTextMessage(roomId,splunkReport,function(){
+            console.log("user found about to send him a message");
+          });
+      })
+    });
   });
 }
 

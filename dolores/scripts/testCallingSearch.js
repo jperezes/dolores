@@ -24,5 +24,5 @@ function myFunction() {
 }
 console.log("this printed immediately before");
 //var intervalID = setInterval(searchPerhour, 15000);
-searchPerhour();
+//searchPerhour();
 console.log("this printed after immediately after");
