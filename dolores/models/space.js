@@ -1,5 +1,5 @@
 var mongoose = require('mongoose');
-let Promise = require('bluebird');
+let Promise = require('promise');
 
 var spaceSchema = mongoose.Schema({
     roomId: String,
@@ -214,11 +214,9 @@ spaceSchema.statics.getSplunkSubscribers = function (req, bot, callback){
   });
 }
 
-spaceSchema.statics.getSplunkUsers = (owner) => {
+spaceSchema.statics.getSplunkUsers = function(owner){
     console.log("about a non saved query on" + owner);
-    'use strict'
-    return new Promise.bind(this).then((resolve,reject) =>{
-      console.log("the type of this inside promise: " + JSON.stringify(this))
+    return new Promise.then(function(resolve,reject){
       this.list(function(err,users){
         let roomsIds = [];
         if(err){
