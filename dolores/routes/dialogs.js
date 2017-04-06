@@ -54,7 +54,7 @@ var showCurrentOptions = function(space) {
   }
   reply = userData + "\n\n- Receive Spark client crash reports real time: " + "**"+ space.macReports.receive +"**"+
                      "\n\n- Crash Reports filter keywords: " + "**"+ space.macReports.tags + "**"+
-                     "\n\n- You can use this room to display Splunk Alerts (default option)";
+                     "\n\n- You can use this room to display Splunk Alerts:" + "**" + space.splunkReports.receive;
 
   return {
       reply: function() {
@@ -162,8 +162,8 @@ callbackQuery = function(question, dbMessage, bot) {
           space.windowsReports.tags[i] =array[i];
         }
         var showSpace = showCurrentOptions(space);
-        reply = "This room will be registered with the following options " + space.nickName +":\n" + showSpace.reply() + "\n\nAre they correct?<yes/no>";
-        scope = "registrationConfirmed";
+        reply = "Would you like to enable this space to receive your splunk alerts?<yes/no>";
+        scope = "confirmSplunkOptions";
       break;
       case "confirmWindowsOptions":
         // User replied whether to receive windows options.
@@ -196,7 +196,7 @@ callbackQuery = function(question, dbMessage, bot) {
           space.splunkReports.receive = "no";
         }
         var showSpace = showCurrentOptions(space);
-        reply = "This room will be registered with the following options " + space.nickName +":\n" + showSpace.reply() + +"\n\nAre they correct?<yes/no>";
+        reply = "This room will be registered with the following options " + space.nickName +":\n" + showSpace.reply() + "\n\nAre they correct?<yes/no>";
         scope = "registrationConfirmed";
       break;
       case "registrationConfirmed":
