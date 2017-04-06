@@ -149,7 +149,7 @@ spaceSchema.statics.getMacReportSubscribers = function (req, bot, callback){
                     "\n\n- **impact_level:** " + req.body.payload.impact_level  +
                     "\n\n- **crashes_count:** " + req.body.payload.crashes_count +
                     //"\nimpacted_devices_count: " + req.body.payload.impacted_devices_count +
-                    "\n\n- **url to the crash:** " + req.body.payload.url;
+                    "\n\n- **url to the crash:** " + "[fabric link to crash]" + "("+ req.body.payload.url + ")";
   stringToSearch = stringToSearch.toLowerCase();
   this.list(function(err,users){
     if(err){
