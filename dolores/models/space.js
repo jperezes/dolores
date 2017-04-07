@@ -1,6 +1,6 @@
 var mongoose = require('mongoose');
 let Promise = require('promise');
-let sleep = require('sleep-promise');
+let sleep = require('sleep');
 
 var spaceSchema = mongoose.Schema({
     roomId: String,
@@ -177,10 +177,13 @@ spaceSchema.statics.getMacReportSubscribers = function (req, bot, callback){
           }
         })
         for(var roomId of roomsIdSet.values()){
+         console.log("nuber of users found:" + roomIdSet.size);
          bot.sendRichTextMessage(roomId,failureReport,function(){
            console.log("user found about to send him a message");
          });
-         sleep(200).then(()=>{console.log("message send to roomId: " + roomId +"sleeping 200 ms")})
+         //sleeping for 100 seconds to send the next request
+         sleep.msleep(100)
+
         }
       }
     });
