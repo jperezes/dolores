@@ -7,9 +7,7 @@
     "promise": "^7.1.1",
     "request-promise": "^4.2.0",
     "sparklite": "^1.0.53",
-    "splunk-sdk": "^1.8.2",
-    "sleep-promise":"^2.0.0",
-    "sleep":"^5.0.0"
+    "splunk-sdk": "^1.8.2"
   },
   "engines": {
     "node": "7.6.0"

@@ -178,11 +178,11 @@ spaceSchema.statics.getMacReportSubscribers = function (req, bot, callback){
         })
         for(var roomId of roomsIdSet.values()){
          console.log("nuber of users found:" + roomIdSet.size);
-         bot.sendRichTextMessage(roomId,failureReport,function(){
-           console.log("user found about to send him a message");
-         });
-         //sleeping for 100 seconds to send the next request
-         sleep.msleep(100)
+         setTimeout(bot.sendRichTextMessage(roomId,failureReport,function(){
+                    console.log("user found about to send him a message");
+                  }),100);
+
+
 
         }
       }
