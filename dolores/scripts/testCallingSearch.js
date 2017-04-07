@@ -20,19 +20,19 @@ let resultDTO = {
 }
 // Set the headers
 let headers = {
-    'Content-Type':     'application/json'
+    'Content-Type': 'application/json'
 }
 // Configure the request
 let options = {
-    url: '',
+    url: "",
     method: 'POST',
     headers: headers,
-    search_name:"wireless share success rate alert",
-    results_link: "test link",
-    owner:"jperezes",
     form: {
-      field:"",
-      value:""
+      "field":"",
+      "value":"",
+      "search_name":"wireless share success rate alert",
+      "results_link": "test link",
+      "owner":"jperezes",
     }
 }
 
@@ -55,6 +55,15 @@ function searchPerhour() {
     console.log("Splunk Result:\n" + result.field[1] +": " + result.value[1])
   });
 }
+
+request(options, function (error, response, body) {
+  console.log("sending post request")
+  if (!error && response.statusCode == 200) {
+    // Print out the response body
+    console.log(body)
+  }
+})
+
 console.log("this printed immediately before");
 //var intervalID = setInterval(searchPerhour, 15000);
 //searchPerhour();
