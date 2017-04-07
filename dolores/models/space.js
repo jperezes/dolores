@@ -119,7 +119,7 @@ spaceSchema.statics.showUserOptions = function (space, bot, callback) {
         reply.response = "These are currently the registration options for this group space " + result[0].nickName + ":" +
                                 "\n\n- Receive Spark client crash reports real time: " + "**"+ result[0].macReports.receive + "**"+
                                 "\n\n- Crash Reports filter keywords: " + "_"+ result[0].macReports.tags + "_"+
-                                "\n\n- You can use this room to display Splunk Alerts:" + "**"+ result[0].splunkReports.receive;
+                                "\n\n- You can use this room to display Splunk Alerts:" + "**"+ result[0].splunkReports.receive+ "**";
       }
       else{
         reply.response = "These are currently your registration options " + result[0].nickName + ":" +

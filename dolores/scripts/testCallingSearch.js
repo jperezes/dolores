@@ -1,5 +1,5 @@
 let SplunkSearch = require('./splunk_sched_queries');
-let request = require('request');
+let rp = require('request-promise');
 let splunkModule = new SplunkSearch();
 
 // Search everything and return the first 10 results
@@ -39,32 +39,20 @@ let options = {
 function searchPerhour() {
   splunkModule.splunkSingleRowSearch(wantedResult,searchQuery).then(result => {
 
-    if(result.value[1] < 99) {
+    if(result.value[1] < 95) {
       // Start the request
+      console.log("this is the value to be sent to reuqest" + result.field[1])
       options.form.field = result.field[1];
-      opions.form.value = result.value[1];
-      request(options, function (error, response, body) {
-        if (!error && response.statusCode == 200) {
-          // Print out the response body
-          console.log(body)
-        }
-      })
+      options.form.value = result.value[1];
+      return options;
     }
-    if(result < 80 ){
+    else{
+      throw new Error("value inside normal margins")
     }
     console.log("Splunk Result:\n" + result.field[1] +": " + result.value[1])
-  });
+  }).then(rp).catch(error => console.log("error retrieving the message" + error));
 }
 
-request(options, function (error, response, body) {
-  console.log("sending post request")
-  if (!error && response.statusCode == 200) {
-    // Print out the response body
-    console.log(body)
-  }
-})
-
-console.log("this printed immediately before");
+console.log("sending hourly ");
 //var intervalID = setInterval(searchPerhour, 15000);
-//searchPerhour();
-console.log("this printed after immediately after");
+searchPerhour();

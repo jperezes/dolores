@@ -3,11 +3,7 @@ var splunkjs = require('splunk-sdk');
 
 // Create a Service instance and log in
 var service = new splunkjs.Service({
-  username:"username",
-  password:"password",
-  scheme:"https",
-  host:"host",
-  port:"port"
+
 });
 
 let splunkModule = function(){};
