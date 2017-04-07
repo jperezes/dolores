@@ -24,7 +24,7 @@ let headers = {
 }
 // Configure the request
 let options = {
-    url: "",
+    url: "https://doloresbot.azurewebsites.net/v1/faststats/",
     method: 'POST',
     headers: headers,
     form: {
