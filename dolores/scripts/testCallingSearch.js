@@ -30,8 +30,8 @@ let options = {
     form: {
       field:"",
       value:"",
-      search_name:"wireless share success rate alert",
-      results_link: "test link",
+      search_name:"wireless share success rate alert 95% threshold",
+      results_link: "",
       owner:"jperezes",
     }
 }

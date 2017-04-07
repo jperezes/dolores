@@ -4,6 +4,7 @@ var mongoose = require('mongoose');
 var bodyParser = require('body-parser');
 var Splunk = require('../models/queries');
 var Space = require('../models/space');
+let sleep = require('sleep-promise');
 var mongoUrl = process.env.MONGO_URL || 'mongodb://localhost:27017/spaces';
 var spaceUrl = process.env.MONGO_SPACES_URL || 'mongodb://localhost:27017/spaces';
 
@@ -73,6 +74,8 @@ botModule.prototype.listenForStadistics = function(bot,app){
           bot.sendRichTextMessage(roomId,splunkReport,function(){
             console.log("user found about to send him a message");
           });
+          sleep(200).then(()=>{console.log("message send to roomId: " + roomId +"sleeping 200 ms")})
+
       })
       res.status(200).send('Splunk result successfully saved to the database');
     }).catch(err => {res.status(204).send(err)});

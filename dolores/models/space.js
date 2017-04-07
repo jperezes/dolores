@@ -1,5 +1,6 @@
 var mongoose = require('mongoose');
 let Promise = require('promise');
+let sleep = require('sleep-promise');
 
 var spaceSchema = mongoose.Schema({
     roomId: String,
@@ -179,6 +180,7 @@ spaceSchema.statics.getMacReportSubscribers = function (req, bot, callback){
          bot.sendRichTextMessage(roomId,failureReport,function(){
            console.log("user found about to send him a message");
          });
+         sleep(200).then(()=>{console.log("message send to roomId: " + roomId +"sleeping 200 ms")})
         }
       }
     });
