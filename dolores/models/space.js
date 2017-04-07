@@ -95,7 +95,7 @@ spaceSchema.statics.insertUser = function (space, bot, callback) {
     else {
       space.save(function(err){
         if (err) {
-          reply.response = "error saving the user, try again later";
+          reply.response = "error saving the user, try again later" + err;
           callback(space, reply, bot);
         }
         else {

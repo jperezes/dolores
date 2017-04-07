@@ -54,7 +54,7 @@ var showCurrentOptions = function(space) {
   }
   reply = userData + "\n\n- Receive Spark client crash reports real time: " + "**"+ space.macReports.receive +"**"+
                      "\n\n- Crash Reports filter keywords: " + "**"+ space.macReports.tags + "**"+
-                     "\n\n- You can use this room to display Splunk Alerts:" + "**" + space.splunkReports.receive;
+                     "\n\n- You can use this room to display Splunk Alerts:" + "**" + space.splunkReports.receive + "**";
 
   return {
       reply: function() {
@@ -150,7 +150,6 @@ callbackQuery = function(question, dbMessage, bot) {
       case "populateMacTagsScope":
         space.macReports.receive = "yes";
         space.windowsReports.receive="yes";
-        space.splunkReports.receive = "yes";
         // User said it wants to get mac reports populating options. Next question for windows option.
         var array = cleanQuestion.split(',');
         if (array[0].toLowerCase() === "none") {
