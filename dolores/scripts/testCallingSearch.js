@@ -24,15 +24,15 @@ let headers = {
 }
 // Configure the request
 let options = {
-    url: "https://doloresbot.azurewebsites.net/v1/faststats/",
+    url: "",
     method: 'POST',
     headers: headers,
     form: {
-      "field":"",
-      "value":"",
-      "search_name":"wireless share success rate alert",
-      "results_link": "test link",
-      "owner":"jperezes",
+      field:"",
+      value:"",
+      search_name:"wireless share success rate alert",
+      results_link: "test link",
+      owner:"jperezes",
     }
 }
 

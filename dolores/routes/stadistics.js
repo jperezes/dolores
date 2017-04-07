@@ -64,9 +64,10 @@ botModule.prototype.listenForStadistics = function(bot,app){
   router.route('/faststats').post(function(req, res) {
     console.log("fast splunk request received: " + JSON.stringify(req.body))
     spaceModel.getSplunkUsers(req.body.owner).then(subscribers =>{
+      console.log("fast splunk request received: " + JSON.stringify(req.body))
       let splunkReport = "Splunk Alert: " +
                         "\n\n- **Search Name:** " + req.body.search_name +
-                        "\n\n- **Result:** " + req.body.form.field + " " + req.body.form.value +
+                        "\n\n- **Result:** " + req.body.field + " " + req.body.value +
                         "\n\n- **Result link:** " + "[splunk dasboard]" + "("+req.body.results_link +")";
       subscribers.forEach((roomId) => {
           bot.sendRichTextMessage(roomId,splunkReport,function(){
