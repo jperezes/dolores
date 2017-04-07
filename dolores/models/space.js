@@ -1,6 +1,5 @@
 var mongoose = require('mongoose');
 let Promise = require('promise');
-let sleep = require('sleep');
 
 var spaceSchema = mongoose.Schema({
     roomId: String,
