@@ -1,15 +1,18 @@
 {
   "name": "DoloresBot",
-  "version": "0.0.1",
+  "version": "2.0.0",
   "dependencies": {
     "bluebird": "^3.5.0",
     "mongoose": "^4.9.3",
     "promise": "^7.1.1",
     "request-promise": "^4.2.0",
+    "sleep": "^5.1.1",
     "sparklite": "^1.0.53",
     "splunk-sdk": "^1.8.2"
   },
   "engines": {
     "node": "7.6.0"
-  }
+  },
+  "author": "Joan Perez Esteban",
+  "license": "ISC"
 }
