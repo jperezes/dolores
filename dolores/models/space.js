@@ -159,12 +159,17 @@ spaceSchema.statics.getMacReportSubscribers = function (req, bot, callback){
     else if (users){
       var roomsIds = [];
       var roomsIdSet = new Set();
+      console.log("total number of registered users: " + users.size)
+      let i = 0;
       users.forEach(function(item){
+          console.log("parsing space number:" + i)
+
           var tags = item.macReports.tags;
           if (tags[0] === "everything"){
             roomsIdSet.add(item.roomId);
           }
           else{
+            console.log("searching for tags on user: " + i)
             tags.forEach(function(tag){
                 var position = stringToSearch.indexOf(tag);
                 if(position >= 0){
@@ -174,6 +179,7 @@ spaceSchema.statics.getMacReportSubscribers = function (req, bot, callback){
 
             })
           }
+          i = i+1;
         })
         for(var roomId of roomsIdSet.values()){
          console.log("nuber of users found:" + roomsIdSet.size);
