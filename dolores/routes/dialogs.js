@@ -151,6 +151,7 @@ callbackQuery = function(question, dbMessage, bot) {
         space.macReports.receive = "yes";
         space.windowsReports.receive="yes";
         // User said it wants to get mac reports populating options. Next question for windows option.
+        cleanQuestion = cleanQuestion.replace(" ",""); //remove spaces
         var array = cleanQuestion.split(',');
         if (array[0].toLowerCase() === "none") {
           space.macReports.receive = "no";
@@ -158,7 +159,7 @@ callbackQuery = function(question, dbMessage, bot) {
         }
         for (var i in array) {
           space.macReports.tags[i] =array[i];
-          space.windowsReports.tags[i] =array[i];
+          space.windowsReports.tags[i] = array[i];
         }
         var showSpace = showCurrentOptions(space);
         reply = "Would you like to enable this space to receive your splunk alerts?<yes/no>";
