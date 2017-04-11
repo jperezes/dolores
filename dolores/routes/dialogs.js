@@ -158,8 +158,8 @@ callbackQuery = function(question, dbMessage, bot) {
           space.windowsReports.receive="no";
         }
         for (var i in array) {
-          space.macReports.tags[i] =array[i];
-          space.windowsReports.tags[i] = array[i];
+          space.macReports.tags[i] =array[i].replace(" ","");
+          space.windowsReports.tags[i] = space.macReports.tags[i];
         }
         var showSpace = showCurrentOptions(space);
         reply = "Would you like to enable this space to receive your splunk alerts?<yes/no>";
