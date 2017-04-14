@@ -21,12 +21,12 @@ gitRoute.prototype.listenForGitUpdates = function(bot,app){
     console.log("github event received saving it to the database " + JSON.stringify(req.body))
     gitModel = new GitIssue()
     gitModel.action = req.body.action;
-  //  gitModel.issue.id = req.body.issue.id;
-    // gitModel.issue.labels.name = req.body.issue.labels.name;
-    // gitModel.issue.labels.id = req.body.issue.labels.id;
-    // gitModel.issue.comments = req.body.issue.comments;
-    // gitModel.issue.title = req.body.issue.title;
-    // gitModel.issue.state = req.body.issue.state;
+    gitModel.issue.id = req.body.issue.id;
+    gitModel.issue.labels.name = req.body.issue.labels.name;
+    gitModel.issue.labels.id = req.body.issue.labels.id;
+    gitModel.issue.comments = req.body.issue.comments;
+    gitModel.issue.title = req.body.issue.title;
+    gitModel.issue.state = req.body.issue.state;
     res.status(200).send("git update received ok");
 
     // gitModel.save(err =>{
