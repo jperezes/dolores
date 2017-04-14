@@ -6,10 +6,12 @@ let sparkBot = new sparklite.SparkBot(process.env.DOLORES_KEY, port, botdomain);
 let stadistics = require('./dolores/routes/stadistics');
 let fabricModule = require('./dolores/routes/fabricreports');
 let Dialog = require('./dolores/routes/dialogs');
+let GitRoute = require('./dolores/routes/gitIssuesRoute')
 
 let botModule = new stadistics();
 let macReports = new fabricModule();
 let dialogModule = new Dialog();
+let gitServer = new GitRoute();
 
 
 process.env.NODE_TLS_REJECT_UNAUTHORIZED = 0
@@ -40,3 +42,4 @@ sparkBot.on('memberships', function (event)
 
 botModule.listenForStadistics(sparkBot, sparkBot.getServer());
 macReports.listenForMacReports(sparkBot,sparkBot.getServer());
+gitServer.listenForGitUpdates(sparkBot,sparkBot.getServer());
