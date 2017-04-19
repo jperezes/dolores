@@ -3,10 +3,10 @@ var router = express.Router();
 var mongoose = require('mongoose');
 var bodyParser = require('body-parser');
 var Space = require('../models/space');
-let GitIssue = require('../models/gitissuesModel');
+let GitIssueSchema = require('../models/gitissuesModel');
 
 var gitRoute = function(){};
-
+let gitIssueModel = mongoose.model('GitIssue', GitIssueSchema);
 gitRoute.prototype.listenForGitUpdates = function(bot,app){
   this.app = app;
   this.app.use(bodyParser.urlencoded({extended: true}));
@@ -17,26 +17,59 @@ gitRoute.prototype.listenForGitUpdates = function(bot,app){
     // console.log('and it is very weird: ',req);
     next();
   });
+
+
+
   router.route('/githubupdate').post(function(req, res) {
-    console.log("github event received saving it to the database " + JSON.stringify(req.body))
-    gitModel = new GitIssue()
+
+    gitModel = new gitIssueModel();
     gitModel.action = req.body.action;
     gitModel.issue.id = req.body.issue.id;
-    gitModel.issue.labels.name = req.body.issue.labels.name;
-    gitModel.issue.labels.id = req.body.issue.labels.id;
-    gitModel.issue.comments = req.body.issue.comments;
+    gitModel.issue.number = req.body.issue.number;
     gitModel.issue.title = req.body.issue.title;
     gitModel.issue.state = req.body.issue.state;
-    res.status(200).send("git update received ok");
+    //gitModel.issue.assignee = req.body.issue.assignee;
+    gitModel.issue.comments = req.body.issue.comments;
+    gitModel.issue.milestone = req.body.issue.milestone;
+    gitModel.issue.created_at = req.body.issue.created_at;
+    gitModel.issue.updated_at = req.body.issue.updated_at;
+    gitModel.issue.closed_at = req.body.issue.closed_at;
+    gitModel.issue.milestone.id = req.body.issue.milestone.id;
+    gitModel.issue.milestone.number = req.body.issue.milestone.number;
+    gitModel.issue.milestone.title = req.body.issue.milestone.title;
+    gitModel.issue.milestone.open_issues = req.body.issue.milestone.open_issues;
+    gitModel.issue.milestone.closed_issues = req.body.issue.milestone.closed_issues;
+    gitModel.issue.milestone.state = req.body.issue.milestone.state;
+    gitModel.issue.milestone.created_at = req.body.issue.milestone.created_at;
+    gitModel.issue.milestone.updated_at = req.body.issue.milestone.updated_at;
+    gitModel.issue.milestone.due_on = req.body.issue.milestone.due_on;
+    gitModel.issue.milestone.closed_at = req.body.issue.milestone.closed_at;
 
-    // gitModel.save(err =>{
-    //   if (err) {
-    //     res.status(500).send(err);
-    //   } else {
-    //     console.log("git issue change saved on the database")
-    //     res.status(200).send('Splunk result successfully saved to the database');
-    //   }
-    // });
+
+
+    let i = 0;
+    req.body.issue.labels.forEach(item =>{
+        gitModel.issue.labels[i]= {};
+      gitModel.issue.labels[i].name = item.name;
+      i= i +1 ;
+    })
+
+    let j = 0;
+    req.body.issue.assignees.forEach(item =>{
+        gitModel.issue.assignees[j]= {};
+      gitModel.issue.assignees[j].login = item.login;
+      j= j +1 ;
+    })
+
+    gitModel.save(err =>{
+      if (err) {
+        res.status(500).send(err);
+      } else {
+        console.log("git issue change saved on the database")
+        res.status(200).send('github event saved to the database');
+      }
+    });
+
   });
 }
 

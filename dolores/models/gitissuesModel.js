@@ -1,4 +1,5 @@
 var mongoose = require('mongoose');
+let Promise = require('promise');
 
 var gitIssueSchema = mongoose.Schema({
   "action": String,
@@ -30,25 +31,35 @@ var gitIssueSchema = mongoose.Schema({
       "type": String,
       "site_admin": Boolean
     },
-    "labels": [
-      {
-        "id": Number,
-        "url": String,
-        "name": String,
-        "color": String,
-        "default": Boolean
-      }
-    ],
+    "labels":[{
+        "name": String
+      }]
+    ,
     "state": String,
     "locked": Boolean,
-    "assignee": String,
+    "assignees": [{
+        "login":String
+      }],
     "milestone": String,
     "comments": String,
     "created_at": String,
     "updated_at": String,
     "closed_at": String,
-    "body": String
+    "body": String,
+    "milestone": {
+      "id": Number,
+      "number": Number,
+      "title": String,
+      "open_issues": Number,
+      "closed_issues": Number,
+      "state": String,
+      "created_at": String,
+      "updated_at": String,
+      "due_on": String,
+      "closed_at": String
+    }
   }
+
 });
 
 
@@ -58,4 +69,24 @@ gitIssueSchema.static({
 	}
 });
 
-module.exports = mongoose.model('GitIssue', gitIssueSchema);
+gitIssueSchema.statics.getIssuesByLabelName = function(labelName){
+  return new Promise((resolve,reject)=>{
+   console.log("about to start finding the issues")
+    this.find({"issue.labels.name":labelName},function(err,items){
+      if(err){
+        console.log("first error on find" + err)
+        reject(err);
+      }
+      else if(items){
+        console.log("label found")
+        resolve(items);
+      }
+      else {
+        reject("label not found");
+      }
+    });
+  })
+}
+
+module.exports = gitIssueSchema;
+//module.exports = mongoose.model('GitIssue', gitIssueSchema);
