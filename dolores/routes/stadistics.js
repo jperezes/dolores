@@ -24,7 +24,6 @@ mongoose.connect(mongoUrl);
 var conn = mongoose.createConnection(spaceUrl)
 var spaceModel = conn.model('SparkSpace', Space);
 var space = new spaceModel();
-
 botModule.prototype.listenForStadistics = function(bot,app){
   this.app = app;
   this.app.use(bodyParser.urlencoded({extended: true}));
@@ -32,8 +31,14 @@ botModule.prototype.listenForStadistics = function(bot,app){
   this.app.use('/v1',router);
   router.use(function(req, res, next) {
     //in the future some middleware can be added here.
-    // console.log('and it is very weird: ',req);
-    next();
+    if (req.headers.authorization !== process.env.AUTH_TOKEN_STATISTICS) {
+      console.log('sorry authenticatin failed: ' );
+      return;
+    } else {
+      next();
+    }
+
+
   });
   router.route('/stadistics').post(function(req, res) {
 

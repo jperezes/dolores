@@ -61,6 +61,11 @@ gitRoute.prototype.listenForGitUpdates = function(bot,app){
       j= j +1 ;
     })
 
+    // gitIssueModel.getClosedIssuesByLabelNameAndDate("bug", "nothing","nothing").then(items => {
+    //   //res.status(200).send('github event saved to the database');
+    //   items.forEach(item => {console.log(item.issue.closed_at)})
+    // }).catch(err => console.log("Error getting the issues: " + err))
+
     gitModel.save(err =>{
       if (err) {
         res.status(500).send(err);

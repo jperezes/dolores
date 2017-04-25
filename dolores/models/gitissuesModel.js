@@ -88,5 +88,26 @@ gitIssueSchema.statics.getIssuesByLabelName = function(labelName){
   })
 }
 
+gitIssueSchema.statics.getClosedIssuesByLabelNameAndDate = function(labelName,earliest,latest){
+
+  return new Promise((resolve,reject)=>{
+   console.log("about to start finding the issues")
+    this.find({"issue.closed_at":{$gte: earliest,$lte: latest}, "issue.labels.name":labelName, "issue.state":"closed"},function(err,items){
+      if(err){
+        console.log("first error on find" + err)
+        reject(err);
+      }
+      else if(items){
+        console.log("issues closed yesterday" )
+        resolve(items);
+      }
+      else {
+        console.log("nothing found")
+        reject("label not found");
+      }
+    });
+  })
+}
+
 module.exports = gitIssueSchema;
 //module.exports = mongoose.model('GitIssue', gitIssueSchema);
