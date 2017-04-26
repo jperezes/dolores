@@ -45,12 +45,14 @@ gitRoute.prototype.listenForGitUpdates = function(bot,app){
     gitModel.issue.milestone.due_on = req.body.issue.milestone.due_on;
     gitModel.issue.milestone.closed_at = req.body.issue.milestone.closed_at;
 
-
-
+    let saveIssue = false
     let i = 0;
     req.body.issue.labels.forEach(item =>{
-        gitModel.issue.labels[i]= {};
+      gitModel.issue.labels[i]= {};
       gitModel.issue.labels[i].name = item.name;
+      if (item.name === process.env.TEAM_SCRUM) {
+        saveIssue = true
+      }
       i= i +1 ;
     })
 
@@ -66,15 +68,16 @@ gitRoute.prototype.listenForGitUpdates = function(bot,app){
     //   items.forEach(item => {console.log(item.issue.closed_at)})
     // }).catch(err => console.log("Error getting the issues: " + err))
 
-    gitModel.save(err =>{
-      if (err) {
-        res.status(500).send(err);
-      } else {
-        console.log("git issue change saved on the database")
-        res.status(200).send('github event saved to the database');
-      }
-    });
-
+    if (saveIssue){
+      gitModel.save(err =>{
+        if (err) {
+          res.status(500).send(err);
+        } else {
+          console.log("git issue change saved on the database")
+          res.status(200).send('github event saved to the database');
+        }
+      });
+    }
   });
 }
 
