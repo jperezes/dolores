@@ -79,6 +79,8 @@ gitRoute.prototype.listenForGitUpdates = function(bot,app){
           res.status(200).send('github event saved to the database');
         }
       });
+    } else{
+      res.status(200).send('invalid github event');
     }
   });
 }

@@ -65,8 +65,10 @@ reports.prototype.listenForMacReports = function(bot,app){
   router.route('/fabricreports').post(function(req, res) {
     if (req.body.event === "verification") {
       res.status(200).send('Verified');
-    }
-    else {
+    } else if (req.body.payload.url.indexOf(process.env.REPORT_KEY) < 0) {
+      console.log("url not not valid");
+      res.status(401).send('Unauthorised');
+    } else {
       res.status(200).send('Verified');
       // if we are in a test environment we don't send the message to the bot
       //saveReport(req);
@@ -77,7 +79,6 @@ reports.prototype.listenForMacReports = function(bot,app){
         bot(err,macReport); // maybe we can use this as a callback function.
 
       }else{
-
         spaceModel.getMacReportSubscribers(req,bot,function(){});
       }
     }
