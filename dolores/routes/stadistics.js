@@ -31,20 +31,17 @@ botModule.prototype.listenForStadistics = function(bot,app){
   this.app.use('/v1',router);
   router.use(function(req, res, next) {
     //in the future some middleware can be added here.
-    if (req.headers.authorization !== process.env.AUTH_TOKEN_STATISTICS) {
-      console.log('sorry authenticatin failed: ' );
-      return;
-    } else {
-      next();
-    }
-
-
+    next();
   });
   router.route('/stadistics').post(function(req, res) {
 
     //Save the date when the query arrived
     var datetime = new Date();
     console.log("slunk data received: " + req);
+    if (req.headers.authorization !== process.env.AUTH_TOKEN_STATISTICS) {
+      console.log('sorry authenticatin failed: ' );
+      return;
+    }
 
     var stats = new Splunk(); // new instance of a Splunk result
     stats.alertDate = datetime;
@@ -67,6 +64,10 @@ botModule.prototype.listenForStadistics = function(bot,app){
   });
 
   router.route('/faststats').post(function(req, res) {
+    if (req.headers.authorization !== process.env.AUTH_TOKEN_STATISTICS) {
+      console.log('sorry authenticatin failed: ' );
+      return;
+    }
     console.log("fast splunk request received: " + JSON.stringify(req.body))
     spaceModel.getSplunkUsers(req.body.owner).then(subscribers =>{
       console.log("fast splunk request received: " + JSON.stringify(req.body))
