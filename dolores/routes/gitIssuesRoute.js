@@ -52,6 +52,7 @@ gitRoute.prototype.listenForGitUpdates = function(bot,app){
       gitModel.issue.labels[i].name = item.name;
       if (item.name === process.env.TEAM_SCRUM) {
         saveIssue = true
+        console.log("save issue set to: " + saveIssue)
       }
       i= i +1 ;
     })
@@ -68,6 +69,7 @@ gitRoute.prototype.listenForGitUpdates = function(bot,app){
     //   items.forEach(item => {console.log(item.issue.closed_at)})
     // }).catch(err => console.log("Error getting the issues: " + err))
 
+    console.log("save issue is now: " + saveIssue + " proceeding to save the object")
     if (saveIssue){
       gitModel.save(err =>{
         if (err) {
