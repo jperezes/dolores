@@ -34,7 +34,7 @@ gitRoute.prototype.listenForGitUpdates = function(bot,app){
     gitModel.issue.created_at = req.body.issue.created_at;
     gitModel.issue.updated_at = req.body.issue.updated_at;
     gitModel.issue.closed_at = req.body.issue.closed_at;
-    if (typeof req.body.issue.milestone !== 'undefined') {
+    if (typeof req.body.issue.milestone.id !== 'undefined') {
       gitModel.issue.milestone = req.body.issue.milestone;
       gitModel.issue.milestone.id = req.body.issue.milestone.id;
       gitModel.issue.milestone.number = req.body.issue.milestone.number;
@@ -45,7 +45,7 @@ gitRoute.prototype.listenForGitUpdates = function(bot,app){
       gitModel.issue.milestone.created_at = req.body.issue.milestone.created_at;
       gitModel.issue.milestone.updated_at = req.body.issue.milestone.updated_at;
       gitModel.issue.milestone.due_on = req.body.issue.milestone.due_on;
-      gitModel.issue.milestone.closed_at = req.body.issue.milestone.closed_at;    
+      gitModel.issue.milestone.closed_at = req.body.issue.milestone.closed_at;
     }
 
 
