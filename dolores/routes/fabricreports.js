@@ -66,7 +66,10 @@ reports.prototype.listenForMacReports = function(bot,app){
     if (req.body.event === "verification") {
       res.status(200).send('Verified');
     } else if (req.body.payload.url.indexOf(process.env.REPORT_KEY) < 0) {
-      console.log("url not not valid");
+
+      bot.sendRichTextMessage(process.env.JUAN_DOLORES_ROOM_ID,"invalid MAC report url received",function(){
+        console.log("url not not valid");
+      });
       res.status(401).send('Unauthorised');
     } else {
       res.status(200).send('Verified');
