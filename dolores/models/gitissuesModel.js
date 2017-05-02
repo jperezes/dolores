@@ -1,5 +1,6 @@
 var mongoose = require('mongoose');
 let Promise = require('promise');
+mongoose.set('debug', true);
 
 var gitIssueSchema = mongoose.Schema({
   "action": String,
@@ -86,6 +87,26 @@ gitIssueSchema.statics.getIssuesByLabelName = function(labelName){
       }
     });
   })
+}
+
+gitIssueSchema.statics.getIssuesByLabelNameCallback = function(labelName,callback) {
+  console.log("about to start finding the issues")
+   this.find({"issue.labels.name":labelName},function(err,items){
+     console.log("just printing")
+     if(err){
+       console.log("first error on find" + err)
+     }
+     else if(items){
+       console.log("label found")
+      items.forEach(function(item){
+        callback(item)
+      })
+     }
+     else {
+       console.log("label not found");
+     }
+   });
+
 }
 
 gitIssueSchema.statics.getClosedIssuesByLabelNameAndDate = function(labelName,earliest,latest){

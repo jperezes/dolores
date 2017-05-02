@@ -30,20 +30,24 @@ gitRoute.prototype.listenForGitUpdates = function(bot,app){
     gitModel.issue.state = req.body.issue.state;
     //gitModel.issue.assignee = req.body.issue.assignee;
     gitModel.issue.comments = req.body.issue.comments;
-    gitModel.issue.milestone = req.body.issue.milestone;
+
     gitModel.issue.created_at = req.body.issue.created_at;
     gitModel.issue.updated_at = req.body.issue.updated_at;
     gitModel.issue.closed_at = req.body.issue.closed_at;
-    gitModel.issue.milestone.id = req.body.issue.milestone.id;
-    gitModel.issue.milestone.number = req.body.issue.milestone.number;
-    gitModel.issue.milestone.title = req.body.issue.milestone.title;
-    gitModel.issue.milestone.open_issues = req.body.issue.milestone.open_issues;
-    gitModel.issue.milestone.closed_issues = req.body.issue.milestone.closed_issues;
-    gitModel.issue.milestone.state = req.body.issue.milestone.state;
-    gitModel.issue.milestone.created_at = req.body.issue.milestone.created_at;
-    gitModel.issue.milestone.updated_at = req.body.issue.milestone.updated_at;
-    gitModel.issue.milestone.due_on = req.body.issue.milestone.due_on;
-    gitModel.issue.milestone.closed_at = req.body.issue.milestone.closed_at;
+    if (typeof req.body.issue.milestone !== 'undefined') {
+      gitModel.issue.milestone = req.body.issue.milestone;
+      gitModel.issue.milestone.id = req.body.issue.milestone.id;
+      gitModel.issue.milestone.number = req.body.issue.milestone.number;
+      gitModel.issue.milestone.title = req.body.issue.milestone.title;
+      gitModel.issue.milestone.open_issues = req.body.issue.milestone.open_issues;
+      gitModel.issue.milestone.closed_issues = req.body.issue.milestone.closed_issues;
+      gitModel.issue.milestone.state = req.body.issue.milestone.state;
+      gitModel.issue.milestone.created_at = req.body.issue.milestone.created_at;
+      gitModel.issue.milestone.updated_at = req.body.issue.milestone.updated_at;
+      gitModel.issue.milestone.due_on = req.body.issue.milestone.due_on;
+      gitModel.issue.milestone.closed_at = req.body.issue.milestone.closed_at;    
+    }
+
 
     let saveIssue = false
     let i = 0;
