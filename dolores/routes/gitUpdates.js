@@ -11,8 +11,8 @@ let scheduleServer = function(bot){
       let latest = new Date();
       let earliest = new Date(latest-24*60*60*1000)
 
-      let tempAMessage="";
-      let tempBMessage="";
+      let tempAMessage="Closed issues last 24h:\n";
+      let tempBMessage="Opened issues last 24h:\n";
       let resultA = yield gitIssueModel.getClosedIssuesByLabelNameAndDate("bug",earliest.toISOString(),latest.toISOString());
       resultA.forEach(function(item){
         console.log("result Found: " + item.issue.title)
@@ -23,6 +23,7 @@ let scheduleServer = function(bot){
         console.log("result Found: " + item.issue.title)
         tempBMessage = tempBMessage + "\n\n - [" + item.issue.number + "]" + "(" + item.issue.url + ")" + ": " + item.issue.title;
       })
+
 
       let finalMessage = tempAMessage + tempBMessage;
       bot.sendRichTextMessage(process.env.JUAN_DOLORES_ROOM_ID,finalMessage,function(){
