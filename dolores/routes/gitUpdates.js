@@ -13,17 +13,18 @@ let scheduleServer = function(bot){
 
       let tempAMessage="Recently issues closed:\n";
       let tempBMessage="\n\nRecently created issues:\n";
-      let resultA = yield gitIssueModel.getClosedIssuesByLabelNameAndDate("bug",earliest.toISOString(),latest.toISOString());
-      resultA.forEach(function(item){
-        console.log("closed issues Found: " + item.issue.title)
-        tempAMessage = tempAMessage + "\n\n - [" + item.issue.number + "]" + "(" + item.issue.url + ")" + ": " + item.issue.title;
-      })
+      
       let resultB = yield gitIssueModel.getOpenedIssuesByLabelNameAndDate("bug",earliest.toISOString(),latest.toISOString());
       resultB.forEach(function(item){
         console.log("opened issues Found: " + item.issue.title)
         tempBMessage = tempBMessage + "\n\n - [" + item.issue.number + "]" + "(" + item.issue.url + ")" + ": " + item.issue.title;
       })
 
+      let resultA = yield gitIssueModel.getClosedIssuesByLabelNameAndDate("bug",earliest.toISOString(),latest.toISOString());
+      resultA.forEach(function(item){
+        console.log("closed issues Found: " + item.issue.title)
+        tempAMessage = tempAMessage + "\n\n - [" + item.issue.number + "]" + "(" + item.issue.url + ")" + ": " + item.issue.title;
+      })
       let finalMessage = tempAMessage + tempBMessage;
       bot.sendRichTextMessage(process.env.JUAN_DOLORES_ROOM_ID,finalMessage,function(){
                console.log("user found about to send him a message");
