@@ -12,7 +12,7 @@ let scheduleServer = function(bot){
       let earliest = new Date(latest-24*60*60*1000)
 
       let tempAMessage="Closed issues last 24h:\n";
-      let tempBMessage="Opened issues last 24h:\n";
+      let tempBMessage="\nOpened issues last 24h:\n";
       let resultA = yield gitIssueModel.getClosedIssuesByLabelNameAndDate("bug",earliest.toISOString(),latest.toISOString());
       resultA.forEach(function(item){
         console.log("result Found: " + item.issue.title)
