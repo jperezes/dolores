@@ -1,6 +1,6 @@
 var mongoose = require('mongoose');
-let Promise = require('promise');
-mongoose.set('debug', true);
+let Promise = require('bluebird');
+//mongoose.set('debug', true);
 
 var gitIssueSchema = mongoose.Schema({
   "action": String,
@@ -72,7 +72,6 @@ gitIssueSchema.static({
 
 gitIssueSchema.statics.getIssuesByLabelName = function(labelName){
   return new Promise((resolve,reject)=>{
-   console.log("about to start finding the issues")
     this.find({"issue.labels.name":labelName},function(err,items){
       if(err){
         console.log("first error on find" + err)
@@ -91,7 +90,7 @@ gitIssueSchema.statics.getIssuesByLabelName = function(labelName){
 
 gitIssueSchema.statics.getIssuesByLabelNameCallback = function(labelName,callback) {
   console.log("about to start finding the issues")
-   this.find({"issue.labels.name":labelName},function(err,items){
+   this.find({action:"closed"},function(err,items){
      console.log("just printing")
      if(err){
        console.log("first error on find" + err)
@@ -110,7 +109,6 @@ gitIssueSchema.statics.getIssuesByLabelNameCallback = function(labelName,callbac
 }
 
 gitIssueSchema.statics.getClosedIssuesByLabelNameAndDate = function(labelName,earliest,latest){
-
   return new Promise((resolve,reject)=>{
    console.log("about to start finding the issues")
     this.find({"issue.closed_at":{$gte: earliest,$lte: latest}, "issue.labels.name":labelName, "issue.state":"closed"},function(err,items){
@@ -119,7 +117,24 @@ gitIssueSchema.statics.getClosedIssuesByLabelNameAndDate = function(labelName,ea
         reject(err);
       }
       else if(items){
-        console.log("issues closed yesterday" )
+        resolve(items);
+      }
+      else {
+        console.log("nothing found")
+        reject("label not found");
+      }
+    });
+  })
+}
+gitIssueSchema.statics.getOpenedIssuesByLabelNameAndDate = function(labelName,earliest,latest){
+  return new Promise((resolve,reject)=>{
+   console.log("about to start finding the issues")
+    this.find({"issue.created_at":{$gte: earliest,$lte: latest}, "issue.labels.name":labelName, "issue.state":"opened"},function(err,items){
+      if(err){
+        console.log("first error on find" + err)
+        reject(err);
+      }
+      else if(items){
         resolve(items);
       }
       else {

@@ -28,6 +28,7 @@ gitRoute.prototype.listenForGitUpdates = function(bot,app){
     gitModel.issue.number = req.body.issue.number;
     gitModel.issue.title = req.body.issue.title;
     gitModel.issue.state = req.body.issue.state;
+    gitModel.issue.url = req.body.issue.url;
     //gitModel.issue.assignee = req.body.issue.assignee;
     gitModel.issue.comments = req.body.issue.comments;
 
@@ -68,21 +69,24 @@ gitRoute.prototype.listenForGitUpdates = function(bot,app){
       j= j +1 ;
     })
 
-    // gitIssueModel.getClosedIssuesByLabelNameAndDate("bug", "nothing","nothing").then(items => {
-    //   //res.status(200).send('github event saved to the database');
-    //   items.forEach(item => {console.log(item.issue.closed_at)})
-    // }).catch(err => console.log("Error getting the issues: " + err))
-
     console.log("save issue is now: " + saveIssue + " proceeding to save the object")
     if (saveIssue){
-      gitModel.save(err =>{
-        if (err) {
-          res.status(500).send(err);
-        } else {
-          console.log("git issue change saved on the database")
-          res.status(200).send('github event saved to the database');
+      gitIssueModel.find({'issue.id':req.body.issue.id}).remove().exec(function(err,result){
+        if(err){
+          console.log("error deleting the issue");
         }
-      });
+        else{
+          gitModel.save(err =>{
+            if (err) {
+              res.status(500).send(err);
+            } else {
+              console.log("git issue change saved on the database")
+              res.status(200).send('github event saved to the database');
+            }
+          });
+        }
+      })
+
     } else{
       res.status(200).send('invalid github event');
     }

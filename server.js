@@ -7,6 +7,7 @@ let stadistics = require('./dolores/routes/stadistics');
 let fabricModule = require('./dolores/routes/fabricreports');
 let Dialog = require('./dolores/routes/dialogs');
 let GitRoute = require('./dolores/routes/gitIssuesRoute')
+let issueSchedule = require('./dolores/routes/gitUpdates')
 
 let botModule = new stadistics();
 let macReports = new fabricModule();
@@ -40,6 +41,11 @@ sparkBot.on('memberships', function (event)
     console.log(JSON.stringify(event));
 })
 
+let bot = function(result){
+  console.log(result);
+}
+
 botModule.listenForStadistics(sparkBot, sparkBot.getServer());
 macReports.listenForMacReports(sparkBot,sparkBot.getServer());
 gitServer.listenForGitUpdates(sparkBot,sparkBot.getServer());
+issueSchedule(sparkBot);
