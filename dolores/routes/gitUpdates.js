@@ -7,12 +7,12 @@ let con = mongoose.createConnection(process.env.MONGO_SPACES_URL);
 let gitIssueModel = mongoose.model('GitIssue', mongoGit);
 
 let scheduleServer = function(bot){
-  schedule.scheduleJob('42 * * * * *', Promise.coroutine(function* () {
+  schedule.scheduleJob('42 * * * *', Promise.coroutine(function* () {
       let latest = new Date();
       let earliest = new Date(latest-24*60*60*1000)
 
-      let tempAMessage="Closed issues last 24h:\n";
-      let tempBMessage="\n\nOpened issues last 24h:\n";
+      let tempAMessage="Recently issues closed:\n";
+      let tempBMessage="\n\nRecently created issues:\n";
       let resultA = yield gitIssueModel.getClosedIssuesByLabelNameAndDate("bug",earliest.toISOString(),latest.toISOString());
       resultA.forEach(function(item){
         console.log("result Found: " + item.issue.title)
