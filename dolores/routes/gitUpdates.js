@@ -15,15 +15,14 @@ let scheduleServer = function(bot){
       let tempBMessage="\n\nRecently created issues:\n";
       let resultA = yield gitIssueModel.getClosedIssuesByLabelNameAndDate("bug",earliest.toISOString(),latest.toISOString());
       resultA.forEach(function(item){
-        console.log("result Found: " + item.issue.title)
+        console.log("closed issues Found: " + item.issue.title)
         tempAMessage = tempAMessage + "\n\n - [" + item.issue.number + "]" + "(" + item.issue.url + ")" + ": " + item.issue.title;
       })
       let resultB = yield gitIssueModel.getOpenedIssuesByLabelNameAndDate("bug",earliest.toISOString(),latest.toISOString());
       resultB.forEach(function(item){
-        console.log("result Found: " + item.issue.title)
+        console.log("opened issues Found: " + item.issue.title)
         tempBMessage = tempBMessage + "\n\n - [" + item.issue.number + "]" + "(" + item.issue.url + ")" + ": " + item.issue.title;
       })
-
 
       let finalMessage = tempAMessage + tempBMessage;
       bot.sendRichTextMessage(process.env.JUAN_DOLORES_ROOM_ID,finalMessage,function(){
