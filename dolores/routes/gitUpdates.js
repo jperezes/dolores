@@ -16,7 +16,7 @@ let scheduleServer = function(bot){
 
       let resultB = yield gitIssueModel.getOpenedIssuesByLabelNameAndDate("bug",earliest.toISOString(),latest.toISOString());
       resultB.forEach(function(item){
-        console.log("opened issues Found: " + item.issue.title)
+        console.log("opened issues Found:  " + item.issue.title)
         tempBMessage = tempBMessage + "\n\n - [" + item.issue.number + "]" + "(" + item.issue.url + ")" + ": " + item.issue.title;
       })
 
