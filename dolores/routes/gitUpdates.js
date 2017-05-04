@@ -7,7 +7,7 @@ let con = mongoose.createConnection(process.env.MONGO_SPACES_URL);
 let gitIssueModel = mongoose.model('GitIssue', mongoGit);
 
 let scheduleServer = function(bot){
-  schedule.scheduleJob('* 30 13 * * *', Promise.coroutine(function* () {
+  schedule.scheduleJob('30 14 * * *', Promise.coroutine(function* () {
       let latest = new Date();
       let earliest = new Date(latest-24*60*60*1000)
 
@@ -26,7 +26,7 @@ let scheduleServer = function(bot){
         tempAMessage = tempAMessage + "\n\n - [" + item.issue.number + "]" + "(" + item.issue.url + ")" + ": " + item.issue.title;
       })
       let finalMessage = "Daily Proteus Issues Status:\n\n" + tempAMessage + tempBMessage;
-      bot.sendRichTextMessage(process.env.PROTEUS_ROOM_ID,finalMessage,function(){
+      bot.sendRichTextMessage(process.env.JUAN_DOLORES_ROOM_ID,finalMessage,function(){
                console.log("user found about to send him a message");
              })
       return;
