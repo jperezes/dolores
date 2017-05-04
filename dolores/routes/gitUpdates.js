@@ -7,7 +7,7 @@ let con = mongoose.createConnection(process.env.MONGO_SPACES_URL);
 let gitIssueModel = mongoose.model('GitIssue', mongoGit);
 
 let scheduleServer = function(bot){
-  schedule.scheduleJob('43 16 * * *', Promise.coroutine(function* () {
+  schedule.scheduleJob('25 17 * * *', Promise.coroutine(function* () {
       let latest = new Date();
       let earliest = new Date(latest-24*60*60*1000)
 
