@@ -11,8 +11,8 @@ let scheduleServer = function(bot){
       let latest = new Date();
       let earliest = new Date(latest-24*60*60*1000)
 
-      let tempAMessage="Issues closed:\n";
-      let tempBMessage="\n\nIssues Created:\n";
+      let tempAMessage="";
+      let tempBMessage="";
 
       let resultB = yield gitIssueModel.getOpenedIssuesByLabelNameAndDate("bug",earliest.toISOString(),latest.toISOString());
       resultB.forEach(function(item){
@@ -25,10 +25,13 @@ let scheduleServer = function(bot){
         console.log("closed issues Found: " + item.issue.title)
         tempAMessage = tempAMessage + "\n\n - [" + item.issue.number + "]" + "(" + item.issue.url.replace("api/v3/repos/","") + ")" + ": " + item.issue.title;
       })
-      let finalMessage = "Daily Proteus Issues Status:\n\n" + tempAMessage + tempBMessage;
-      bot.sendRichTextMessage(process.env.PROTEUS_ROOM_ID,finalMessage,function(){
-               console.log("user found about to send him a message");
-             })
+      
+      if (tempAMessage !== "" || tempBMessage !== ""){
+        let finalMessage = "Daily Proteus Issues Status:\n\n" + "Issues closed:\n" + tempAMessage + "\n\nIssues Created:\n" + tempBMessage;
+        bot.sendRichTextMessage(process.env.PROTEUS_ROOM_ID,finalMessage,function(){
+                 console.log("user found about to send him a message");
+               })
+      }
       return;
     }));
 }
