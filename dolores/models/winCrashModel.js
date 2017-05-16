@@ -38,5 +38,24 @@ winReportSchema.statics.getCountAndDelete = function (hash) {
  })
 };
 
+winReportSchema.statics.sendReport = function(winReport,bot){
+  var failureReport = "Win crash received: " +
+                    //"\nevent: " + req.body.event +
+                    //"\npayload Type: " + req.body.payload_type +
+                    "\n\n- **Reported Date:** " + winReport.reportDate +
+                    "\n\n- **Title:** " + winReport.title +
+                    "\n\n- **method affected:** " + winReport.method +
+                    "\n\n- **Feedback ID:** " + winReport.feedback_id  +
+                    "\n\n- **Crashes Count:** " + winReport.crashes_count +
+                    "\n\n- **Client Version:** " + winReport.client_version +
+                    "\n\n- **Crash ID:** " + winReport.id +
+                    //"\nimpacted_devices_count: " + req.body.payload.impacted_devices_count +
+                    "\n\n- **url to the crash:** " + "[PRT server URK]" + "("+ winReport.url + ")";
+
+    bot.sendRichTextMessage(process.env.JUAN_DOLORES_ROOM_ID,failureReport,function(){
+        console.log("message sent to the bot");
+    });
+}
+
 //module.exports = mongoose.model('WinReport', winReportSchema);
 module.exports = winReportSchema;

@@ -27,7 +27,7 @@ mongoose.Promise = global.Promise;
 
 var userIds=[];
 var winReport = new WinReportModel(); // new instance of a fabric report
-var saveReport = Promise.coroutine(function*(req,res) {
+var saveAndSendReport = Promise.coroutine(function*(req,res,bot) {
   winReport.reportDate = req.body.reportClientDate;
   winReport.hashA = req.body.hashA;
   winReport.title = req.body.title;
@@ -37,7 +37,7 @@ var saveReport = Promise.coroutine(function*(req,res) {
   winReport.id = req.body.id;
   winReport.url = req.body.url;
 
-  let crashCount = yield WinReportModel.getCountAndDelete(req.body.hashA)
+  let crashCount = yield WinReportModel.getCountAndDelete(req.body.hashA);
   winReport.crashes_count = crashCount + 1;
   console.log("incrementing crash count: " + crashCount)
   winReport.save(err =>{
@@ -48,6 +48,8 @@ var saveReport = Promise.coroutine(function*(req,res) {
       res.status(200).send('github event saved to the database');
     }
   });
+
+  WinReportModel.sendReport(winReport,bot);
 })
 
 router.route('/wincrashreports').post(function(req, res) {
@@ -60,15 +62,8 @@ router.route('/wincrashreports').post(function(req, res) {
       });
       res.status(401).send('Unauthorised');
     } else {
-      console.log("about to save the report to the database");
-      saveReport(req,res);
-      if (mongoUrl === 'mongodb://localhost:27017/spaces'){
-        var err = null;
-        console.log("this simulates a bot: " + winReport.id);
-
-      }else{
-        spaceModel.getMacReportSubscribers(req,bot,function(){});
-      }
+      console.log("about to save and send the report the report to the database");
+      saveAndSendReport(req,res,bot);
     }
   });
 
