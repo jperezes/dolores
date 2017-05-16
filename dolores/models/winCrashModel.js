@@ -2,8 +2,7 @@ var mongoose = require('mongoose');
 let Promise= require('bluebird')
 
 var winReportSchema = mongoose.Schema({
-    firstReportDate: String,
-    lastReportDate:String,
+    reportDate: [String],
     hashA: String,
     title: String,
     method: String,
@@ -42,8 +41,8 @@ winReportSchema.statics.sendReport = function(winReport,bot){
   var failureReport = "Win crash received: " +
                     //"\nevent: " + req.body.event +
                     //"\npayload Type: " + req.body.payload_type +
-                    "\n\n- **First occurrence:** " + winReport.firstReportDate +
-                    "\n\n- **Last occurrence:** " + winReport.lastReportDate +
+                    "\n\n- **First occurrence:** " + winReport.reportDate[0] +
+                    "\n\n- **Last occurrence:** " + winReport.reportDate.slice(-1).pop() +
                     "\n\n- **Title:** " + winReport.title +
                     "\n\n- **method affected:** " + winReport.method +
                     "\n\n- **Feedback ID:** " + winReport.feedback_id  +

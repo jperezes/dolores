@@ -29,8 +29,7 @@ var userIds=[];
 
 var saveAndSendReport = Promise.coroutine(function*(req,res,bot) {
   let winReport = new WinReportModel(); // new instance of a fabric report
-  winReport.lastReportDate = req.body.reportDate;
-  winReport.firstReportDate=req.body.reportDate;
+  winReport.reportDate.push(req.body.reportDate);
   winReport.hashA = req.body.hashA;
   winReport.title = req.body.title;
   winReport.method = req.body.method;
@@ -39,9 +38,10 @@ var saveAndSendReport = Promise.coroutine(function*(req,res,bot) {
   winReport.url = req.body.url;
 
   let result = yield WinReportModel.getCountAndDelete(req.body.hashA);
-  if (typeof(result.firstReportDate) !== 'undefined'){
+  if (typeof(result.reportDate) !== 'undefined'){
 
-    result.lastReportDate=req.body.reportDate;
+    result.reportDate.push(req.body.reportDate);
+    result.reportDate.sort();
     result.crashes_count = result.crashes_count +1;
     result.save(function(err){
       if(err){
@@ -50,6 +50,8 @@ var saveAndSendReport = Promise.coroutine(function*(req,res,bot) {
         res.status(200).send('win crash event updated');
       }
     });
+    winReport.reportDate = result.reportDate;
+    winReport.crashes_count = result.crashes_count;
   } else {
     winReport.crashes_count = 1;
     winReport.save(err =>{
