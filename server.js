@@ -8,11 +8,13 @@ let fabricModule = require('./dolores/routes/fabricreports');
 let Dialog = require('./dolores/routes/dialogs');
 let GitRoute = require('./dolores/routes/gitIssuesRoute')
 let issueSchedule = require('./dolores/routes/gitUpdates')
+let WinReport = require('./dolores/routes/winreports');
 
 let botModule = new stadistics();
 let macReports = new fabricModule();
 let dialogModule = new Dialog();
 let gitServer = new GitRoute();
+let winReports = new WinReport();
 
 
 process.env.NODE_TLS_REJECT_UNAUTHORIZED = 0
@@ -48,4 +50,5 @@ let bot = function(result){
 botModule.listenForStadistics(sparkBot, sparkBot.getServer());
 macReports.listenForMacReports(sparkBot,sparkBot.getServer());
 gitServer.listenForGitUpdates(sparkBot,sparkBot.getServer());
+winReports.listenForWinReports(sparkBot,sparkBot.getServer());
 issueSchedule(sparkBot);

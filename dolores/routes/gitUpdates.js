@@ -2,8 +2,9 @@ let schedule = require('node-schedule');
 let mongoGit = require('../models/gitissuesModel')
 var mongoose = require('mongoose');
 let Promise= require('bluebird')
+var mongoUrl = process.env.MONGO_SPACES_URL || 'mongodb://localhost:27017/spaces';
 
-let con = mongoose.createConnection(process.env.MONGO_SPACES_URL);
+let con = mongoose.createConnection(mongoUrl);
 let gitIssueModel = mongoose.model('GitIssue', mongoGit);
 
 let scheduleServer = function(bot){
@@ -25,7 +26,7 @@ let scheduleServer = function(bot){
         console.log("closed issues Found: " + item.issue.title)
         tempAMessage = tempAMessage + "\n\n - [" + item.issue.number + "]" + "(" + item.issue.url.replace("api/v3/repos/","") + ")" + ": " + item.issue.title;
       })
-      
+
       if (tempAMessage !== "" || tempBMessage !== ""){
         let finalMessage = "Daily Proteus Issues Status:\n\n" + "Issues closed:\n" + tempAMessage + "\n\nIssues Created:\n" + tempBMessage;
         bot.sendRichTextMessage(process.env.PROTEUS_ROOM_ID,finalMessage,function(){
