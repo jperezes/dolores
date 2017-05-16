@@ -56,7 +56,6 @@ winReportSchema.statics.sendReport = function(winReport,bot){
                     "\n\n- **Feedback ID:** " + winReport.feedback_id  +
                     "\n\n- **Crashes Count:** " + winReport.crashes_count +
                     "\n\n- **Client Version:** " + winReport.client_version +
-                    "\n\n- **Crash ID:** " + winReport.id +
                     //"\nimpacted_devices_count: " + req.body.payload.impacted_devices_count +
                     "\n\n- **url to the crash:** " + "[PRT server URK]" + "("+ winReport.url + ")";
 

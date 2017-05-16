@@ -35,7 +35,6 @@ var saveAndSendReport = Promise.coroutine(function*(req,res,bot) {
   winReport.method = req.body.method;
   winReport.feedback_id = req.body.feedback_id;
   winReport.client_version = req.body.client_version;
-  winReport.id = req.body.id;
   winReport.url = req.body.url;
 
   let result = yield WinReportModel.getCountAndDelete(req.body.hashA);
