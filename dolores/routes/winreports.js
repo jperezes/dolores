@@ -28,24 +28,31 @@ mongoose.Promise = global.Promise;
 var userIds=[];
 var winReport = new WinReportModel(); // new instance of a fabric report
 var saveAndSendReport = Promise.coroutine(function*(req,res,bot) {
-  winReport.reportDate = req.body.reportClientDate;
+  winReport.lastReportDate = req.body.reportDate;
+  winReport.firstReportDate=req.body.reportDate;
   winReport.hashA = req.body.hashA;
   winReport.title = req.body.title;
-  winReport.method = req.body.mehtod;
+  winReport.method = req.body.method;
   winReport.feedback_id = req.body.feedback_id;
   winReport.client_version = req.body.client_version;
   winReport.id = req.body.id;
   winReport.url = req.body.url;
 
-  let crashCount = yield WinReportModel.getCountAndDelete(req.body.hashA);
-  winReport.crashes_count = crashCount + 1;
-  console.log("incrementing crash count: " + crashCount)
+  let result = yield WinReportModel.getCountAndDelete(req.body.hashA);
+  if (typeof(result.crashes_count) !=='undefined'){
+    winReport.crashes_count = result.crashes_count + 1;
+    winReport.firstReportDate = result.firstReportDate;
+  } else {
+    winReport.crashes_count = 1;
+  }
+
+  console.log("incrementing crash count: " + winReport.crashes_count)
   winReport.save(err =>{
     if (err) {
       res.status(500).send(err);
     } else {
       console.log("git issue change saved on the database")
-      res.status(200).send('github event saved to the database');
+      res.status(200).send('win crash event saved to the database');
     }
   });
 

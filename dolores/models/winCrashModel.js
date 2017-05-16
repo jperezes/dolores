@@ -2,7 +2,8 @@ var mongoose = require('mongoose');
 let Promise= require('bluebird')
 
 var winReportSchema = mongoose.Schema({
-    reportDate: String,
+    firstReportDate: String,
+    lastReportDate:String,
     hashA: String,
     title: String,
     method: String,
@@ -28,7 +29,13 @@ winReportSchema.statics.getCountAndDelete = function (hash) {
       }
       else if(typeof(result[0]) !== 'undefined'){
         console.dir("crash found count: " + result[0].hashA)
-        resolve(result[0].crashes_count)
+        let res={
+          firstReportDate:"",
+          crashes_count:0
+        }
+        res.firstReportDate = result[0].firstReportDate;
+        res.crashes_count=result[0].crashes_count;
+        resolve(res)
      }
      else{
        console.log("new Crash saving to database...: " + result.n)
