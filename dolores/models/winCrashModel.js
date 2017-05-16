@@ -49,7 +49,8 @@ winReportSchema.statics.sendReport = function(winReport,bot){
   var failureReport = "Win crash received: " +
                     //"\nevent: " + req.body.event +
                     //"\npayload Type: " + req.body.payload_type +
-                    "\n\n- **Reported Date:** " + winReport.reportDate +
+                    "\n\n- **First occurrence:** " + winReport.firstReportDate +
+                    "\n\n- **Last occurrence:** " + winReport.lastReportDate +
                     "\n\n- **Title:** " + winReport.title +
                     "\n\n- **method affected:** " + winReport.method +
                     "\n\n- **Feedback ID:** " + winReport.feedback_id  +
