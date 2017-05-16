@@ -22,26 +22,19 @@ winReportSchema.static({
 
 winReportSchema.statics.getCountAndDelete = function (hash) {
   return new Promise((resolve,reject)=>{
-    this.find({hashA:hash},function(err,result){
-      let roomsIds = [];
+    this.findOne({hashA:hash},function(err,result){
       if(err){
         reject(error);
       }
-      else if(typeof(result[0]) !== 'undefined'){
-        console.dir("crash found count: " + result[0].hashA)
-        let res={
-          firstReportDate:"",
-          crashes_count:0
-        }
-        res.firstReportDate = result[0].firstReportDate;
-        res.crashes_count=result[0].crashes_count;
-        resolve(res)
-     }
-     else{
-       console.log("new Crash saving to database...: " + result.n)
+      else if(result !== null){
+        console.log("crash found count: " + result.crashes_count)
+        resolve(result);
+
+     } else{
+       console.log("new Crash saving to database...: " + result)
        resolve(0);
      }
-  }).remove();
+  });
  })
 };
 
