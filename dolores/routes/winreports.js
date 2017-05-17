@@ -51,7 +51,13 @@ var saveAndSendReport = Promise.coroutine(function*(req,res,bot) {
         res.status(200).send('win crash event updated');
       }
     })
-    SpaceModel.getWinReportSubscribers(result,bot,function(){});
+    roomsIdSet = yield SpaceModel.getWinReportSubscribers(result);
+    if(roomsIdSet !== null){
+      for(var roomId of roomsIdSet.values()){
+       console.log("nuber of users found:" + roomsIdSet.size);
+       WinReportModel.sendReport(result,bot,roomId);
+      }
+    }
   } else {
     winReport.crashes_count = 1;
     let count = 0
@@ -72,8 +78,14 @@ var saveAndSendReport = Promise.coroutine(function*(req,res,bot) {
           res.status(200).send('win crash event saved to the database');
         }
       });
-      SpaceModel.getWinReportSubscribers(winReport,bot,function(){});
     }).catch(err => res.status(500).send("error accessing the database"))
+    roomsIdSet = yield SpaceModel.getWinReportSubscribers(winReport);
+    if(roomsIdSet !== null){
+      for(var roomId of roomsIdSet.values()){
+       console.log("nuber of users found:" + roomsIdSet.size);
+       WinReportModel.sendReport(winReport,bot,roomId);
+      }
+    }
   }
   //WinReportModel.sendReport(winReport,bot);
 })

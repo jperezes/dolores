@@ -1,5 +1,5 @@
 var mongoose = require('mongoose');
-let Promise = require('promise');
+let Promise= require('bluebird')
 
 var spaceSchema = mongoose.Schema({
     roomId: String,
@@ -236,57 +236,57 @@ spaceSchema.statics.getSplunkUsers = function(owner){
   })
 }
 
-spaceSchema.statics.getWinReportSubscribers = function (winReport, bot, callback){
-  console.log("about to parse and send a message to found users");
-  var stringToSearch = winReport.method;
-  var failureReport = "Win crash received: " +
-                    //"\nevent: " + req.body.event +
-                    //"\npayload Type: " + req.body.payload_type +
-                    "\n\n- **Crash Id:** " + winReport.id +
-                    "\n\n- **First occurrence:** " + winReport.reportDate[0] +
-                    "\n\n- **Last occurrence:** " + winReport.reportDate.slice(-1).pop() +
-                    "\n\n- **Title:** " + winReport.title +
-                    "\n\n- **method affected:** " + winReport.method +
-                    "\n\n- **Feedback ID:** " + winReport.feedback_id  +
-                    "\n\n- **Crashes Count:** " + winReport.crashes_count +
-                    "\n\n- **Client Version:** " + winReport.client_version +
-                    //"\nimpacted_devices_count: " + req.body.payload.impacted_devices_count +
-                    "\n\n- **url to the crash:** " + "[PRT server URK]" + "("+ winReport.url + ")";
+spaceSchema.statics.getWinReportSubscribers = function (winReport){
+  return new Promise((resolve,reject)=>{
+    console.log("about to parse and send a message to found users");
+    var stringToSearch = winReport.method;
+    var failureReport = "Win crash received: " +
+                      //"\nevent: " + req.body.event +
+                      //"\npayload Type: " + req.body.payload_type +
+                      "\n\n- **Crash Id:** " + winReport.id +
+                      "\n\n- **First occurrence:** " + winReport.reportDate[0] +
+                      "\n\n- **Last occurrence:** " + winReport.reportDate.slice(-1).pop() +
+                      "\n\n- **Title:** " + winReport.title +
+                      "\n\n- **method affected:** " + winReport.method +
+                      "\n\n- **Feedback ID:** " + winReport.feedback_id  +
+                      "\n\n- **Crashes Count:** " + winReport.crashes_count +
+                      "\n\n- **Client Version:** " + winReport.client_version +
+                      //"\nimpacted_devices_count: " + req.body.payload.impacted_devices_count +
+                      "\n\n- **url to the crash:** " + "[PRT server URK]" + "("+ winReport.url + ")";
 
-  stringToSearch = stringToSearch.toLowerCase();
-  this.list(function(err,users){
-    if(err){
-      console.log("error reading the database");
-    }
-    else if (users){
-      console.log("users Found" + users);
-      var roomsIds = [];
-      var roomsIdSet = new Set();
+    stringToSearch = stringToSearch.toLowerCase();
+    this.list(function(err,users){
+      if(err){
+        console.log("error reading the database");
+        reject(err)
+      }
+      else if (users){
+        console.log("users Found" + users);
+        var roomsIds = [];
+        var roomsIdSet = new Set();
 
 
-      users.forEach(function(item){
-          var tags = item.macReports.tags;
-          console.log("searching on user: " + item.personName)
-          tags.forEach(function(tag){
-             console.log("searching for tag: " + tag + " - " + stringToSearch)
-              var position = stringToSearch.indexOf(tag);
-              if(position >= 0){
-                console.log("USER FOUND SAVING THE ROOM ID INTO AN ARRAY");
-                roomsIdSet.add(item.roomId);
-              }
+        users.forEach(function(item){
+            var tags = item.macReports.tags;
+            console.log("searching on user: " + item.personName)
+            tags.forEach(function(tag){
+               console.log("searching for tag: " + tag + " - " + stringToSearch)
+                var position = stringToSearch.indexOf(tag);
+                if(position >= 0){
+                  console.log("USER FOUND SAVING THE ROOM ID INTO AN ARRAY");
+                  roomsIdSet.add(item.roomId);
+                }
+
+            })
 
           })
-
-        })
-        for(var roomId of roomsIdSet.values()){
-         console.log("number of win report users found:" + roomsIdSet.size);
-         bot.sendRichTextMessage(roomId,failureReport,function(){
-                  console.log("user found about to send him a message");
-                })
+          resolve(roomsIdSet);
+        } else {
+          resolve(null);
         }
-      }
-    });
-  }
+      });
+  })
+}
 
 // module.exports = mongoose.model('SparkSpace', spaceSchema);
 module.exports = spaceSchema;

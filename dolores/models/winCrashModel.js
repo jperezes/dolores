@@ -37,10 +37,11 @@ winReportSchema.statics.getCountAndDelete = function (hash) {
  })
 };
 
-winReportSchema.statics.sendReport = function(winReport,bot){
+winReportSchema.statics.sendReport = function(winReport,bot,roomId){
   var failureReport = "Win crash received: " +
                     //"\nevent: " + req.body.event +
                     //"\npayload Type: " + req.body.payload_type +
+                    "\n\n- **Crash Id:** " + winReport.id +
                     "\n\n- **First occurrence:** " + winReport.reportDate[0] +
                     "\n\n- **Last occurrence:** " + winReport.reportDate.slice(-1).pop() +
                     "\n\n- **Title:** " + winReport.title +
