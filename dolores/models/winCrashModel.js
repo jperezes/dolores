@@ -1,5 +1,6 @@
 var mongoose = require('mongoose');
 let Promise= require('bluebird')
+mongoose.set('debug', true);
 
 var winReportSchema = mongoose.Schema({
     reportDate: [String],

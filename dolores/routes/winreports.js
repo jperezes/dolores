@@ -6,6 +6,8 @@ var SpaceSchema = require('../models/space');
 let WinReportSchema = require('../models/winCrashModel');
 var mongoUrl = process.env.MONGO_URL || 'mongodb://localhost:27017/spaces';
 let Promise= require('bluebird')
+mongoose.set('debug', true);
+
 
 var winReports = function(){};
 let con = mongoose.createConnection(mongoUrl)
@@ -25,8 +27,6 @@ winReports.prototype.listenForWinReports = function(bot,app){
 //To avoid promise warning
 mongoose.Promise = global.Promise;
 //mongoose.Promise = require('bluebird');
-
-var userIds=[];
 
 var saveAndSendReport = Promise.coroutine(function*(req,res,bot) {
   let winReport = new WinReportModel(); // new instance of a fabric report
