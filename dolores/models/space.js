@@ -259,6 +259,7 @@ spaceSchema.statics.getWinReportSubscribers = function (winReport, bot, callback
       console.log("error reading the database");
     }
     else if (users){
+      console.log("users Found");
       var roomsIds = [];
       var roomsIdSet = new Set();
 
