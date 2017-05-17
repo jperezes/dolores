@@ -264,6 +264,7 @@ spaceSchema.statics.getWinReportSubscribers = function (winReport, bot, callback
 
       users.forEach(function(item){
           var tags = item.macReports.tags;
+          console.log("searching on user: " + item.personName)
           tags.forEach(function(tag){
               var position = stringToSearch.indexOf(tag);
               if(position >= 0){
