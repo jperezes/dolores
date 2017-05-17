@@ -44,13 +44,6 @@ var saveAndSendReport = Promise.coroutine(function*(req,res,bot) {
     result.reportDate.push(req.body.reportDate);
     result.reportDate.sort();
     result.crashes_count = result.crashes_count +1;
-    result.save(function(err){
-      if(err){
-        res.status(500).send("error updating the crash into the database" + err);
-      } else {
-        res.status(200).send('win crash event updated');
-      }
-    })
     roomsIdSet = yield SpaceModel.getWinReportSubscribers(result);
     if(roomsIdSet !== null){
       for(var roomId of roomsIdSet.values()){
@@ -58,6 +51,14 @@ var saveAndSendReport = Promise.coroutine(function*(req,res,bot) {
        WinReportModel.sendReport(result,bot,roomId);
       }
     }
+    result.save(function(err){
+      if(err){
+        res.status(500).send("error updating the crash into the database" + err);
+      } else {
+        res.status(200).send('win crash event updated');
+      }
+    })
+
   } else {
     winReport.crashes_count = 1;
     let count = 0
