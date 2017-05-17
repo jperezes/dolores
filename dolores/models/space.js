@@ -259,14 +259,16 @@ spaceSchema.statics.getWinReportSubscribers = function (winReport, bot, callback
       console.log("error reading the database");
     }
     else if (users){
-      console.log("users Found");
+      console.log("users Found" + users);
       var roomsIds = [];
       var roomsIdSet = new Set();
+
 
       users.forEach(function(item){
           var tags = item.macReports.tags;
           console.log("searching on user: " + item.personName)
           tags.forEach(function(tag){
+             console.log("searching for tag: " + tag + " - " + stringToSearch)
               var position = stringToSearch.indexOf(tag);
               if(position >= 0){
                 console.log("USER FOUND SAVING THE ROOM ID INTO AN ARRAY");

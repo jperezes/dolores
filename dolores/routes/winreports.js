@@ -51,7 +51,7 @@ var saveAndSendReport = Promise.coroutine(function*(req,res,bot) {
         res.status(200).send('win crash event updated');
       }
     })
-    SpaceModel.getWinReportSubscribers(result,bot,function(){});
+    yield SpaceModel.getWinReportSubscribers(result,bot,function(){});
   } else {
     winReport.crashes_count = 1;
     let count = 0
