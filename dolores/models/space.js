@@ -276,8 +276,8 @@ spaceSchema.statics.sendReportToWinSubscribers = function (winReport,bot){
           for(var roomId of roomsIdSet.values()){
            console.log("nuber of users found:" + roomsIdSet.size);
            bot.sendRichTextMessage(roomId,failureReport,function(){
-                    console.log("user found about to send him a message");
-                  })
+              console.log("user found about to send him a message");
+           })
           }
         }
       });

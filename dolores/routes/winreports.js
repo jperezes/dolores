@@ -30,7 +30,6 @@ winReports.prototype.listenForWinReports = function(bot,app){
 //To avoid promise warning
 mongoose.Promise = global.Promise;
 //mongoose.Promise = require('bluebird');
-
 var saveAndSendReport = Promise.coroutine(function*(req,res,bot) {
   let winReport = new WinReportModel(); // new instance of a fabric report
   winReport.reportDate.push(req.body.reportDate);
@@ -43,7 +42,7 @@ var saveAndSendReport = Promise.coroutine(function*(req,res,bot) {
 
   let result = yield WinReportModel.getCountAndDelete(req.body.hashA);
   if (typeof(result.reportDate) !== 'undefined'){
-
+    console.log("crash already reported")
     result.reportDate.push(req.body.reportDate);
     result.reportDate.sort();
     result.crashes_count = result.crashes_count +1;
@@ -56,31 +55,21 @@ var saveAndSendReport = Promise.coroutine(function*(req,res,bot) {
       }
     })
     yield SpaceModel.sendReportToWinSubscribers(result,bot);
-
   } else {
+    console.log("New crash! ")
     winReport.crashes_count = 1;
-    let count = 0
-    WinReportModel.count({},(err,result)=>{
-      if(err){
+    result = yield WinReportModel.getCountId();
+    winReport.id = result + 1;
+    winReport.save(err =>{
+      if (err) {
         throw err;
       } else {
-        return result;
+        console.log("git issue change saved on the database")
+        res.status(200).send('win crash event saved to the database');
       }
-    }).then(result => {
-      console.log("number of found documents is: " + result)
-      winReport.id = result + 1;
-      winReport.save(err =>{
-        if (err) {
-          throw err;
-        } else {
-          console.log("git issue change saved on the database")
-          res.status(200).send('win crash event saved to the database');
-        }
-      });
-    }).catch(err => res.status(500).send("error accessing the database"))
+    });
     yield SpaceModel.sendReportToWinSubscribers(winReport,bot);
   }
-  //WinReportModel.sendReport(winReport,bot);
 })
 
 router.route('/wincrashreports').post(function(req, res) {
