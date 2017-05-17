@@ -2,7 +2,7 @@ var express = require('express');
 var router = express.Router();
 var bodyParser = require('body-parser');
 var mongoose = require('mongoose');
-var Space = require('../models/space');
+var SpaceSchema = require('../models/space');
 let WinReportSchema = require('../models/winCrashModel');
 var mongoUrl = process.env.MONGO_URL || 'mongodb://localhost:27017/spaces';
 let Promise= require('bluebird')
@@ -10,6 +10,7 @@ let Promise= require('bluebird')
 var winReports = function(){};
 //let con = mongoose.createConnection(mongoUrl)
 let WinReportModel = mongoose.model('winReport', WinReportSchema);
+let SpaceModel = mongoose.model('SparkSpace', SpaceSchema);
 winReports.prototype.listenForWinReports = function(bot,app){
   this.app = app;
   this.app.use(bodyParser.urlencoded({extended: true}));
@@ -49,21 +50,32 @@ var saveAndSendReport = Promise.coroutine(function*(req,res,bot) {
       } else {
         res.status(200).send('win crash event updated');
       }
-    });
-    winReport.reportDate = result.reportDate;
-    winReport.crashes_count = result.crashes_count;
+    })
+    SpaceModel.getWinReportSubscribers(result,bot,function(){});
   } else {
     winReport.crashes_count = 1;
-    winReport.save(err =>{
-      if (err) {
-        res.status(500).send(err);
+    let count = 0
+    WinReportModel.count({},(err,result)=>{
+      if(err){
+        throw err;
       } else {
-        console.log("git issue change saved on the database")
-        res.status(200).send('win crash event saved to the database');
+        return result;
       }
-    });
+    }).then(result => {
+      console.log("number of found documents is: " + result)
+      winReport.id = result + 1;
+      winReport.save(err =>{
+        if (err) {
+          throw err;
+        } else {
+          console.log("git issue change saved on the database")
+          res.status(200).send('win crash event saved to the database');
+        }
+      });
+      SpaceModel.getWinReportSubscribers(winReport,bot,function(){});
+    }).catch(err => res.status(500).send("error accessing the database"))
   }
-  WinReportModel.sendReport(winReport,bot);
+  //WinReportModel.sendReport(winReport,bot);
 })
 
 router.route('/wincrashreports').post(function(req, res) {
