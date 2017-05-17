@@ -12,7 +12,10 @@ mongoose.set('debug', true);
 var winReports = function(){};
 let con = mongoose.createConnection(mongoUrl)
 let WinReportModel = con.model('winReport', WinReportSchema);
-let SpaceModel = con.model('SparkSpace', SpaceSchema);
+var conn2 = mongoose.createConnection(process.env.MONGO_SPACES_URL)
+let SpaceModel = conn2.model('SparkSpace', SpaceSchema);
+
+
 winReports.prototype.listenForWinReports = function(bot,app){
   this.app = app;
   this.app.use(bodyParser.urlencoded({extended: true}));
@@ -94,7 +97,7 @@ var saveAndSendReport = Promise.coroutine(function*(req,res,bot) {
 router.route('/wincrashreports').post(function(req, res) {
     if (req.body.event === "verification") {
       res.status(200).send('Verified');
-    } else if (req.headers.authorization !== process.env.AUTH_TOKEN_WIN_REPORTS){
+    } else if (req.headers.authorization !== process.env.AUTH_TOKEN_WIN_REPORTS && false){
 
       bot.sendRichTextMessage(process.env.JUAN_DOLORES_ROOM_ID,"invalid WIN report url received",function(){
         console.log("url not not valid");
