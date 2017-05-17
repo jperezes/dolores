@@ -304,7 +304,4 @@ dialogModule.prototype.getUser = (user) =>{
     return userRegistered;
 }
 
-
-
-
 module.exports = dialogModule;

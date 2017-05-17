@@ -6,7 +6,7 @@ var SpaceSchema = require('../models/space');
 let WinReportSchema = require('../models/winCrashModel');
 var mongoUrl = process.env.MONGO_URL || 'mongodb://localhost:27017/spaces';
 let Promise= require('bluebird')
-mongoose.set('debug', true);
+//mongoose.set('debug', true);
 
 
 var winReports = function(){};
@@ -47,13 +47,7 @@ var saveAndSendReport = Promise.coroutine(function*(req,res,bot) {
     result.reportDate.push(req.body.reportDate);
     result.reportDate.sort();
     result.crashes_count = result.crashes_count +1;
-    roomsIdSet = yield SpaceModel.getWinReportSubscribers(result);
-    if(roomsIdSet !== null){
-      for(var roomId of roomsIdSet.values()){
-       console.log("Number of users found:" + roomsIdSet.size);
-       WinReportModel.sendReport(result,bot,roomId);
-      }
-    }
+
     result.save(function(err){
       if(err){
         res.status(500).send("error updating the crash into the database" + err);
@@ -61,6 +55,7 @@ var saveAndSendReport = Promise.coroutine(function*(req,res,bot) {
         res.status(200).send('win crash event updated');
       }
     })
+    yield SpaceModel.sendReportToWinSubscribers(result,bot);
 
   } else {
     winReport.crashes_count = 1;
@@ -83,13 +78,7 @@ var saveAndSendReport = Promise.coroutine(function*(req,res,bot) {
         }
       });
     }).catch(err => res.status(500).send("error accessing the database"))
-    roomsIdSet = yield SpaceModel.getWinReportSubscribers(winReport);
-    if(roomsIdSet !== null){
-      for(var roomId of roomsIdSet.values()){
-       console.log("nuber of users found:" + roomsIdSet.size);
-       WinReportModel.sendReport(winReport,bot,roomId);
-      }
-    }
+    yield SpaceModel.sendReportToWinSubscribers(winReport,bot);
   }
   //WinReportModel.sendReport(winReport,bot);
 })
@@ -97,7 +86,7 @@ var saveAndSendReport = Promise.coroutine(function*(req,res,bot) {
 router.route('/wincrashreports').post(function(req, res) {
     if (req.body.event === "verification") {
       res.status(200).send('Verified');
-    } else if (req.headers.authorization !== process.env.AUTH_TOKEN_WIN_REPORTS && false){
+    } else if (req.headers.authorization !== process.env.AUTH_TOKEN_WIN_REPORTS){
 
       bot.sendRichTextMessage(process.env.JUAN_DOLORES_ROOM_ID,"invalid WIN report url received",function(){
         console.log("url not not valid");

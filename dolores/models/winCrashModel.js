@@ -1,6 +1,6 @@
 var mongoose = require('mongoose');
 let Promise= require('bluebird')
-mongoose.set('debug', true);
+//mongoose.set('debug', true);
 
 var winReportSchema = mongoose.Schema({
     reportDate: [String],
@@ -53,7 +53,7 @@ winReportSchema.statics.sendReport = function(winReport,bot,roomId){
                     //"\nimpacted_devices_count: " + req.body.payload.impacted_devices_count +
                     "\n\n- **url to the crash:** " + "[PRT server URK]" + "("+ winReport.url + ")";
 
-    bot.sendRichTextMessage(process.env.JUAN_DOLORES_ROOM_ID,failureReport,function(){
+    bot.sendRichTextMessage(roomId,failureReport,function(){
         console.log("message sent to the bot");
     });
 }

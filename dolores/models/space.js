@@ -236,7 +236,7 @@ spaceSchema.statics.getSplunkUsers = function(owner){
   })
 }
 
-spaceSchema.statics.getWinReportSubscribers = function (winReport){
+spaceSchema.statics.sendReportToWinSubscribers = function (winReport,bot){
   return new Promise((resolve,reject)=>{
     console.log("about to parse and send a message to found users");
     var stringToSearch = winReport.method;
@@ -261,26 +261,24 @@ spaceSchema.statics.getWinReportSubscribers = function (winReport){
         reject(err)
       }
       else if (users){
-        console.log("users Found: " + users[0]);
         var roomsIds = [];
         var roomsIdSet = new Set();
         users.forEach(function(item){
             var tags = item.macReports.tags;
-            console.log("searching on user: " + item.personName)
             tags.forEach(function(tag){
-               console.log("searching for tag: " + tag + " - " + stringToSearch)
                 var position = stringToSearch.indexOf(tag);
                 if(position >= 0){
                   console.log("USER FOUND SAVING THE ROOM ID INTO AN ARRAY");
                   roomsIdSet.add(item.roomId);
                 }
-
             })
-
           })
-          resolve(roomsIdSet);
-        } else {
-          resolve(null);
+          for(var roomId of roomsIdSet.values()){
+           console.log("nuber of users found:" + roomsIdSet.size);
+           bot.sendRichTextMessage(roomId,failureReport,function(){
+                    console.log("user found about to send him a message");
+                  })
+          }
         }
       });
   })
