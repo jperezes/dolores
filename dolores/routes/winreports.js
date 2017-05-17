@@ -54,7 +54,7 @@ var saveAndSendReport = Promise.coroutine(function*(req,res,bot) {
     roomsIdSet = yield SpaceModel.getWinReportSubscribers(result);
     if(roomsIdSet !== null){
       for(var roomId of roomsIdSet.values()){
-       console.log("nuber of users found:" + roomsIdSet.size);
+       console.log("Number of users found:" + roomsIdSet.size);
        WinReportModel.sendReport(result,bot,roomId);
       }
     }

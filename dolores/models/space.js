@@ -261,11 +261,9 @@ spaceSchema.statics.getWinReportSubscribers = function (winReport){
         reject(err)
       }
       else if (users){
-        console.log("users Found" + users);
+        console.log("users Found: " + users);
         var roomsIds = [];
         var roomsIdSet = new Set();
-
-
         users.forEach(function(item){
             var tags = item.macReports.tags;
             console.log("searching on user: " + item.personName)
