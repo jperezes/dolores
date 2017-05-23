@@ -285,5 +285,67 @@ spaceSchema.statics.sendReportToWinSubscribers = function (winReport,bot){
   })
 }
 
+spaceSchema.statics.isSpaceRegistered = function(roomId) {
+  return new Promise((resolve,reject) =>{
+    spaceModel.find({roomId:roomId}, function(err, result){
+      if (err) {
+        console.log('error retreiving from the database');
+        userRegistered = false;
+      } else if (result.length > 0){
+        console.log('user found in the databasae ');
+        resolve(true);
+      } else {
+        // if the scope is different than null it means we are registering a space
+        resolve(false);
+      }
+    });
+  });
+}
+
+spaceSchema.statics.deleteUserPromified = function (roomId) {
+  return new Promise((resolve,reject) =>{
+    this.find({roomId: user.roomId}).remove().exec(function(err, data){
+      if(err) {
+        "Error deleting the user, please try again later";
+        resolve("Error deleting the user, please try again later")
+      }
+      else if(data.result.n === 0) {
+        resolve("Space not registered in the database");
+      }
+      else {
+        resolve("Room deleted from the database");
+      }
+    });
+  })
+}
+
+spaceSchema.statics.showUserOptionsPromified = function (room_Id) {
+  return new Promise((resolve,reject) =>{
+    this.find({roomId: room_Id}, function(err, result) {
+      if (result.length>0){
+        if(result[0].roomType === "group"){
+          let reply = "These are currently the registration options for this group space " + result[0].nickName + ":" +
+                                  "\n\n- Receive Spark client crash reports real time: " + "**"+ result[0].macReports.receive + "**"+
+                                  "\n\n- Crash Reports filter keywords: " + "_"+ result[0].macReports.tags + "_"+
+                                  "\n\n- You can use this room to display Splunk Alerts:" + "**"+ result[0].splunkReports.receive+ "**";
+          resolve(reply);
+        }
+        else{
+          let reply= "These are currently your registration options " + result[0].nickName + ":" +
+                                  "\n\n- Name: " + "**" +result[0].personName+ "**" +
+                                  "\n\n- Receive Spark client crash reports real time: " + "**"+ result[0].macReports.receive + "**"+
+                                  "\n\n- Crash Reports filter keywords: " + "_"+ result[0].macReports.tags + "_"+
+                                  "\n\n- You can use this room to display Splunk Alerts:" + "**"+ result[0].splunkReports.receive+ "**";
+          resolve(reply);
+        }
+
+      }
+      else {
+        resolve("You are not yet registered");
+    }
+  });
+  })
+}
+
 // module.exports = mongoose.model('SparkSpace', spaceSchema);
 module.exports = spaceSchema;

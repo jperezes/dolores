@@ -5,6 +5,7 @@ var mongoose = require('mongoose');
 var SpaceSchema = require('../models/space');
 let WinReportSchema = require('../models/winCrashModel');
 var mongoUrl = process.env.MONGO_URL || 'mongodb://localhost:27017/spaces';
+let mongoSp = process.env.MONGO_SPACES_URL || 'mongodb://localhost:27017/spaces';
 let Promise= require('bluebird')
 //mongoose.set('debug', true);
 
@@ -12,7 +13,7 @@ let Promise= require('bluebird')
 var winReports = function(){};
 let con = mongoose.createConnection(mongoUrl)
 let WinReportModel = con.model('winReport', WinReportSchema);
-var conn2 = mongoose.createConnection(process.env.MONGO_SPACES_URL)
+var conn2 = mongoose.createConnection(mongoSp)
 let SpaceModel = conn2.model('SparkSpace', SpaceSchema);
 
 
