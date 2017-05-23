@@ -159,7 +159,7 @@ dialogModule.prototype.parseQuestion = Promise.coroutine(function* (query, bot){
                 console.log("spaced saved to database")
                 saveReply = "Welcome to SparkWorld";
               }
-              bot.sendRichTextMessage(query.roomId, reply , function(){
+              bot.sendRichTextMessage(query.roomId, saveReply , function(){
                                       console.log('Message sent from Bot!');
                                       });
             });
