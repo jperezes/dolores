@@ -287,7 +287,7 @@ spaceSchema.statics.sendReportToWinSubscribers = function (winReport,bot){
 
 spaceSchema.statics.isSpaceRegistered = function(roomId) {
   return new Promise((resolve,reject) =>{
-    spaceModel.find({roomId:roomId}, function(err, result){
+    this.find({roomId:roomId}, function(err, result){
       if (err) {
         console.log('error retreiving from the database');
         userRegistered = false;
