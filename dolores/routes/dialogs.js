@@ -166,15 +166,14 @@ dialogModule.prototype.parseQuestion = Promise.coroutine(function* (query, bot){
           }
         break;
       }
-      if (mongoUrl ==='mongodb://localhost:27017/spaces'){
-          var err = null;
-          bot(err,reply);
-      }else {
-          bot.sendRichTextMessage(query.roomId, reply , function(){
-                                  console.log('Message sent from Bot!');
-                                  });
-      }
-
+  }
+  if (mongoUrl ==='mongodb://localhost:27017/spaces'){
+      var err = null;
+      bot(err,reply);
+  }else {
+      bot.sendRichTextMessage(query.roomId, reply , function(){
+                              console.log('Message sent from Bot!');
+                              });
   }
 })
 
