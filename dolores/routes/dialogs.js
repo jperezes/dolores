@@ -92,8 +92,9 @@ dialogModule.prototype.parseQuestion = Promise.coroutine(function* (query, bot){
     console.log('Message sent from Bot!');
     })
   } else if(cleanQuestion === "bring yourself back online" || (!alreadyRegistered && scope ==="")) {
-    scope = "askTags"
-    //show menu first time change scope
+    console.log("newUser add asking for menu");
+    reply = "What can I do for you " + query.person.nickName + "?"+ showMenu();
+    scope = "menuShown"
   } else if (scope !=="") {
       switch(scope) {
         case "menuShown":
