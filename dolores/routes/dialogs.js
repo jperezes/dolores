@@ -88,7 +88,7 @@ dialogModule.prototype.parseQuestion = Promise.coroutine(function* (query, bot){
   if (alreadyRegistered && cleanQuestion !== "bring yourself back online") {
     console.log("user already registered proceeding to find the question")
     reply = yield dialogModel.retrieveResponsePromised(query);
-    bot.sendRichTextMessage(roomId, reply , function(){
+    bot.sendRichTextMessage(query.roomId, reply , function(){
     console.log('Message sent from Bot!');
     })
   } else if(cleanQuestion === "bring yourself back online" || (!alreadyRegistered && scope ==="")) {
@@ -154,10 +154,10 @@ dialogModule.prototype.parseQuestion = Promise.coroutine(function* (query, bot){
           if (cleanQuestion === 'yes') {
             space.save(err =>{
               if (err) {
-                reply = "error saving to the database, try again later"
+                this.reply = "error saving to the database, try again later"
               } else {
                 console.log("spaced saved to database")
-                reply = "Welcome to SparkWorld";
+                this.reply = "Welcome to SparkWorld";
               }
             });
           }
