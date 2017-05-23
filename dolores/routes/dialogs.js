@@ -85,7 +85,7 @@ dialogModule.prototype.parseQuestion = Promise.coroutine(function* (query, bot){
   let cleanQuestion = query.message.toLowerCase().replace(" dolores","").replace("dolores ","").replace("?","");
   let reply ="";
   let alreadyRegistered = yield spaceModel.isSpaceRegistered(query.roomId);
-  if (alreadyRegistered && cleanQuestion !== "bring yourself back online" && scope !=="") {
+  if (alreadyRegistered && cleanQuestion !== "bring yourself back online" && scope ==="") {
     scope = "menuShown";
     console.log("user already registered proceeding to find the question")
     reply = yield dialogModel.retrieveResponsePromised(query);
@@ -174,6 +174,7 @@ dialogModule.prototype.parseQuestion = Promise.coroutine(function* (query, bot){
                               console.log('Message sent from Bot!');
                               });
   }
+  return;
 })
 
 
