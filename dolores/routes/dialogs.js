@@ -81,7 +81,7 @@ dialogModule.prototype.showSchema = function(){
 }
 
 dialogModule.prototype.parseQuestion = Promise.coroutine(function* (query, bot){
-
+   console.log("THE SCOPE IS: " + scope);
   let cleanQuestion = query.message.toLowerCase().replace(" dolores","").replace("dolores ","").replace("?","");
   let reply ="";
   let alreadyRegistered = yield spaceModel.isSpaceRegistered(query.roomId);
@@ -89,9 +89,6 @@ dialogModule.prototype.parseQuestion = Promise.coroutine(function* (query, bot){
     scope = "menuShown";
     console.log("user already registered proceeding to find the question")
     reply = yield dialogModel.retrieveResponsePromised(query);
-    bot.sendRichTextMessage(query.roomId, reply , function(){
-    console.log('Message sent from Bot!');
-    })
   } else if(cleanQuestion === "bring yourself back online" || (!alreadyRegistered && scope ==="")) {
     console.log("newUser add asking for menu");
     reply = "What can I do for you " + query.person.nickName + "?"+ showMenu();
