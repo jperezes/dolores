@@ -99,10 +99,10 @@ dialogModule.prototype.parseQuestion = Promise.coroutine(function* (query, bot){
       switch(scope) {
         case "menuShown":
           if(cleanQuestion == "1"){
-            var report = populateTempSpace(question);
+            var report = populateTempSpace(query);
             //reply = report.reply();
             space = report.space();
-            space.updateTempSpace(question);
+            space.updateTempSpace(query);
             reply = "Please write the tags you want to filter the crash reports separated by comma " +
                     "for example: *whiteboard*, _auxiliaryDeviceService_,*roomsView*, so I will sent you only the ones you are interested at." +
                     "\n\n- If you want to receive all the crashes reported type \"**everything**\"." +
