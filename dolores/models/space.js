@@ -290,12 +290,13 @@ spaceSchema.statics.isSpaceRegistered = function(roomId) {
     this.find({roomId:roomId}, function(err, result){
       if (err) {
         console.log('error retreiving from the database');
-        userRegistered = false;
+        resolve(false)
       } else if (result.length > 0){
         console.log('user found in the databasae ');
         resolve(true);
       } else {
         // if the scope is different than null it means we are registering a space
+        console.log('user not found in the databasae ');
         resolve(false);
       }
     });

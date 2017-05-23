@@ -86,6 +86,7 @@ dialogModule.prototype.parseQuestion = Promise.coroutine(function* (query, bot){
   let reply ="";
   let alreadyRegistered = yield spaceModel.isSpaceRegistered(query.roomId);
   if (alreadyRegistered && cleanQuestion !== "bring yourself back online") {
+    console.log("user already registered proceeding to find the question")
     reply = yield dialogModel.retrieveResponsePromised(query);
     bot.sendRichTextMessage(roomId, reply , function(){
     console.log('Message sent from Bot!');
