@@ -110,6 +110,7 @@ dialogModule.prototype.parseQuestion = Promise.coroutine(function* (query, bot){
                     "\n\n- You can update these options at any time by typing \"**Bring yourself back online**\".";
             scope = "tagsAsked";
           }else if(cleanQuestion == "2"){
+            console.log("about to delete the user")
             scope="";
             reply = yield spaceModel.deleteUserPromified(query.roomId);
           }else if(cleanQuestion == "3"){

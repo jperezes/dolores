@@ -285,9 +285,9 @@ spaceSchema.statics.sendReportToWinSubscribers = function (winReport,bot){
   })
 }
 
-spaceSchema.statics.isSpaceRegistered = function(roomId) {
+spaceSchema.statics.isSpaceRegistered = function(room_id) {
   return new Promise((resolve,reject) =>{
-    this.find({roomId:roomId}, function(err, result){
+    this.find({roomId:room_id}, function(err, result){
       if (err) {
         console.log('error retreiving from the database');
         resolve(false)
@@ -303,9 +303,9 @@ spaceSchema.statics.isSpaceRegistered = function(roomId) {
   });
 }
 
-spaceSchema.statics.deleteUserPromified = function (roomId) {
+spaceSchema.statics.deleteUserPromified = function (room_id) {
   return new Promise((resolve,reject) =>{
-    this.find({roomId: user.roomId}).remove().exec(function(err, data){
+    this.find({roomId: room_id}).remove().exec(function(err, data){
       if(err) {
         "Error deleting the user, please try again later";
         resolve("Error deleting the user, please try again later")
