@@ -152,13 +152,18 @@ dialogModule.prototype.parseQuestion = Promise.coroutine(function* (query, bot){
           scope = "";
           if (cleanQuestion === 'yes') {
             space.save(err =>{
+              let saveReply="";
               if (err) {
-                this.reply = "error saving to the database, try again later"
+                saveReply = "error saving to the database, try again later"
               } else {
                 console.log("spaced saved to database")
-                this.reply = "Welcome to SparkWorld";
+                saveReply = "Welcome to SparkWorld";
               }
+              bot.sendRichTextMessage(query.roomId, reply , function(){
+                                      console.log('Message sent from Bot!');
+                                      });
             });
+            return;
           }
           else {
             reply = "Sorry if something was wrong, please try again later";
