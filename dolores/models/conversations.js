@@ -36,8 +36,8 @@ DialogSchema.statics.retrieveResponsePromised = function (question) {
         reject(err);
         console.log('Error retrieving the dialog from the DB');
       }
-      console.log('question properly parsed, response: ' + result[0]);
-      resolve(result[0]);
+      console.log('question properly parsed, response: ' + result[0].response);
+      resolve(result[0].response);
     });
   })
 }
