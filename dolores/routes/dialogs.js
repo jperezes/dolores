@@ -156,14 +156,14 @@ dialogModule.prototype.parseQuestion = Promise.coroutine(function* (query, bot){
       });
       dates = dates.split(',');
       dates.sort();
-      reply = query.person.nickName + " version " + version + " has " + count + " reported crash(es) between " + dates.slice(-1).pop() +
+      reply = query.person.nickName + " version " + version + " has " + count + " windows reported crash(es) between " + dates.slice(-1).pop() +
               " and " + dates[1] + " with the following ids:" +
               "\n\n >" + ids;
     } else {
       reply = "Client version " + version + " has no crashes reported";
     }
-  } else if (alreadyRegistered && cleanQuestion.indexOf("get crash with id") !== -1){
-    let crashId = cleanQuestion.replace("get crash with id","").replace(" ","");
+  } else if (alreadyRegistered && cleanQuestion.indexOf("get me crash with id") !== -1){
+    let crashId = cleanQuestion.replace("get me crash with id","").replace(" ","");
     let crash = yield winReportModel.getCrashById(crashId);
     if(crash){
       let clients= "";
@@ -174,10 +174,10 @@ dialogModule.prototype.parseQuestion = Promise.coroutine(function* (query, bot){
                         "\n\n> **Crash Id:** " + crash.id +
                         "\n\n> **First reported:** " + crash.reportDate[0] +
                         "\n\n> **Last reported:** " + crash.reportDate.slice(-1).pop() +
-                        "\n\n- **name:** " + crash.title +
-                        "\n\n- **method affected:** " + crash.method +
-                        "\n\n- **Crashes Count:** " + crash.crashes_count +
-                        "\n\n- **Client versions afected:** " + clients;
+                        "\n\n> **name:** " + crash.title +
+                        "\n\n> **method affected:** " + crash.method +
+                        "\n\n> **Crashes Count:** " + crash.crashes_count +
+                        "\n\n> **Client versions afected:** " + clients;
     } else {
       reply = "invalid crash id...";
     }
