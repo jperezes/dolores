@@ -185,7 +185,7 @@ dialogModule.prototype.parseQuestion = Promise.coroutine(function* (query, bot){
         case "askedForConfirmation":
           scope = "";
           if (cleanQuestion === 'yes') {
-            space = copySpace(tempSpace).space();
+            space = copySpace(space).space();
             cleanTempSpace();
             space.save(err =>{
               let saveReply="";
