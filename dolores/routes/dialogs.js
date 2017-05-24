@@ -151,8 +151,9 @@ dialogModule.prototype.parseQuestion = Promise.coroutine(function* (query, bot){
         ids += item.id + ", ";
         dates.concat(item.reportDate);
       });
+      dates.sort();
       reply = query.person.nickName + " version " + version + " has " + dates.length + " reported crash(es) between " + dates[0] +
-              "and " + dates.slice(-1).pop() + " with the following ids:" + 
+              "and " + dates.slice(-1).pop() + " with the following ids:" +
               "\n\n >" + ids;
     } else {
       reply = "Client version " + version + " has no crashes reported";
