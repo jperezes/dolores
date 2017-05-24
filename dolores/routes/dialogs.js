@@ -146,7 +146,7 @@ dialogModule.prototype.parseQuestion = Promise.coroutine(function* (query, bot){
     if(result){
       lastCrash = result.slice(-1).pop();
       let dates = [];
-      let count = 0;
+      let ids = "";
       result.forEach(item=>{
         ids += item.id + ", ";
         dates.concat(item.reportDate);
