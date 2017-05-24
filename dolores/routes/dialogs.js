@@ -145,18 +145,17 @@ dialogModule.prototype.parseQuestion = Promise.coroutine(function* (query, bot){
       lastCrash = result.slice(-1).pop();
       let dates = "";
       let ids = "";
-      item.reportDate.forEach(it =>{
-        dates += it + ", ";
-      })
+      let count = 0;
       result.forEach(item=>{
         ids += item.id + ", ";
         item.reportDate.forEach(it =>{
           dates += it + ", ";
+          count += 1;
         })
       });
-      reply = query.person.nickName + " version " + version + " has " + lastCrash.crashes_count + " reported on the following dates:"+
+      reply = query.person.nickName + " version " + version + " has " + count + " reported crash(es) on the following dates:"+
               "\n\n >" + dates +
-              "\n\n with crash ids: " +
+              "\n\n With crash ids: " +
               "\n\n >" + ids;
     } else {
       reply = "Client version " + version + " has no crashes reported";
@@ -253,7 +252,7 @@ dialogModule.prototype.parseQuestion = Promise.coroutine(function* (query, bot){
   }
   if (mongoUrl ==='mongodb://localhost:27017/spaces'){
       var err = null;
-      bot(err,reply);
+      bot(reply);
   }else {
       bot.sendRichTextMessage(query.roomId, reply , function(){
                               console.log('Message sent from Bot!');
