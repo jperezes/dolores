@@ -34,8 +34,8 @@ let cleanTempSpace = ()=>{
   tempSpace.personName="";
   tempSpace.personEmail="";
   tempSpace.nickName="";
-  tempSpace.macReport.tags=[];
-  tempSpace.windowsReports.tags=[];
+  tempSpace.macReports.tags=[""];
+  tempSpace.windowsReports.tags=[""];
   tempSpace.splunkReports.receive="";
 }
 
