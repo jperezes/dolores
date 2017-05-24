@@ -140,14 +140,21 @@ dialogModule.prototype.parseQuestion = Promise.coroutine(function* (query, bot){
     reply = "sorry " + query.person.nickName + ", there is a user currently registering, try again later...";
   } else if (alreadyRegistered && cleanQuestion.indexOf("get crashes count on version") !== -1){
     version = cleanQuestion.replace("get crashes count on version","").replace(" ","");
-    let lastCrash = yield winReportModel.getCrashesByVersion(version);
+    let result = yield winReportModel.getCrashesByVersion(version);
     if(result){
+      lastCrash = result.slice(-1).pop();
       let dates = "";
+      let ids = "";
       lastCrash.reportDate.forEach(item =>{
         dates += item + ", ";
       })
+      result.forEach(item=>{
+        ids += item.id + ", ";
+      });
       reply = query.person.nickName + " version " + version + " has " + lastCrash.crashes_count + " reported on the following dates:"+
-              "\n\n >" + dates;
+              "\n\n >" + dates +
+              "\n\n with crash ids: " +
+              "\n\n >" + ids;
     } else {
       reply = "Client version " + version + " has no crashes reported";
     }

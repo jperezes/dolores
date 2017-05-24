@@ -57,7 +57,7 @@ winReportSchema.statics.getCrashesByVersion = function (clientVersion) {
       }
       else if(result.n > 0){
         console.log("crash found count: " + result[0].id)
-        resolve(result.slice(-1).pop());
+        resolve(result);
 
      } else{
        console.log("crash not found: " + result)
