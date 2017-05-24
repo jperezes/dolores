@@ -7,6 +7,7 @@ let mongoUrl = process.env.MONGO_SPACES_URL || 'mongodb://localhost:27017/spaces
 
 
 let scope = "";
+let currentRegisteringUser = "";
 let reply = "";
 let dialogModule = function(){};
 let tempSpace = {
@@ -119,6 +120,13 @@ dialogModule.prototype.showCurrentOptions = function(){
 dialogModule.prototype.showSchema = function(){
   return space;
 }
+let lockRegistration= userId=>{
+  currentRegisteringUser = roomId;
+}
+let unlockRegistration = () =>{
+  currentRegisteringUser = "";
+  scope = "";
+}
 
 dialogModule.prototype.parseQuestion = Promise.coroutine(function* (query, bot){
   let space = new spaceModel();
@@ -126,14 +134,19 @@ dialogModule.prototype.parseQuestion = Promise.coroutine(function* (query, bot){
   let cleanQuestion = query.message.toLowerCase().replace(" dolores","").replace("dolores ","").replace("?","");
   let reply ="";
   let alreadyRegistered = yield spaceModel.isSpaceRegistered(query.roomId);
-  if (alreadyRegistered && cleanQuestion !== "bring yourself back online" && scope ==="") {
+  if(currentRegisteringUser !== query.roomId){
+    reply = "sorry there is a user currently registering, try again later...";
+  }
+  else if (alreadyRegistered && cleanQuestion !== "bring yourself back online" && scope ==="") {
     scope = "menuShown";
+    lockRegistration(query.roomId);
     console.log("user already registered proceeding to find the question")
     reply = yield dialogModel.retrieveResponsePromised(query);
   } else if(cleanQuestion === "bring yourself back online" || (!alreadyRegistered && scope ==="")) {
     console.log("newUser add asking for menu");
     reply = "What can I do for you " + query.person.nickName + "?"+ showMenu();
     scope = "menuShown"
+    lockRegistration(query.roomId);
   } else if (scope !=="") {
       switch(scope) {
         case "menuShown":
@@ -147,13 +160,13 @@ dialogModule.prototype.parseQuestion = Promise.coroutine(function* (query, bot){
             scope = "tagsAsked";
           }else if(cleanQuestion == "2"){
             console.log("about to delete the user")
-            scope="";
+            unlockRegistration();
             reply = yield spaceModel.deleteUserPromified(query.roomId);
           }else if(cleanQuestion == "3"){
-            scope="";
+            unlockRegistration();
             reply = yield spaceModel.showUserOptionsPromified(query.roomId);
           }else{
-            scope="";
+            unlockRegistration();
             reply = "incorrect answer";
           }
         break;
@@ -203,6 +216,7 @@ dialogModule.prototype.parseQuestion = Promise.coroutine(function* (query, bot){
                                       console.log('Message sent from Bot!');
                                       });
             });
+            unlockRegistration();
 
             return;
           }
