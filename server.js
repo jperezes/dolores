@@ -55,7 +55,7 @@ issueSchedule(sparkBot);
 
 // let fake_event = {
 //   roomId:"fake_romId1",
-//   message:"get me crash with id 15",
+//   message:"get me occurrences of crash with id 15",
 //   person:{
 //     nickName:"superJuan"
 //   }

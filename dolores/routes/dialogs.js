@@ -181,6 +181,19 @@ dialogModule.prototype.parseQuestion = Promise.coroutine(function* (query, bot){
     } else {
       reply = "invalid crash id...";
     }
+  }else if (alreadyRegistered && cleanQuestion.indexOf("get me occurrences of crash with id") !== -1){
+    let crashId = cleanQuestion.replace("get me occurrences of crash with id","").replace(" ","");
+    let crash = yield winReportModel.getCrashById(crashId);
+    if(crash){
+      let dates= "";
+      crash.reportDate.forEach(item =>{
+        dates += item + ", ";
+      })
+      reply = "Crash id " + crash.id + " has been reported " + crash.crashes_count + " on the followind dates:" +
+              "\n\n> " + dates;    
+    } else {
+      reply = "invalid crash id...";
+    }
   }
   else if (alreadyRegistered && cleanQuestion !== "bring yourself back online" && scope ==="") {
     scope = "menuShown";
