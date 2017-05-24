@@ -35,7 +35,9 @@ let cleanTempSpace = ()=>{
   tempSpace.personEmail="";
   tempSpace.nickName="";
   tempSpace.macReports.tags=[""];
+  tempSpace.macReports.receive="";
   tempSpace.windowsReports.tags=[""];
+  tempSpace.windowsReports.receive="";
   tempSpace.splunkReports.receive="";
 }
 
@@ -74,7 +76,9 @@ let copySpace = space => {
     space.personEmail = tempSpace.personEmail;
     space.nickName = tempSpace.nickName;
     space.macReports.tags = tempSpace.macReports.tags;
+    space.macReports.receive = tempSpace.macReports.receive;
     space.windowsReports.tags = tempSpace.windowsReports.tags;
+    space.windowsReports.receive = tempSpace.windowsReports.receive;
     space.splunkReports.receive = tempSpace.splunkReports.receive;
     //Use the module pattern
     return {
