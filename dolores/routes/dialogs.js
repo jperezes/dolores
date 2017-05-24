@@ -65,7 +65,23 @@ let populateTempSpace = function(space){
   tempSpace.personEmail = space.personEmail;
   tempSpace.roomId = space.roomId;
   tempSpace.roomType = space.roomType;
-  console.log('[populateTempSpace:] about to go to confirmation if no error ' + space.personName + reply);
+}
+
+let copySpace = space => {
+    space.roomId=tempSpace.roomId ;
+    space.roomType = tempSpace.roomType;
+    space.personName = tempSpace.personName;
+    space.personEmail = tempSpace.personEmail;
+    space.nickName = tempSpace.nickName;
+    space.macReports.tags = tempSpace.macReports.tags;
+    space.windowsReports.tags = tempSpace.windowsReports.tags;
+    space.splunkReports.receive = tempSpace.splunkReports.receive;
+    //Use the module pattern
+    return {
+      space: function() {
+          return space;
+      }
+    }
 }
 
 var showCurrentOptions = function(space) {
@@ -169,7 +185,7 @@ dialogModule.prototype.parseQuestion = Promise.coroutine(function* (query, bot){
         case "askedForConfirmation":
           scope = "";
           if (cleanQuestion === 'yes') {
-            space = tempSpace;
+            space = copySpace(tempSpace).space();
             cleanTempSpace();
             space.save(err =>{
               let saveReply="";
