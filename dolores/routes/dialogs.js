@@ -174,8 +174,8 @@ dialogModule.prototype.parseQuestion = Promise.coroutine(function* (query, bot){
                         "\n\n> **Crash Id:** " + crash.id +
                         "\n\n> **First reported:** " + crash.reportDate[0] +
                         "\n\n> **Last reported:** " + crash.reportDate.slice(-1).pop() +
-                        "\n\n> **name:** " + crash.title +
-                        "\n\n> **method affected:** " + crash.method +
+                        "\n\n> **Name:** " + crash.title +
+                        "\n\n> **Method affected:** " + crash.method +
                         "\n\n> **Crashes Count:** " + crash.crashes_count +
                         "\n\n> **Client versions afected:** " + clients;
     } else {
