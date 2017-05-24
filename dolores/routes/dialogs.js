@@ -141,10 +141,9 @@ dialogModule.prototype.parseQuestion = Promise.coroutine(function* (query, bot){
   if(currentRegisteringUser !== query.roomId && currentRegisteringUser !== "" ){
     reply = "sorry " + query.person.nickName + ", there is a user currently registering, try again later...";
   } else if (alreadyRegistered && cleanQuestion.indexOf("get crashes count on version") !== -1){
-    version = cleanQuestion.replace("get crashes count on version","").replace(" ","");
+    let version = cleanQuestion.replace("get crashes count on version","").replace(" ","");
     let result = yield winReportModel.getCrashesByVersion(version);
     if(result){
-      lastCrash = result.slice(-1).pop();
       let dates = "";
       let ids = "";
       let count = 0;
@@ -157,11 +156,30 @@ dialogModule.prototype.parseQuestion = Promise.coroutine(function* (query, bot){
       });
       dates = dates.split(',');
       dates.sort();
-      reply = query.person.nickName + " version " + version + " has " + count + " reported crash(es) between " + dates[1] +
-              " and " + dates.slice(-1).pop() + " with the following ids:" +
+      reply = query.person.nickName + " version " + version + " has " + count + " reported crash(es) between " + dates.slice(-1).pop() +
+              " and " + dates[1] + " with the following ids:" +
               "\n\n >" + ids;
     } else {
       reply = "Client version " + version + " has no crashes reported";
+    }
+  } else if (alreadyRegistered && cleanQuestion.indexOf("get crash with id") !== -1){
+    let crashId = cleanQuestion.replace("get crash with id","").replace(" ","");
+    let crash = yield winReportModel.getCrashById(crashId);
+    if(crash){
+      let clients= "";
+      crash.client_version.forEach(item =>{
+        clients += item + ", ";
+      })
+      reply = "Here we go: " +
+                        "\n\n> **Crash Id:** " + crash.id +
+                        "\n\n> **First reported:** " + crash.reportDate[0] +
+                        "\n\n> **Last reported:** " + crash.reportDate.slice(-1).pop() +
+                        "\n\n- **name:** " + crash.title +
+                        "\n\n- **method affected:** " + crash.method +
+                        "\n\n- **Crashes Count:** " + crash.crashes_count +
+                        "\n\n- **Client versions afected:** " + clients;
+    } else {
+      reply = "invalid crash id...";
     }
   }
   else if (alreadyRegistered && cleanQuestion !== "bring yourself back online" && scope ==="") {

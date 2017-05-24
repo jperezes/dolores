@@ -52,9 +52,10 @@ macReports.listenForMacReports(sparkBot,sparkBot.getServer());
 gitServer.listenForGitUpdates(sparkBot,sparkBot.getServer());
 winReports.listenForWinReports(sparkBot,sparkBot.getServer());
 issueSchedule(sparkBot);
+
 // let fake_event = {
 //   roomId:"fake_romId1",
-//   message:"get crashes count on version 2.0.3.48",
+//   message:"get crash with id 15",
 //   person:{
 //     nickName:"superJuan"
 //   }
