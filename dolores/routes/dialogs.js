@@ -145,11 +145,14 @@ dialogModule.prototype.parseQuestion = Promise.coroutine(function* (query, bot){
       lastCrash = result.slice(-1).pop();
       let dates = "";
       let ids = "";
-      lastCrash.reportDate.forEach(item =>{
-        dates += item + ", ";
+      item.reportDate.forEach(it =>{
+        dates += it + ", ";
       })
       result.forEach(item=>{
         ids += item.id + ", ";
+        item.reportDate.forEach(it =>{
+          dates += it + ", ";
+        })
       });
       reply = query.person.nickName + " version " + version + " has " + lastCrash.crashes_count + " reported on the following dates:"+
               "\n\n >" + dates +
