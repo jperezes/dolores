@@ -60,7 +60,7 @@ winReportSchema.statics.getCrashesByVersion = function (clientVersion) {
         resolve(result);
 
      } else{
-       console.log("crash not found: " + result[0].id)
+       console.log("client version " + clientVersion + " has no crashes!!!!")
        resolve(false);
      }
   });
