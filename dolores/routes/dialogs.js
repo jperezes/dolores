@@ -145,19 +145,14 @@ dialogModule.prototype.parseQuestion = Promise.coroutine(function* (query, bot){
     let result = yield winReportModel.getCrashesByVersion(version);
     if(result){
       lastCrash = result.slice(-1).pop();
-      let dates = "";
-      let ids = "";
+      let dates = [];
       let count = 0;
       result.forEach(item=>{
         ids += item.id + ", ";
-        item.reportDate.forEach(it =>{
-          dates += it + ", ";
-          count += 1;
-        })
+        dates.concat(item.reportDate);
       });
-      reply = query.person.nickName + " version " + version + " has " + count + " reported crash(es) on the following dates:"+
-              "\n\n >" + dates +
-              "\n\n With crash ids: " +
+      reply = query.person.nickName + " version " + version + " has " + dates.length + " reported crash(es) between " + dates[0] +
+              "and " + dates.slice(-1).pop() + " with the following ids:" + 
               "\n\n >" + ids;
     } else {
       reply = "Client version " + version + " has no crashes reported";
