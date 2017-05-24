@@ -1,5 +1,6 @@
 let Space = require('../models/space');
 let Dialog = require('../models/conversations')
+let WinReportSchema = require('../models/winCrashModel')
 let mongoose = require('mongoose');
 let bodyParser = require('body-parser');
 let Promise= require('bluebird')
@@ -50,6 +51,7 @@ let conn = mongoose.createConnection(mongoUrl);
 
 let spaceModel = conn.model('SparkSpace', Space);
 let dialogModel = conn.model('Dialog', Dialog);
+let winReportModel = conn.model('winReport',WinReportSchema)
 
 
 ///
@@ -136,6 +138,19 @@ dialogModule.prototype.parseQuestion = Promise.coroutine(function* (query, bot){
   let alreadyRegistered = yield spaceModel.isSpaceRegistered(query.roomId);
   if(currentRegisteringUser !== query.roomId && currentRegisteringUser !== "" ){
     reply = "sorry " + query.person.nickName + ", there is a user currently registering, try again later...";
+  } else if (alreadyRegistered && cleanQuestion.indexOf("get crashes count on version") !== -1){
+    version = cleanQuestion.replace("get crashes count on version","").replace(" ","");
+    let lastCrash = yield winReportModel.getCrashesByVersion(version);
+    if(result){
+      let dates = "";
+      lastCrash.reportDate.forEach(item =>{
+        dates += item + ", ";
+      })
+      reply = query.person.nickName + " version " + version + " has " + lastCrash.crashes_count + " reported on the following dates:"+
+              "\n\n >" + dates;
+    } else {
+      reply = "Client version " + version + " has no crashes reported";
+    }
   }
   else if (alreadyRegistered && cleanQuestion !== "bring yourself back online" && scope ==="") {
     scope = "menuShown";
