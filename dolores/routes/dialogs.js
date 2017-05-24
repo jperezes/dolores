@@ -134,8 +134,8 @@ dialogModule.prototype.parseQuestion = Promise.coroutine(function* (query, bot){
   let cleanQuestion = query.message.toLowerCase().replace(" dolores","").replace("dolores ","").replace("?","");
   let reply ="";
   let alreadyRegistered = yield spaceModel.isSpaceRegistered(query.roomId);
-  if(currentRegisteringUser !== query.roomId){
-    reply = "sorry there is a user currently registering, try again later...";
+  if(currentRegisteringUser !== query.roomId && currentRegisteringUser !== "" ){
+    reply = "sorry " + query.person.nickName + ", there is a user currently registering, try again later...";
   }
   else if (alreadyRegistered && cleanQuestion !== "bring yourself back online" && scope ==="") {
     scope = "menuShown";
