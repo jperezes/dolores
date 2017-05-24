@@ -240,6 +240,10 @@ spaceSchema.statics.getSplunkUsers = function(owner){
 spaceSchema.statics.sendReportToWinSubscribers = function (winReport,bot){
   return new Promise((resolve,reject)=>{
     console.log("about to parse and send a message to found users");
+    let clients= "";
+    winReport.client_version.forEach(item =>{
+      clients += item + ", ";
+    })
     var stringToSearch = winReport.method;
     var failureReport = "Win crash received: " +
                       //"\nevent: " + req.body.event +
@@ -251,7 +255,7 @@ spaceSchema.statics.sendReportToWinSubscribers = function (winReport,bot){
                       "\n\n- **method affected:** " + winReport.method +
                       "\n\n- **Feedback ID:** " + winReport.feedback_id  +
                       "\n\n- **Crashes Count:** " + winReport.crashes_count +
-                      "\n\n- **Client Version:** " + winReport.client_version +
+                      "\n\n- **Client Version:** " + clients +
                       //"\nimpacted_devices_count: " + req.body.payload.impacted_devices_count +
                       "\n\n- **url to the crash:** " + "[PRT server URK]" + "("+ winReport.url + ")";
 

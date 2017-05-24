@@ -9,7 +9,7 @@ var winReportSchema = mongoose.Schema({
     method: String,
     feedback_id: String,
     crashes_count: Number,
-    client_version: String,
+    client_version: [String],
     id:String,
     url: String
 });

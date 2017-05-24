@@ -44,6 +44,10 @@ var saveAndSendReport = Promise.coroutine(function*(req,res,bot) {
   let result = yield WinReportModel.getCountAndDelete(req.body.hashA);
   if (typeof(result.reportDate) !== 'undefined'){
     console.log("crash already reported")
+    if(result.client_version.indexOf(req.body.client_version) === -1){
+      result.client_version.push(req.body.client_version);
+      result.client_version.sort();
+    }
     result.reportDate.push(req.body.reportDate);
     result.reportDate.sort();
     result.crashes_count = result.crashes_count +1;
