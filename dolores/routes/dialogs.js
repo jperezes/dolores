@@ -9,6 +9,35 @@ let mongoUrl = process.env.MONGO_SPACES_URL || 'mongodb://localhost:27017/spaces
 let scope = "";
 let reply = "";
 let dialogModule = function(){};
+let tempSpace = {
+    roomId: "",
+    roomType: "",
+    personName: "",
+    personEmail: "",
+    nickName: "",
+    macReports: {
+      receive: "" ,
+      tags: [""]
+    },
+    splunkReports: {
+      receive: ""
+    },
+    windowsReports: {
+      receive: "",
+      tags: [""]
+    }
+};
+
+let cleanTempSpace = ()=>{
+  tempSpace.roomId = "";
+  tempSpace.roomType="";
+  tempSpace.personName="";
+  tempSpace.personEmail="";
+  tempSpace.nickName="";
+  tempSpace.macReport.tags=[""];
+  tempSpace.windowsReports.tags=[""];
+  tempSpace.splunkReports.receive="";
+}
 
 console.log(' Attempting to connect to the database ');
 //To avoid promise warning
@@ -18,33 +47,24 @@ let conn = mongoose.createConnection(mongoUrl);
 
 let spaceModel = conn.model('SparkSpace', Space);
 let dialogModel = conn.model('Dialog', Dialog);
-let space = new spaceModel();
+
 
 ///
-let populateTempSpace = function(tempSpace){
-  if (tempSpace.roomType === "group") {
-    reply = "** ·Your name: " + tempSpace.person.displayName +
+let populateTempSpace = function(space){
+  if (space.roomType === "group") {
+    reply = "** ·Your name: " + space.person.displayName +
                             "\n** ·Room is not one to one: " +
                             "\n** ·Is this data correct? answer <yes/no>";
   } else {
-    reply = "** ·Name: " + tempSpace.person.displayName +
-                            "\n** ·Email: " + tempSpace.personEmail +
+    reply = "** ·Name: " + space.person.displayName +
+                            "\n** ·Email: " + space.personEmail +
                             "\n** ·Is this data correct? answer <yes/no>";
-    space.personName = tempSpace.person.displayName;
-    space.nickName = tempSpace.person.nickName;
+    tempSpace.personName = space.person.displayName;
+    tempSpace.nickName = space.person.nickName;
   }
-  space.personEmail = tempSpace.personEmail;
-  space.roomId = tempSpace.roomId;
-  space.roomType = tempSpace.roomType;
-  //Use the module pattern
-  return {
-    space: function() {
-      return space;
-    },
-    reply: function() {
-      return reply;
-    }
-  }
+  tempSpace.personEmail = space.personEmail;
+  tempSpace.roomId = space.roomId;
+  tempSpace.roomType = space.roomType;
   console.log('[populateTempSpace:] about to go to confirmation if no error ' + space.personName + reply);
 }
 
@@ -81,6 +101,7 @@ dialogModule.prototype.showSchema = function(){
 }
 
 dialogModule.prototype.parseQuestion = Promise.coroutine(function* (query, bot){
+  let space = new spaceModel();
    console.log("THE SCOPE IS: " + scope);
   let cleanQuestion = query.message.toLowerCase().replace(" dolores","").replace("dolores ","").replace("?","");
   let reply ="";
@@ -97,10 +118,7 @@ dialogModule.prototype.parseQuestion = Promise.coroutine(function* (query, bot){
       switch(scope) {
         case "menuShown":
           if(cleanQuestion == "1"){
-            var report = populateTempSpace(query);
-            //reply = report.reply();
-            space = report.space();
-            space.updateTempSpace(query);
+            populateTempSpace(query);
             reply = "Please write the tags you want to filter the crash reports separated by comma " +
                     "for example: *whiteboard*, _auxiliaryDeviceService_,*roomsView*, so I will sent you only the ones you are interested at." +
                     "\n\n- If you want to receive all the crashes reported type \"**everything**\"." +
@@ -120,18 +138,18 @@ dialogModule.prototype.parseQuestion = Promise.coroutine(function* (query, bot){
           }
         break;
         case "tagsAsked":
-          space.macReports.receive = "yes";
-          space.windowsReports.receive="yes";
+          tempSpace.macReports.receive = "yes";
+          tempSpace.windowsReports.receive="yes";
           // User said it wants to get mac reports populating options. Next question for windows option.
           cleanQuestion = cleanQuestion.replace(" ",""); //remove spaces
           var array = cleanQuestion.split(',');
           if (array[0].toLowerCase() === "none") {
-            space.macReports.receive = "no";
-            space.windowsReports.receive="no";
+            tempSpace.macReports.receive = "no";
+            tempSpace.windowsReports.receive="no";
           }
           for (var i in array) {
-            space.macReports.tags[i] =array[i];
-            space.windowsReports.tags[i] = space.macReports.tags[i];
+            tempSpace.macReports.tags[i] =array[i];
+            tempSpace.windowsReports.tags[i] = tempSpace.macReports.tags[i];
           }
           reply = "Would you like to enable this space to receive your splunk alerts?<yes/no>";
           scope = "splunkAsked";
@@ -139,10 +157,10 @@ dialogModule.prototype.parseQuestion = Promise.coroutine(function* (query, bot){
         case "splunkAsked":
           // user replied to teh Splunk Option. Next is to show the final confirmation.
           if (cleanQuestion === 'yes'){
-            space.splunkReports.receive = "yes";
+            tempSpace.splunkReports.receive = "yes";
           }
           else {
-            space.splunkReports.receive = "no";
+            tempSpace.splunkReports.receive = "no";
           }
           var showSpace = showCurrentOptions(space);
           reply = "This room will be registered with the following options " + space.nickName +":\n" + showSpace.reply() + "\n\nAre they correct?<yes/no>";
@@ -151,6 +169,8 @@ dialogModule.prototype.parseQuestion = Promise.coroutine(function* (query, bot){
         case "askedForConfirmation":
           scope = "";
           if (cleanQuestion === 'yes') {
+            space = tempSpace;
+            cleanTempSpace();
             space.save(err =>{
               let saveReply="";
               if (err) {
@@ -163,6 +183,7 @@ dialogModule.prototype.parseQuestion = Promise.coroutine(function* (query, bot){
                                       console.log('Message sent from Bot!');
                                       });
             });
+
             return;
           }
           else {
