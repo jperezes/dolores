@@ -120,7 +120,7 @@ dialogModule.prototype.showCurrentOptions = function(){
 dialogModule.prototype.showSchema = function(){
   return space;
 }
-let lockRegistration= userId=>{
+let lockRegistration= roomId=>{
   currentRegisteringUser = roomId;
 }
 let unlockRegistration = () =>{
