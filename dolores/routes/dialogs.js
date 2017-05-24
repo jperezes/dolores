@@ -162,7 +162,7 @@ dialogModule.prototype.parseQuestion = Promise.coroutine(function* (query, bot){
           else {
             tempSpace.splunkReports.receive = "no";
           }
-          var showSpace = showCurrentOptions(space);
+          var showSpace = showCurrentOptions(tempSpace);
           reply = "This room will be registered with the following options " + space.nickName +":\n" + showSpace.reply() + "\n\nAre they correct?<yes/no>";
           scope = "askedForConfirmation";
         break;
