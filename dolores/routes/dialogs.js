@@ -5,6 +5,7 @@ let mongoose = require('mongoose');
 let bodyParser = require('body-parser');
 let Promise= require('bluebird')
 let mongoUrl = process.env.MONGO_SPACES_URL || 'mongodb://localhost:27017/spaces';
+let mongoReportUrl = process.env.MONGO_URL || 'mongodb://localhost:27017/spaces';
 
 
 let scope = "";
@@ -48,10 +49,11 @@ console.log(' Attempting to connect to the database ');
 mongoose.Promise = global.Promise;
 // Connect to DB
 let conn = mongoose.createConnection(mongoUrl);
+let con = mongoose.createConnection(mongoReportUrl);
 
 let spaceModel = conn.model('SparkSpace', Space);
 let dialogModel = conn.model('Dialog', Dialog);
-let winReportModel = conn.model('winReport',WinReportSchema)
+let winReportModel = con.model('winReport',WinReportSchema)
 
 
 ///
