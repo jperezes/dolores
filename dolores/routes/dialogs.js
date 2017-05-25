@@ -215,7 +215,7 @@ dialogModule.prototype.parseQuestion = Promise.coroutine(function* (query, bot){
                     "\n\n- If you want to receive all MAC crashes reported type \"**everything**\" " +
                     "\n\n- To get all Windows crashes only type \"**none, everything**\"" +
                     "\n\n- To get ALL crashes on MAC and Win type \"**everything,everything**\" ( is not recomended as there is \"**All Spark Crashes**\" room for that)" +
-                    "\n\n- If you don't want to receive any reporte type \"**none**\". You still can use the bot to query crashes or chat when bored" +
+                    "\n\n- If you don't want to receive anything type \"**none**\" (You'll still be able to use the bot to query crashes or chat when bored)." +
                     "\n\n- You can update these options at any time by typing \"**Bring yourself back online**\".";
             scope = "tagsAsked";
           }else if(cleanQuestion == "2"){
