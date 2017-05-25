@@ -210,13 +210,13 @@ dialogModule.prototype.parseQuestion = Promise.coroutine(function* (query, bot){
         case "menuShown":
           if(cleanQuestion == "1"){
             populateTempSpace(query);
-            reply = "Please write the tags you want to filter the crash reports separated by comma " +
+            reply = "Please write the tags you want to filter the crash reports separated by comma, " +
                     "for example: *whiteboard*, _auxiliaryDeviceService_,*roomsView*, so I will sent you only the ones you are interested at." +
-                    "\n\n> If you want to receive all the MAC crashes reported type \"**everything**\" " +
-                    "\n\n> To get all Windows crashes only type \"**none, everything**\"" +
-                    "\n\n> To get ALL crashes on MAC and Win type \"**everything,everything**\" ( is not recomended as there is \"**All Spark Crashes**\" room for that)" +
-                    "\n\n> If you don't want to receive any reporte type \"**none**\"." +
-                    "\n\n> You can update these options at any time by typing \"**Bring yourself back online**\".";
+                    "\n\n- If you want to receive all MAC crashes reported type \"**everything**\" " +
+                    "\n\n- To get all Windows crashes only type \"**none, everything**\"" +
+                    "\n\n- To get ALL crashes on MAC and Win type \"**everything,everything**\" ( is not recomended as there is \"**All Spark Crashes**\" room for that)" +
+                    "\n\n- If you don't want to receive any reporte type \"**none**\". You still can use the bot to query crashes or chat when bored" +
+                    "\n\n- You can update these options at any time by typing \"**Bring yourself back online**\".";
             scope = "tagsAsked";
           }else if(cleanQuestion == "2"){
             console.log("about to delete the user")
