@@ -270,13 +270,17 @@ spaceSchema.statics.sendReportToWinSubscribers = function (winReport,bot){
         var roomsIdSet = new Set();
         users.forEach(function(item){
             var tags = item.macReports.tags;
-            tags.forEach(function(tag){
-                var position = stringToSearch.indexOf(tag);
-                if(position >= 0){
-                  console.log("USER FOUND SAVING THE ROOM ID INTO AN ARRAY");
-                  roomsIdSet.add(item.roomId);
-                }
-            })
+            if (tags[1] === "everything"){
+              roomsIdSet.add(item.roomId);
+            } else {
+              tags.forEach(function(tag){
+                  var position = stringToSearch.indexOf(tag);
+                  if(position >= 0){
+                    console.log("USER FOUND SAVING THE ROOM ID INTO AN ARRAY");
+                    roomsIdSet.add(item.roomId);
+                  }
+              })
+            }
           })
           for(var roomId of roomsIdSet.values()){
            console.log("nuber of users found:" + roomsIdSet.size);
