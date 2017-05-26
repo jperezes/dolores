@@ -175,6 +175,7 @@ dialogModule.prototype.parseQuestion = Promise.coroutine(function* (query, bot){
                         "\n\n> **First reported:** " + crash.reportDate[0] +
                         "\n\n> **Last reported:** " + crash.reportDate.slice(-1).pop() +
                         "\n\n> **Name:** " + crash.title +
+                        "\n\n> **Hash:** " + crash.hashA +
                         "\n\n> **Method affected:** " + crash.method +
                         "\n\n> **Crashes Count:** " + crash.crashes_count +
                         "\n\n> **Client versions afected:** " + clients;
@@ -189,7 +190,7 @@ dialogModule.prototype.parseQuestion = Promise.coroutine(function* (query, bot){
       crash.reportDate.forEach(item =>{
         dates += item + ", ";
       })
-      reply = "Crash id " + crash.id + " has been reported " + crash.crashes_count + " on the followind dates:" +
+      reply = "Crash id " + crash.id + " has been reported " + crash.crashes_count + " times on the followind dates:" +
               "\n\n> " + dates;
     } else {
       reply = "invalid crash id...";

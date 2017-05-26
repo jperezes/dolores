@@ -249,15 +249,16 @@ spaceSchema.statics.sendReportToWinSubscribers = function (winReport,bot){
                       //"\nevent: " + req.body.event +
                       //"\npayload Type: " + req.body.payload_type +
                       "\n\n- **Crash Id:** " + winReport.id +
-                      "\n\n- **First occurrence:** " + winReport.reportDate[0] +
-                      "\n\n- **Last occurrence:** " + winReport.reportDate.slice(-1).pop() +
+                      "\n\n- **First Report:** " + winReport.reportDate[0] +
+                      "\n\n- **Last Report:** " + winReport.reportDate.slice(-1).pop() +
                       "\n\n- **Title:** " + winReport.title +
+                      "\n\n- **Crash Hash:** " + winReport.hashA +
                       "\n\n- **method affected:** " + winReport.method +
                       "\n\n- **Feedback ID:** " + winReport.feedback_id  +
                       "\n\n- **Crashes Count:** " + winReport.crashes_count +
                       "\n\n- **Client Version:** " + clients +
                       //"\nimpacted_devices_count: " + req.body.payload.impacted_devices_count +
-                      "\n\n- **url to the crash:** " + "[PRT server URK]" + "("+ winReport.url + ")";
+                      "\n\n- **url to the crash:** " + "[PRT server URL]" + "("+ winReport.url + ")";
 
     stringToSearch = stringToSearch.toLowerCase();
     this.list(function(err,users){
