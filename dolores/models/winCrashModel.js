@@ -83,9 +83,9 @@ winReportSchema.statics.getCrashById = function (crash_id) {
  })
 };
 
-winReportSchema.prototype.setCrashAsFixed = function (crash_id){
+winReportSchema.methods.setCrashAsFixed = function (crash_id){
   return new Promise((resolve,reject)=>{
-    this.findOneAndUpdate({id:crash_id},{ $set: { is_resolved: 'true' },function(err){
+    this.findOneAndUpdate({id:crash_id},{ $set: { is_resolved: 'true' }},function(err){
       if(err){
         console.log("something went wrong updating the data")
         resolve(false);
