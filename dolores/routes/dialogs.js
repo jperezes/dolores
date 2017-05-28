@@ -134,6 +134,7 @@ let unlockRegistration = () =>{
 
 dialogModule.prototype.parseQuestion = Promise.coroutine(function* (query, bot){
   let space = new spaceModel();
+  let winReport = new winReportModel();
    console.log("THE SCOPE IS: " + scope);
   let cleanQuestion = query.message.toLowerCase().replace(" dolores","").replace("dolores ","").replace("?","");
   let reply ="";
@@ -228,7 +229,7 @@ dialogModule.prototype.parseQuestion = Promise.coroutine(function* (query, bot){
             reply = yield spaceModel.showUserOptionsPromified(query.roomId);
           }else{
             unlockRegistration();
-            reply = "incorrect answer";
+            reply = "incorrect answer: " + scope;
           }
         break;
         case "tagsAsked":

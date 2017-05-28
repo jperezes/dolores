@@ -11,6 +11,7 @@ var winReportSchema = mongoose.Schema({
     crashes_count: Number,
     client_version: [String],
     id:String,
+    is_resolved:String,
     url: String
 });
 
@@ -81,5 +82,19 @@ winReportSchema.statics.getCrashById = function (crash_id) {
   });
  })
 };
+
+winReportSchema.prototype.setCrashAsFixed = function (crash_id){
+  return new Promise((resolve,reject)=>{
+    this.findOneAndUpdate({id:crash_id},{ $set: { is_resolved: 'true' },function(err){
+      if(err){
+        console.log("something went wrong updating the data")
+        resolve(false);
+      }else{
+       resolve(true);
+     }
+  });
+ })
+}
+
 //module.exports = mongoose.model('WinReport', winReportSchema);
 module.exports = winReportSchema;
