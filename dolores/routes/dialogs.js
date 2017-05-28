@@ -110,7 +110,16 @@ var showCurrentOptions = function(space) {
 };
 
 var showMenu = function(){
-    return "\n\n1. Register Space \n\n2. Unregister Space" + "\n\n3. Show Space options" + "\n\n\n Select <1><2><3>";
+    return "\n\n1. Register Space \n\n2. Unregister Space" +
+    "\n\n3. Show current space registration options" +
+    "\n\n4. Show crash managements options" +
+    "\n\n\n Select <1><2><3><4>";
+}
+let showCrashOptions = function(){
+  return "\n\n> To get crashes count on a specific build type: **get crashes count on version** *version number*" +
+  "\n\n> To get information of a specific crash type: **get me crash with id** *version number*" +
+  "\n\n> To get number and report dats of a specific crash type: **get me occurrences of crash with id** *version number*" +
+  "\n\n> To set a crash as resolved type: **set as resolved crash with id** *version number*";
 }
 dialogModule.prototype.showMenu = function(){
   return showMenu();
@@ -200,7 +209,7 @@ dialogModule.prototype.parseQuestion = Promise.coroutine(function* (query, bot){
     let crashId = cleanQuestion.replace("set as resolved crash with id","").replace(" ","");
     let setFixed = yield winReportModel.setCrashAsFixed(crashId);
     if(setFixed){
-      reply = "crash id " + crashId + "has been set as fixed, no reports will be sent unless is reported in a different version";
+      reply = "crash id " + crashId + " has been set as fixed, no reports will be sent unless is reported in a different version";
     } else {
       reply = "problem seeting the crash as fixed, pleasy try again later";
     }
@@ -235,7 +244,11 @@ dialogModule.prototype.parseQuestion = Promise.coroutine(function* (query, bot){
           }else if(cleanQuestion == "3"){
             unlockRegistration();
             reply = yield spaceModel.showUserOptionsPromified(query.roomId);
-          }else{
+          }else if (cleanQuestion === "4"){
+            unlockRegistration();
+            reply = showCrashOptions();
+          }
+          else{
             unlockRegistration();
             reply = "incorrect answer";
           }
