@@ -198,7 +198,7 @@ dialogModule.prototype.parseQuestion = Promise.coroutine(function* (query, bot){
     }
   }
   else if (alreadyRegistered && cleanQuestion !== "bring yourself back online" && scope ==="") {
-    scope = "menuShown";
+    //scope = "menuShown";
     lockRegistration(query.roomId);
     console.log("user already registered proceeding to find the question")
     reply = yield dialogModel.retrieveResponsePromised(query);
