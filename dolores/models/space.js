@@ -244,7 +244,7 @@ spaceSchema.statics.sendReportToWinSubscribers = function (winReport,bot){
     winReport.client_version.forEach(item =>{
       clients += item + ", ";
     })
-    var stringToSearch = winReport.method;
+    var stringToSearch =winReport.hashA + winReport.method;
     var failureReport = "Win crash received: " +
                       //"\nevent: " + req.body.event +
                       //"\npayload Type: " + req.body.payload_type +

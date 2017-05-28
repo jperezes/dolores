@@ -196,6 +196,14 @@ dialogModule.prototype.parseQuestion = Promise.coroutine(function* (query, bot){
     } else {
       reply = "invalid crash id...";
     }
+  } else if (alreadyRegistered && cleanQuestion.indexOf("set as resolved crash with id") !== -1){
+    let crashId = cleanQuestion.replace("set as resolved crash with id","").replace(" ","");
+    let setFixed = yield winReportModel.setCrashAsFixed(crashId);
+    if(setFixed){
+      reply = "crash id " + crashId + "has been set as fixed, no reports will be sent unless is reported in a different version";
+    } else {
+      reply = "problem seeting the crash as fixed, pleasy try again later";
+    }
   }
   else if (alreadyRegistered && cleanQuestion !== "bring yourself back online" && scope ==="") {
     //scope = "menuShown";
@@ -229,7 +237,7 @@ dialogModule.prototype.parseQuestion = Promise.coroutine(function* (query, bot){
             reply = yield spaceModel.showUserOptionsPromified(query.roomId);
           }else{
             unlockRegistration();
-            reply = "incorrect answer: " + scope;
+            reply = "incorrect answer";
           }
         break;
         case "tagsAsked":

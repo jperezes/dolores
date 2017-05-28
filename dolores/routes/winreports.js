@@ -47,6 +47,10 @@ var saveAndSendReport = Promise.coroutine(function*(req,res,bot) {
     if(result.client_version.indexOf(req.body.client_version) === -1){
       result.client_version.push(req.body.client_version);
       result.client_version.sort();
+      if(result.is_resolved === "true"){
+        console.log("possible regression")
+        result.is_resolved = "false";
+      }
     }
     result.reportDate.push(req.body.reportDate);
     result.reportDate.sort();
@@ -59,7 +63,9 @@ var saveAndSendReport = Promise.coroutine(function*(req,res,bot) {
         res.status(200).send('win crash event updated');
       }
     })
-    yield SpaceModel.sendReportToWinSubscribers(result,bot);
+    if(result.is_resolved !== "true"){
+      yield SpaceModel.sendReportToWinSubscribers(result,bot);      
+    }
   } else {
     console.log("New crash! ")
     winReport.crashes_count = 1;
