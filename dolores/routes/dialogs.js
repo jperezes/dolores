@@ -119,7 +119,8 @@ let showCrashOptions = function(){
   return "\n\n> To get crashes count on a specific build type: **get crashes count on version** *version number*" +
   "\n> To get information of a specific crash type: **get me crash with id** *crash id*" +
   "\n> To get number and report dats of a specific crash type: **get me occurrences of crash with id** *crash id*" +
-  "\n> To set a crash as resolved type: **set as resolved crash with id** *crash id*";
+  "\n> To set a crash as resolved type: **set as resolved crash with id** *crash id*. After that crash won't be reported" +
+  " on rooms unless is reproduced in a newer Spark version";
 }
 dialogModule.prototype.showMenu = function(){
   return showMenu();
