@@ -227,7 +227,7 @@ dialogModule.prototype.parseQuestion = Promise.coroutine(function* (query, bot){
     lockRegistration(query.roomId);
     console.log("user already registered proceeding to find the question")
     reply = yield dialogModel.retrieveResponsePromised(query);
-  } else if(cleanQuestion === "bring yourself back online" || cleanQuestion === "-m" || (!alreadyRegistered && scope ==="")) {
+  } else if(cleanQuestion === "bring yourself back online" || cleanQuestion.indexOf("-m") !==-1 || (!alreadyRegistered && scope ==="")) {
     console.log("newUser add asking for menu");
     reply = "What can I do for you " + query.person.nickName + "?"+ showMenu();
     scope = "menuShown"
