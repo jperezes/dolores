@@ -116,11 +116,14 @@ var showMenu = function(){
     "\n\n\n Select <1><2><3><4>";
 }
 let showCrashOptions = function(){
-  return "\n\n> To get crashes count on a specific build type: **get crashes count on version** *version number*" +
-  "\n\n> To get information of a specific crash type: **get me crash with id** *crash id*" +
-  "\n\n> To get number and report dats of a specific crash type: **get me occurrences of crash with id** *crash id*" +
-  "\n\n> To set a crash as resolved type: **set as resolved crash with id** *crash id*. After that crash won't be reported" +
-  " on rooms unless is reproduced in a newer Spark version";
+  let options = "\n\n> usage: dolores [-h] [--help]  to print options" +
+                "\n\n>                [-cv <Spark version>] show crash number of the specified Spark version" +
+                "\n\n>                [-i <crash id>] show crash info" +
+                "\n\n>                [-o <crash id>] show crash occurrences" +
+                "\n\n>                [-r <crash id>] mark crash as resolved";
+
+
+  return options;
 }
 dialogModule.prototype.showMenu = function(){
   return showMenu();
@@ -214,6 +217,8 @@ dialogModule.prototype.parseQuestion = Promise.coroutine(function* (query, bot){
     } else {
       reply = "problem seeting the crash as fixed, pleasy try again later";
     }
+  } else if (alreadyRegistered && (cleanQuestion.indexOf("--help") !== -1 || cleanQuestion.indexOf("-h") !==-1)){
+    reply = showCrashOptions();
   }
   else if (alreadyRegistered && cleanQuestion !== "bring yourself back online" && scope ==="") {
     //scope = "menuShown";
