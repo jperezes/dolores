@@ -151,8 +151,8 @@ dialogModule.prototype.parseQuestion = Promise.coroutine(function* (query, bot){
   let alreadyRegistered = yield spaceModel.isSpaceRegistered(query.roomId);
   if(currentRegisteringUser !== query.roomId && currentRegisteringUser !== "" ){
     reply = "sorry " + query.person.nickName + ", there is a user currently registering, try again later...";
-  } else if (alreadyRegistered && cleanQuestion.indexOf("get crashes count on version") !== -1){
-    let version = cleanQuestion.replace("get crashes count on version","").replace(" ","");
+  } else if (alreadyRegistered && (cleanQuestion.indexOf("get crashes count on version") !== -1 || cleanQuestion.indexOf("-cv") !==-1)){
+    let version = cleanQuestion.replace("get crashes count on version","").replace("-cv","").replace(" ","");
     let result = yield winReportModel.getCrashesByVersion(version);
     if(result){
       let dates = "";
@@ -173,8 +173,8 @@ dialogModule.prototype.parseQuestion = Promise.coroutine(function* (query, bot){
     } else {
       reply = "Client version " + version + " has no crashes reported";
     }
-  } else if (alreadyRegistered && cleanQuestion.indexOf("get me crash with id") !== -1){
-    let crashId = cleanQuestion.replace("get me crash with id","").replace(" ","");
+  } else if (alreadyRegistered && (cleanQuestion.indexOf("get me crash with id") !== -1 || cleanQuestion.indexOf("-i") !==-1)){
+    let crashId = cleanQuestion.replace("get me crash with id","").replace("-i","").replace(" ","");
     let crash = yield winReportModel.getCrashById(crashId);
     if(crash){
       let clients= "";
@@ -193,8 +193,8 @@ dialogModule.prototype.parseQuestion = Promise.coroutine(function* (query, bot){
     } else {
       reply = "invalid crash id...";
     }
-  }else if (alreadyRegistered && cleanQuestion.indexOf("get me occurrences of crash with id") !== -1){
-    let crashId = cleanQuestion.replace("get me occurrences of crash with id","").replace(" ","");
+  }else if (alreadyRegistered && (cleanQuestion.indexOf("get me occurrences of crash with id") !== -1 || cleanQuestion.indexOf("-o") !==-1)){
+    let crashId = cleanQuestion.replace("get me occurrences of crash with id","").replace("-o","").replace(" ","");
     let crash = yield winReportModel.getCrashById(crashId);
     if(crash){
       let dates= "";
@@ -206,8 +206,8 @@ dialogModule.prototype.parseQuestion = Promise.coroutine(function* (query, bot){
     } else {
       reply = "invalid crash id...";
     }
-  } else if (alreadyRegistered && cleanQuestion.indexOf("set as resolved crash with id") !== -1){
-    let crashId = cleanQuestion.replace("set as resolved crash with id","").replace(" ","");
+  } else if (alreadyRegistered && (cleanQuestion.indexOf("set as resolved crash with id") !== -1 || cleanQuestion.indexOf("-r") !==-1)){
+    let crashId = cleanQuestion.replace("set as resolved crash with id","").replace("-r","").replace(" ","");
     let setFixed = yield winReportModel.setCrashAsFixed(crashId);
     if(setFixed){
       reply = "crash id " + crashId + " has been set as fixed, no reports will be sent unless is reported in a different version";
