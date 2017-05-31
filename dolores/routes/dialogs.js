@@ -152,7 +152,7 @@ dialogModule.prototype.parseQuestion = Promise.coroutine(function* (query, bot){
   let winReport = new winReportModel();
    console.log("THE SCOPE IS: " + scope);
   let cleanQuestion = query.message.toLowerCase().replace(" dolores","").replace("dolores ","").replace("?","");
-  console.log("clean question is: " + cleanQuestion);
+  //console.log("clean question is: " + cleanQuestion);
   let reply ="";
   let alreadyRegistered = yield spaceModel.isSpaceRegistered(query.roomId);
   if(currentRegisteringUser !== query.roomId && currentRegisteringUser !== "" ){
@@ -223,7 +223,7 @@ dialogModule.prototype.parseQuestion = Promise.coroutine(function* (query, bot){
   } else if (alreadyRegistered && (cleanQuestion.indexOf("-help") !== -1 || cleanQuestion.indexOf("-h") !==-1)){
     reply = showCrashOptions();
   }
-  else if (alreadyRegistered && cleanQuestion !== "bring yourself back online" && scope ==="") {
+  else if (alreadyRegistered && cleanQuestion !== "bring yourself back online" && (cleanQuestion.indexOf("-m") ===-1) && scope ==="") {
     //scope = "menuShown";
     lockRegistration(query.roomId);
     console.log("user already registered proceeding to find the question")
