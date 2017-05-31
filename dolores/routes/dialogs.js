@@ -121,7 +121,8 @@ let showCrashOptions = function(){
                 "\n              [-cv <Spark version>] show crash number of the specified Spark version" +
                 "\n              [-i <crash id>] show crash info" +
                 "\n              [-o <crash id>] show crash occurrences" +
-                "\n              [-r <crash id>] mark crash as resolved";
+                "\n              [-r <crash id>] mark crash as resolved" +
+                "\n              [-m] show space options menu";
 
 
   return options;
@@ -226,7 +227,7 @@ dialogModule.prototype.parseQuestion = Promise.coroutine(function* (query, bot){
     lockRegistration(query.roomId);
     console.log("user already registered proceeding to find the question")
     reply = yield dialogModel.retrieveResponsePromised(query);
-  } else if(cleanQuestion === "bring yourself back online" || (!alreadyRegistered && scope ==="")) {
+  } else if(cleanQuestion === "bring yourself back online" || cleanQuestion === "-m" || (!alreadyRegistered && scope ==="")) {
     console.log("newUser add asking for menu");
     reply = "What can I do for you " + query.person.nickName + "?"+ showMenu();
     scope = "menuShown"
@@ -242,7 +243,7 @@ dialogModule.prototype.parseQuestion = Promise.coroutine(function* (query, bot){
                     "\n\n- To get all Windows crashes only type \"**none, everything**\"" +
                     "\n\n- To get ALL crashes on MAC and Win type \"**everything,everything**\" ( is not recomended as there is \"**All Spark Crashes**\" room for that)" +
                     "\n\n- If you don't want to receive anything type \"**none**\" (You'll still be able to use the bot to query crashes or chat when bored)." +
-                    "\n\n- You can update these options at any time by typing \"**Bring yourself back online**\".";
+                    "\n\n- You can update these options at any time by typing \"**Bring yourself back online**\" or \"**-m**\".";
             scope = "tagsAsked";
           }else if(cleanQuestion == "2"){
             console.log("about to delete the user")
