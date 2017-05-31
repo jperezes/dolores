@@ -117,10 +117,10 @@ var showMenu = function(){
 }
 let showCrashOptions = function(){
   let options = "\n usage: dolores [-h] [--help]  to print options" +
-                "\n                [-cv <Spark version>] show crash number of the specified Spark version" +
-                "\n                [-i <crash id>] show crash info" +
-                "\n                [-o <crash id>] show crash occurrences" +
-                "\n                [-r <crash id>] mark crash as resolved";
+                "\n                \[-cv <Spark version>] show crash number of the specified Spark version" +
+                "\n                \[-i <crash id>] show crash info" +
+                "\n                \[-o <crash id>] show crash occurrences" +
+                "\n                \[-r <crash id>] mark crash as resolved";
 
 
   return options;
