@@ -152,6 +152,7 @@ dialogModule.prototype.parseQuestion = Promise.coroutine(function* (query, bot){
   let winReport = new winReportModel();
    console.log("THE SCOPE IS: " + scope);
   let cleanQuestion = query.message.toLowerCase().replace(" dolores","").replace("dolores ","").replace("?","");
+  console.log("clean question is: " + cleanQuestion);
   let reply ="";
   let alreadyRegistered = yield spaceModel.isSpaceRegistered(query.roomId);
   if(currentRegisteringUser !== query.roomId && currentRegisteringUser !== "" ){
