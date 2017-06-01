@@ -39,7 +39,7 @@ DialogSchema.statics.retrieveResponsePromised = function (question) {
         resolve(result.response);
       } else {
         console.log('question not found ');
-        resolve("sorry I did not get that, to see the options menu type *bring yourself back online*");
+        resolve("sorry I did not get that, to see the options menu type *bring yourself back online*, to see command options type -h or -help");
       }
 
     });

@@ -222,6 +222,10 @@ dialogModule.prototype.parseQuestion = Promise.coroutine(function* (query, bot){
     }
   } else if (alreadyRegistered && (cleanQuestion.indexOf("-help") !== -1 || cleanQuestion.indexOf("-h") !==-1)){
     reply = showCrashOptions();
+  } else if (alreadyRegistered && (cleanQuestion.indexOf("-aw") !== -1)){
+    //add word(s) to triage the filter
+  } else if (alreadyRegistered && (cleanQuestion.indexOf("-dw") !== -1)){
+    //delete triage filter words, disable crash alerts.
   }
   else if (alreadyRegistered && cleanQuestion !== "bring yourself back online" && (cleanQuestion.indexOf("-m") ===-1) && scope ==="") {
     //scope = "menuShown";
