@@ -155,9 +155,7 @@ dialogModule.prototype.parseQuestion = Promise.coroutine(function* (query, bot){
   //console.log("clean question is: " + cleanQuestion);
   let reply ="";
   let alreadyRegistered = yield spaceModel.isSpaceRegistered(query.roomId);
-  if(currentRegisteringUser !== query.roomId && currentRegisteringUser !== "" ){
-    reply = "sorry " + query.person.nickName + ", there is a user currently registering, try again later...";
-  } else if (alreadyRegistered && (cleanQuestion.indexOf("get crashes count on version") !== -1 || cleanQuestion.indexOf("-cv") !==-1)){
+  if (alreadyRegistered && (cleanQuestion.indexOf("get crashes count on version") !== -1 || cleanQuestion.indexOf("-cv") !==-1)){
     let version = cleanQuestion.replace("get crashes count on version","").replace("-cv","").replace(" ","");
     let result = yield winReportModel.getCrashesByVersion(version);
     if(result){
@@ -229,10 +227,12 @@ dialogModule.prototype.parseQuestion = Promise.coroutine(function* (query, bot){
   }
   else if (alreadyRegistered && cleanQuestion !== "bring yourself back online" && (cleanQuestion.indexOf("-m") ===-1) && scope ==="") {
     //scope = "menuShown";
-    lockRegistration(query.roomId);
+    //lockRegistration(query.roomId);
     console.log("user already registered proceeding to find the question")
     reply = yield dialogModel.retrieveResponsePromised(query);
-  } else if(cleanQuestion === "bring yourself back online" || cleanQuestion.indexOf("-m") !==-1 || (!alreadyRegistered && scope ==="")) {
+  }else if(currentRegisteringUser !== query.roomId && currentRegisteringUser !== "" ){
+      reply = "sorry " + query.person.nickName + ", there is a user currently registering, try again later...";
+  }else if(cleanQuestion === "bring yourself back online" || cleanQuestion.indexOf("-m") !==-1 || (!alreadyRegistered && scope ==="")) {
     console.log("newUser add asking for menu");
     reply = "What can I do for you " + query.person.nickName + "?"+ showMenu();
     scope = "menuShown"
