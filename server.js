@@ -28,7 +28,7 @@ sparkBot.on('message', function (event)
    if (mail[1] === "cisco.com"){
      dialogModule.parseQuestion(event,sparkBot);
    } else {
-     sparkBot.sendMessage(event.roomId, "Hi, sorry to tell you that but you're not allowed to proceed",function(){});
+     sparkBot.sendMessage(event.roomId, "Hi, sorry to tell you that but you're not allowed to proceed.",function(){});
    }
   console.log(JSON.stringify(event));
 
