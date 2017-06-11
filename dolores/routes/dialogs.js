@@ -166,6 +166,7 @@ dialogModule.prototype.parseQuestion = Promise.coroutine(function* (query, bot){
         ids += item.id + ", ";
         item.reportDate.forEach(it=>{
           dates += it + ", ";
+          console.log(dates)
           count += 1;
         })
       });
