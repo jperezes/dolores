@@ -169,10 +169,11 @@ dialogModule.prototype.parseQuestion = Promise.coroutine(function* (query, bot){
           count += 1;
         })
       });
+      dates = dates.slice(0,-1);
       dates = dates.split(',');
       dates.sort();
       reply = query.person.nickName + " version " + version + " has " + count + " windows reported crash(es) between " + dates.slice(-1).pop() +
-              " and " + dates[1] + " with the following ids:" +
+              " and " + dates[0] + " with the following ids:" +
               "\n\n >" + ids;
     } else {
       reply = "Client version " + version + " has no crashes reported";
