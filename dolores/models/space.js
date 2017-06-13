@@ -375,7 +375,7 @@ spaceSchema.statics.showFilterWords = function (room_Id) {
   return new Promise((resolve,reject) =>{
     this.find({roomId: room_Id}, function(err, result) {
       if (result.length>0){
-        resolve(result[0].macReports.tag.toString());
+        resolve(result[0].macReports.tags.toString());
 
       }
       else {
