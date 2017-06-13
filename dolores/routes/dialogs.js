@@ -122,6 +122,8 @@ let showCrashOptions = function(){
                 "\n              [-i <crash id>] show crash info" +
                 "\n              [-o <crash id>] show crash occurrences" +
                 "\n              [-r <crash id>] mark crash as resolved" +
+                "\n              [-aw <word1, word2 ...>] add keyword(s) to the crash trage filter" +
+                "\n              [-sf] shows filter keywords" +
                 "\n              [-m] show space options menu";
 
 
