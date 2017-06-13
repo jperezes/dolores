@@ -230,7 +230,7 @@ dialogModule.prototype.parseQuestion = Promise.coroutine(function* (query, bot){
   } else if (alreadyRegistered && (cleanQuestion.indexOf("-sf") !== -1)){
     //show filter keywords
     let filter = yield spaceModel.showFilterWords(query.roomId);
-    reply = "Keywords filter for this room are: " + filter;
+    reply = "Keywords filter for this room are: _" + filter + "_";
   } else if (alreadyRegistered && (cleanQuestion.indexOf("-dw") !== -1)){
     //delete triage filter words, disable crash alerts.
   }
