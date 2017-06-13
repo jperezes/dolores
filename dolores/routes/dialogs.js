@@ -224,10 +224,10 @@ dialogModule.prototype.parseQuestion = Promise.coroutine(function* (query, bot){
   } else if (alreadyRegistered && (cleanQuestion.indexOf("-aw") !== -1)){
     //add word(s) to triage the filter
     let keyword = cleanQuestion.replace("-aw","").replace(" ","");
-    reply = spaceModel.addFilterKeyWord(query.roomId,keyword)
+    reply = yield spaceModel.addFilterKeyWord(query.roomId,keyword)
   } else if (alreadyRegistered && (cleanQuestion.indexOf("-sf") !== -1)){
     //show filter keywords
-    let filter = spaceModel.showFilterWords(query.roomId);
+    let filter = yield spaceModel.showFilterWords(query.roomId);
     reply = "Keywords filter for this room are: " + filter;
   } else if (alreadyRegistered && (cleanQuestion.indexOf("-dw") !== -1)){
     //delete triage filter words, disable crash alerts.
