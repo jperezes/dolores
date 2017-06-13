@@ -358,7 +358,7 @@ spaceSchema.statics.showUserOptionsPromified = function (room_Id) {
 }
 spaceSchema.statics.addFilterKeyWord = function (room_Id,keyword) {
   return new Promise((resolve,reject) =>{
-    this.findByIdAndUpdate({roomId: room_Id},{$push: {"macReports.tags": keyword, "winreports.tags":keyword}},
+    this.findOneAndUpdate({roomId: room_Id},{$push: {"macReports.tags": keyword, "winreports.tags":keyword}},
       {safe: true, upsert: true}, function(err, result) {
         if(err) {
           let reply = "Failed to ad the keyword with following error: " + err;
