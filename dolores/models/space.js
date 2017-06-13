@@ -375,8 +375,11 @@ spaceSchema.statics.showFilterWords = function (room_Id) {
   return new Promise((resolve,reject) =>{
     this.find({roomId: room_Id}, function(err, result) {
       if (result.length>0){
-        resolve(result[0].macReports.tags.toString());
-
+        let filter = ""
+        result[0].macReports.tags.forEach(item => {
+          filter = filter + ", " + item;
+        })
+        resolve(filter);
       }
       else {
         resolve("You are not yet registered");
