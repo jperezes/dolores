@@ -402,23 +402,6 @@ spaceSchema.statics.deleteAllFilterWord = function(room_Id) {
   })
 }
 
-roomId: String,
-roomType: String,
-personName: String,
-personEmail: String,
-nickName: String,
-macReports: {
-  receive: String ,
-  tags: [String]
-},
-splunkReports: {
-  receive: String
-},
-windowsReports: {
-  receive: String,
-  tags: [String]
-}
-
 spaceSchema.statics.registerSpace = function(space) {
 
   return new Promise((resolve,reject) =>{
