@@ -392,12 +392,19 @@ spaceSchema.statics.deleteAllFilterWord = function(room_Id) {
     this.findOneAndUpdate({roomId: room_Id},{$set: {"macReports.tags": [], "winreports.tags":[]}},
       {safe: true}, function(err, result) {
         if(err) {
-          let reply = "Failed to empty the filter with following error: " + err;
-          resolve(reply)
+          return Promise.reject(err)
         } else {
           let reply = "filter is now empty, this room won't receive any crash report";
-          resolve(reply)
+          return Promise.resolve(reply)
         }
+   }).then((resolve,error) => {
+     if(error) {
+       let reply = "Failed to empty the filter with following error: " + err;
+       resolve(reply)
+     } else {
+       let reply = "filter is now empty, this room won't receive any crash report";
+       resolve(reply)
+     }
    })
   })
 }
