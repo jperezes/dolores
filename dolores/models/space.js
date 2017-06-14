@@ -409,7 +409,7 @@ spaceSchema.statics.registerSpace = function(space) {
         if(err) {
           let reply = "Failed to register the space with following error: " + err;
           resolve(reply)
-        } else if (typof(result.length) !== 'undefined'){
+        } else if (typeof(result.length) !== 'undefined'){
           let reply = "I am afraid this space already registered " + space.person.nickName;
           resolve(reply)
         } else {
