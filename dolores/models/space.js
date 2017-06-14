@@ -389,7 +389,7 @@ spaceSchema.statics.showFilterWords = function (room_Id) {
 
 spaceSchema.statics.deleteAllFilterWord = function(room_Id) {
   return new Promise((resolve,reject) =>{
-    this.findOneAndUpdate({roomId: room_Id},{$pullAll: {"macReports.tags": [], "winreports.tags":[]}},
+    this.findOneAndUpdate({roomId: room_Id},{$set: {"macReports.tags": [], "winreports.tags":[]}},
       {safe: true}, function(err, result) {
         if(err) {
           let reply = "Failed to empty the filter with following error: " + err;
