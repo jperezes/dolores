@@ -234,7 +234,7 @@ dialogModule.prototype.parseQuestion = Promise.coroutine(function* (query, bot){
   } else if (alreadyRegistered && (cleanQuestion.indexOf("-dw") !== -1)){
     //delete triage filter words, disable crash alerts.
     let keyword = cleanQuestion.replace("-dw","").replace(" ","");
-    reply = yield spaceModel.deleteFilterWord(query.roomId,keyword)
+    reply = yield spaceModel.deleteAllFilterWord(query.roomId)
   }
   else if (alreadyRegistered && cleanQuestion !== "bring yourself back online" && (cleanQuestion.indexOf("-m") ===-1) && scope ==="") {
     //scope = "menuShown";

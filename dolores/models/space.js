@@ -29,6 +29,7 @@ spaceSchema.static({
 	}
 });
 
+
 spaceSchema.methods.unInitSelf = function(){
   this.roomId = "";
   this.roomType = "";
@@ -386,10 +387,39 @@ spaceSchema.statics.showFilterWords = function (room_Id) {
   })
 }
 
+spaceSchema.statics.deleteAllFilterWord = function(room_Id) {
+  return new Promise((resolve,reject) =>{
+    this.findOneAndUpdate({roomId: room_Id},{$pullAll: {"macReports.tags": [], "winreports.tags":[]}},
+      {safe: true}, function(err, result) {
+        if(err) {
+          let reply = "Failed to empty the filter with following error: " + err;
+          resolve(reply)
+        } else {
+          let reply = "filter is now empty, this room won't receive any crash report";
+          resolve(reply)
+        }
+   })
+  })
+}
+spaceSchema.pre('remove', function (next) {
+  return new Promise((resolve,reject) =>{
+    this.update(
+      { "macReports.tags": this, "winreports.tags": this },
+      { $pull: { "macReports.tags": this._id, "winreports.tags": this_id } },
+      { multi: true }, function(err, result) {
+        if(err) {
+          reject(err)
+        } else {
+          resolve(result)
+        }
+     });
+  })
+})
+
 spaceSchema.statics.deleteFilterWord = function (room_Id,keyword) {
   return new Promise((resolve,reject) =>{
     let keywordArray = keyword.split(',');
-    this.findOneAndUpdate({roomId: room_Id},{$pull: {"macReports.tags": keywordArray, "winreports.tags":keywordArray}},
+    this.findOne({roomId: room_Id},{$pull: {"macReports.tags": keywordArray, "winreports.tags":keywordArray}},
       {safe: true}, function(err, result) {
         if(err) {
           let reply = "Failed to remove the keyword with following error: " + err;
@@ -402,5 +432,25 @@ spaceSchema.statics.deleteFilterWord = function (room_Id,keyword) {
   });
   })
 }
+
+
+
+spaceSchema.statics.deleteFilterWord = function (room_Id,keyword) {
+  this.findOne(req.params.comment_id)
+    .then(function (comment) {
+      return comment.remove() // doc.remove will trigger the remove middleware
+    })
+    .then(function () {
+      console.log('Comment successfully deleted!')
+      return res.redirect('back')
+    })
+    .catch(function (err) {
+      console.log(err)
+      res.redirect('/index')
+    })
+}
+
+
+
 // module.exports = mongoose.model('SparkSpace', spaceSchema);
 module.exports = spaceSchema;
