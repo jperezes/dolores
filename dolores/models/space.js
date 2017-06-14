@@ -393,10 +393,63 @@ spaceSchema.statics.deleteAllFilterWord = function(room_Id) {
       {safe: true}, function(err, result) {
         if(err) {
           let reply = "Failed to empty the filter with following error: " + err;
-          resolve(reply)
+          reject(reply)
         } else {
           let reply = "filter is now empty, this room won't receive any crash report";
           resolve(reply)
+        }
+   })
+  })
+}
+
+roomId: String,
+roomType: String,
+personName: String,
+personEmail: String,
+nickName: String,
+macReports: {
+  receive: String ,
+  tags: [String]
+},
+splunkReports: {
+  receive: String
+},
+windowsReports: {
+  receive: String,
+  tags: [String]
+}
+
+spaceSchema.statics.registerSpace = function(space) {
+
+  return new Promise((resolve,reject) =>{
+    this.findOne({roomId: space.roomId},function(err, result) {
+        if(err) {
+          let reply = "Failed to register the space with following error: " + err;
+          resolve(reply)
+        } else if (result.length>0) {
+          let reply = "I am afraid this space already registered " + space.person.nickName;
+          resolve(reply)
+        } else {
+          this.roomId = space.roomId;
+          this.roomType = space.roomType;
+          this.nickName = space.person.nickName;
+          this.personName = space.person.displayName;
+          this.personEmail = space.personEmail;
+          this.macReports.receive = "no";
+          this.macReports.tags[0] = "none";
+          this.windowsReports.receive = "no";
+          this.windowsReports.tags[0] = "none";
+          this.splunkReports.receive = "no";
+          this.save(function(err){
+            if(err) {
+              this.unInitSelf()
+              resolve("Failure registering the user")
+            } else {
+              let reply = "Welcome to Sparkworld " + space.nickName;
+              this.unInitSelf()
+              resolve(reply)
+            }
+          })
         }
    })
   })
