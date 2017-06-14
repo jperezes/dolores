@@ -385,5 +385,22 @@ spaceSchema.statics.showFilterWords = function (room_Id) {
   });
   })
 }
+
+spaceSchema.statics.deleteFilterWord = function (room_Id,keyword) {
+  return new Promise((resolve,reject) =>{
+    let keywordArray = keyword.split(',');
+    this.findOneAndUpdate({roomId: room_Id},{$pull: {"macReports.tags": keywordArray, "winreports.tags":keywordArray}},
+      {safe: true}, function(err, result) {
+        if(err) {
+          let reply = "Failed to remove the keyword with following error: " + err;
+          resolve(reply)
+        } else {
+          let reply = "Keyword **" + keyword + "** removed to the crash filter";
+          resolve(reply)
+        }
+
+  });
+  })
+}
 // module.exports = mongoose.model('SparkSpace', spaceSchema);
 module.exports = spaceSchema;
