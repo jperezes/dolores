@@ -213,7 +213,7 @@ dialogModule.prototype.parseQuestion = Promise.coroutine(function* (query, bot){
     } else {
       reply = "invalid crash id...";
     }
-  } else if (alreadyRegistered && (cleanQuestion.indexOf("-reg") !== -1)){
+  } else if ((cleanQuestion.indexOf("-reg") !== -1)){
     //show filter keywords
     let reply = yield spaceModel.registerSpace(query);
   } else if (alreadyRegistered && (cleanQuestion.indexOf("set as resolved crash with id") !== -1 || cleanQuestion.indexOf("-r") !==-1)){
