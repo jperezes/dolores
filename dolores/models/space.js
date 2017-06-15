@@ -423,11 +423,12 @@ spaceSchema.statics.registerSpace = function(space) {
           this.windowsReports.receive = "no";
           this.windowsReports.tags[0] = "none";
           this.splunkReports.receive = "no";
-          this.save(function(err){
+          this.save(function(err,resolve){
             if(err) {
               this.unInitSelf()
               resolve("Failure registering the user")
             } else {
+              consoloe.log("user saved to the database")
               let reply = "Welcome to Sparkworld " + space.nickName;
               this.unInitSelf()
               resolve(reply)
@@ -437,6 +438,8 @@ spaceSchema.statics.registerSpace = function(space) {
    })
   })
 }
+
+
 spaceSchema.pre('remove', function (next) {
   return new Promise((resolve,reject) =>{
     this.update(
