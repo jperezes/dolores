@@ -44,7 +44,7 @@ let cleanTempSpace = ()=>{
   tempSpace.splunkReports.receive="";
 }
 
-let registeredOptions= ["-m","-i","-o","-r","unregister","-cv","-aw","-dw","-da"];
+let registeredOptions= ["-i","-o","-r","unregister","-cv","-aw","-df","-da","-sf"];
 
 let checkRegisteredOption = function(question){
   let check = ""
@@ -176,7 +176,7 @@ dialogModule.prototype.parseQuestion = Promise.coroutine(function* (query, bot){
   let reply ="";
   let alreadyRegistered = yield spaceModel.isSpaceRegistered(query.roomId);
   if(!alreadyRegistered && checkRegisteredOption(cleanQuestion)){
-    reply = "You need to be registered to know that mate"
+    reply = "You'll need to be registered to know that mate ;)"
   } else if ((cleanQuestion.indexOf("get crashes count on version") !== -1 || cleanQuestion.indexOf("-cv") !==-1)){
     let version = cleanQuestion.replace("get crashes count on version","").replace("-cv","").replace(" ","");
     let result = yield winReportModel.getCrashesByVersion(version);
@@ -200,7 +200,7 @@ dialogModule.prototype.parseQuestion = Promise.coroutine(function* (query, bot){
     } else {
       reply = "Client version " + version + " has no crashes reported";
     }
-  } else if (alreadyRegistered && (cleanQuestion.indexOf("get me crash with id") !== -1 || cleanQuestion.indexOf("-i") !==-1)){
+  } else if ((cleanQuestion.indexOf("get me crash with id") !== -1 || cleanQuestion.indexOf("-i") !==-1)){
     let crashId = cleanQuestion.replace("get me crash with id","").replace("-i","").replace(" ","");
     let crash = yield winReportModel.getCrashById(crashId);
     if(crash){
@@ -220,7 +220,7 @@ dialogModule.prototype.parseQuestion = Promise.coroutine(function* (query, bot){
     } else {
       reply = "invalid crash id...";
     }
-  }else if (alreadyRegistered && (cleanQuestion.indexOf("get me occurrences of crash with id") !== -1 || cleanQuestion.indexOf("-o") !==-1)){
+  }else if ((cleanQuestion.indexOf("get me occurrences of crash with id") !== -1 || cleanQuestion.indexOf("-o") !==-1)){
     let crashId = cleanQuestion.replace("get me occurrences of crash with id","").replace("-o","").replace(" ","");
     let crash = yield winReportModel.getCrashById(crashId);
     if(crash){
@@ -251,9 +251,9 @@ dialogModule.prototype.parseQuestion = Promise.coroutine(function* (query, bot){
         console.log("spaced saved to database")
         reply = "Welcome to SparkWorld" + query.person.nickName;
       }})
-  } else if (alreadyRegistered && (cleanQuestion.indexOf("unregister") !==-1)){
+  } else if ((cleanQuestion.indexOf("unregister") !==-1)){
     reply = yield spaceModel.deleteUserPromified(query.roomId);
-  }  else if (alreadyRegistered && (cleanQuestion.indexOf("set as resolved crash with id") !== -1 || cleanQuestion.indexOf("-r") !==-1)){
+  }  else if ((cleanQuestion.indexOf("set as resolved crash with id") !== -1 || cleanQuestion.indexOf("-r") !==-1)){
     let crashId = cleanQuestion.replace("set as resolved crash with id","").replace("-r","").replace(" ","");
     let setFixed = yield winReportModel.setCrashAsFixed(crashId);
     if(setFixed){
@@ -263,20 +263,20 @@ dialogModule.prototype.parseQuestion = Promise.coroutine(function* (query, bot){
     }
   } else if ((cleanQuestion.indexOf("help") !== -1 || cleanQuestion.indexOf("-h") !==-1)){
     reply = showCrashOptions();
-  } else if (alreadyRegistered && (cleanQuestion.indexOf("-aw") !== -1)){
+  } else if ((cleanQuestion.indexOf("-aw") !== -1)){
     //add word(s) to triage the filter
     let keyword = cleanQuestion.replace("-aw","").replace(" ","");
     reply = yield spaceModel.addFilterKeyWord(query.roomId,keyword)
-  } else if (alreadyRegistered && (cleanQuestion.indexOf("-sf") !== -1)){
+  } else if ((cleanQuestion.indexOf("-sf") !== -1)){
     //show filter keywords
     let filter = yield spaceModel.showFilterWords(query.roomId);
     reply = "Keywords filter for this room are: _" + filter + "_";
-  } else if (alreadyRegistered && (cleanQuestion.indexOf("-dw") !== -1)){
+  } else if ((cleanQuestion.indexOf("-dw") !== -1)){
     //delete triage filter words, disable crash alerts.
     let keyword = cleanQuestion.replace("-dw","").replace(" ","");
     reply = yield spaceModel.deleteAllFilterWord(query.roomId)
   }
-  else if (alreadyRegistered && cleanQuestion !== "bring yourself back online" && (cleanQuestion.indexOf("-m") ===-1) && scope ==="") {
+  else if (cleanQuestion !== "bring yourself back online" && (cleanQuestion.indexOf("-m") ===-1) && scope ==="") {
     //scope = "menuShown";
     //lockRegistration(query.roomId);
     console.log("user already registered proceeding to find the question")
