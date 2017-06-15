@@ -230,7 +230,7 @@ dialogModule.prototype.parseQuestion = Promise.coroutine(function* (query, bot){
       } else {
         console.log("spaced saved to database")
         reply = "Welcome to SparkWorld" + query.person.nickName;
-      }
+      })
   } else if (alreadyRegistered && (cleanQuestion.indexOf("set as resolved crash with id") !== -1 || cleanQuestion.indexOf("-r") !==-1)){
     let crashId = cleanQuestion.replace("set as resolved crash with id","").replace("-r","").replace(" ","");
     let setFixed = yield winReportModel.setCrashAsFixed(crashId);
