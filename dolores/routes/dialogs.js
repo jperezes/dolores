@@ -44,6 +44,24 @@ let cleanTempSpace = ()=>{
   tempSpace.splunkReports.receive="";
 }
 
+let registeredOptions= ["-m","-i","-o","-r","unregister","-cv","-aw","-dw","-da"];
+
+let checkRegisteredOption = function(question){
+  let check = ""
+  registeredOptions.forEach(item=>{
+    if(question.indexOf(item) !== -1){
+      console.log("Menu question found")
+      check = "found"
+    }
+  })
+  if(check === "found"){
+    return true;
+  } else{
+    console.log("unknown question")
+    return false;
+  }
+}
+
 console.log(' Attempting to connect to the database ');
 //To avoid promise warning
 mongoose.Promise = global.Promise;
@@ -157,7 +175,9 @@ dialogModule.prototype.parseQuestion = Promise.coroutine(function* (query, bot){
   //console.log("clean question is: " + cleanQuestion);
   let reply ="";
   let alreadyRegistered = yield spaceModel.isSpaceRegistered(query.roomId);
-  if (alreadyRegistered && (cleanQuestion.indexOf("get crashes count on version") !== -1 || cleanQuestion.indexOf("-cv") !==-1)){
+  if(!alreadyRegistered && checkRegisteredOption(cleanQuestion)){
+    reply = "You need to be registered to know that mate"
+  } else if ((cleanQuestion.indexOf("get crashes count on version") !== -1 || cleanQuestion.indexOf("-cv") !==-1)){
     let version = cleanQuestion.replace("get crashes count on version","").replace("-cv","").replace(" ","");
     let result = yield winReportModel.getCrashesByVersion(version);
     if(result){
@@ -241,7 +261,7 @@ dialogModule.prototype.parseQuestion = Promise.coroutine(function* (query, bot){
     } else {
       reply = "problem seeting the crash as fixed, pleasy try again later";
     }
-  } else if (alreadyRegistered && (cleanQuestion.indexOf("-help") !== -1 || cleanQuestion.indexOf("-h") !==-1)){
+  } else if ((cleanQuestion.indexOf("help") !== -1 || cleanQuestion.indexOf("-h") !==-1)){
     reply = showCrashOptions();
   } else if (alreadyRegistered && (cleanQuestion.indexOf("-aw") !== -1)){
     //add word(s) to triage the filter
