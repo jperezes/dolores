@@ -143,8 +143,8 @@ let showCrashOptions = function(){
                 "\n              [-aw <word1, word2 ...>] add keyword(s) to the crash triage filter" +
                 "\n              [-sf] shows filter keywords" +
                 "\n              [-df] deletes filter keywords" +
-                "\n              [register] register space with empty options" +
-                "\n              [unregister] register space with empty options" +
+                "\n              [register] register space" +
+                "\n              [unregister] unregister space" +
                 "\n              [-m] show space options menu";
 
 
@@ -248,14 +248,12 @@ dialogModule.prototype.parseQuestion = Promise.coroutine(function* (query, bot){
     space.splunkReports.receive="no"
     space.macReports.receive="no";
     space.windowsReports.receive="no";
-    space.save(err =>{
-      let that = this
-      if (err) {
-        that.reply = "error saving to the database, try again later"
-      } else {
-        console.log("spaced saved to database")
-        that.reply = "Welcome to SparkWorld" + query.person.nickName;
-      }})
+    let registration = yield spaceModel.registerSpace(space);
+    if(registration){
+      reply = "Welcome to SparkWorld " + query.person.nickName + "!";
+    } else{
+      reply = "Failed to register the user, try again later";
+    }
   }  else if ((cleanQuestion.indexOf("set as resolved crash with id") !== -1 || cleanQuestion.indexOf("-r") !==-1)){
     let crashId = cleanQuestion.replace("set as resolved crash with id","").replace("-r","").replace(" ","");
     let setFixed = yield winReportModel.setCrashAsFixed(crashId);
@@ -274,9 +272,9 @@ dialogModule.prototype.parseQuestion = Promise.coroutine(function* (query, bot){
     //show filter keywords
     let filter = yield spaceModel.showFilterWords(query.roomId);
     reply = "Keywords filter for this room are: _" + filter + "_";
-  } else if ((cleanQuestion.indexOf("-dw") !== -1)){
+  } else if ((cleanQuestion.indexOf("-df") !== -1)){
     //delete triage filter words, disable crash alerts.
-    let keyword = cleanQuestion.replace("-dw","").replace(" ","");
+    let keyword = cleanQuestion.replace("-df","").replace(" ","");
     reply = yield spaceModel.deleteAllFilterWord(query.roomId)
   }
   else if (cleanQuestion !== "bring yourself back online" && (cleanQuestion.indexOf("-m") ===-1) && scope ==="") {

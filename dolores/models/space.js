@@ -404,17 +404,7 @@ spaceSchema.statics.deleteAllFilterWord = function(room_Id) {
 
 spaceSchema.statics.registerSpace = function(space){
   return new Promise((resolve,reject) =>{
-    this.roomId = space.roomId;
-    this.roomType = space.roomType;
-    this.personName = space.person.displayName;
-    this.personEmail = space.personEmail;
-    this.nickName = space.person.nickName;
-    this.splunkReports.receive="no"
-    this.macReports.receive="no";
-    this.macReports.tags=[];
-    this.windowsReports.receive="no";
-    this.windowsReports.tags=[];
-    this.save(function(err,resolve){
+    space.save(function(err,resolve){
       if(err) {
         resolve(false)
       } else {
