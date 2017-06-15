@@ -54,6 +54,7 @@ var saveAndSendReport = Promise.coroutine(function*(req,res,bot) {
     }
     result.reportDate.push(req.body.reportDate);
     result.reportDate.sort();
+    result.feedback_id=req.body.feedback_id;
     result.crashes_count = result.crashes_count +1;
 
     result.save(function(err){
@@ -64,7 +65,7 @@ var saveAndSendReport = Promise.coroutine(function*(req,res,bot) {
       }
     })
     if(result.is_resolved !== "true"){
-      yield SpaceModel.sendReportToWinSubscribers(result,bot);      
+      yield SpaceModel.sendReportToWinSubscribers(result,bot);
     }
   } else {
     console.log("New crash! ")
