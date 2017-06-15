@@ -143,6 +143,7 @@ let showCrashOptions = function(){
                 "\n              [-aw <word1, word2 ...>] add keyword(s) to the crash triage filter" +
                 "\n              [-sf] shows filter keywords" +
                 "\n              [-df] deletes filter keywords" +
+                "\n              [-so] shows user registration options" +
                 "\n              [register] register space" +
                 "\n              [unregister] unregister space" +
                 "\n              [-m] show space options menu";
@@ -264,7 +265,9 @@ dialogModule.prototype.parseQuestion = Promise.coroutine(function* (query, bot){
     }
   } else if ((cleanQuestion.indexOf("help") !== -1 || cleanQuestion.indexOf("-h") !==-1)){
     reply = showCrashOptions();
-  } else if ((cleanQuestion.indexOf("-aw") !== -1)){
+  } else if ((cleanQuestion.indexOf("-so") !==-1)){
+    reply = yield spaceModel.showUserOptionsPromified(query.roomId);
+  }else if ((cleanQuestion.indexOf("-aw") !== -1)){
     //add word(s) to triage the filter
     let keyword = cleanQuestion.replace("-aw","").replace(" ","");
     reply = yield spaceModel.addFilterKeyWord(query.roomId,keyword)
