@@ -44,7 +44,7 @@ let cleanTempSpace = ()=>{
   tempSpace.splunkReports.receive="";
 }
 
-let registeredOptions= ["-i","-o","-r","unregister","-cv","-aw","-df","-da","-sf"];
+let registeredOptions= ["-i","-o","-r","unregister","-cv","-aw","-df","-sf"];
 
 let checkRegisteredOption = function(question){
   let check = ""
@@ -179,7 +179,7 @@ dialogModule.prototype.parseQuestion = Promise.coroutine(function* (query, bot){
   let reply ="";
   let alreadyRegistered = yield spaceModel.isSpaceRegistered(query.roomId);
   if(!alreadyRegistered && checkRegisteredOption(cleanQuestion)){
-    reply = "You'll need to be registered to know that mate ;)"
+    reply = "You'll need to be registered to do that mate ;)"
   } else if ((cleanQuestion.indexOf("get crashes count on version") !== -1 || cleanQuestion.indexOf("-cv") !==-1)){
     let version = cleanQuestion.replace("get crashes count on version","").replace("-cv","").replace(" ","");
     let result = yield winReportModel.getCrashesByVersion(version);

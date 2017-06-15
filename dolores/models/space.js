@@ -408,7 +408,7 @@ spaceSchema.statics.registerSpace = function(space){
       if(err) {
         resolve(false)
       } else {
-        consoloe.log("user saved to the database")
+        console.log("user saved to the database")
         resolve(true)
       }
     })
