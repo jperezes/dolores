@@ -405,40 +405,52 @@ spaceSchema.statics.deleteAllFilterWord = function(room_Id) {
 spaceSchema.statics.registerSpace = function(space) {
 
   return new Promise((resolve,reject) =>{
-    this.findOne({roomId: space.roomId},function(err, result) {
-        if(err) {
-          let reply = "Failed to register the space with following error: " + err;
-          resolve(reply)
-        } else if (typeof(result) !== 'undefined'){
-          let reply = "I am afraid this space already registered " + space.person.nickName;
-          resolve(reply)
+    Promise.coroutine(function* () {
+      let reply = ""
+        let user = yield this.checkRegister(space.roomId);
+        if(user){
+          reply = "user already registered to the database";
         } else {
-          this.roomId = space.roomId;
-          this.roomType = space.roomType;
-          this.nickName = space.person.nickName;
-          this.personName = space.person.displayName;
-          this.personEmail = space.personEmail;
-          this.macReports.receive = "no";
-          this.macReports.tags[0] = "none";
-          this.windowsReports.receive = "no";
-          this.windowsReports.tags[0] = "none";
-          this.splunkReports.receive = "no";
-          this.save(function(err,resolve){
-            if(err) {
-              this.unInitSelf()
-              resolve("Failure registering the user")
-            } else {
-              consoloe.log("user saved to the database")
-              let reply = "Welcome to Sparkworld " + space.nickName;
-              this.unInitSelf()
-              resolve(reply)
-            }
-          })
+          let register = yield this.promifiedSave(space)
+          if (register) {
+            reply = "Welcome to SparkWorld " + space.person.nickName
+          } else {
+            reply = "an error occurred saving the user to the database, pleasy try again later"
+          }
         }
-   })
+        return reply;
+    })
   })
 }
 
+
+
+spaceSchema.statics.checkRegister = function(room_id) {
+    return new Promise((resolve,reject) =>{
+      this.findOne({roomId: room_id},function(err,result){
+        if(err) {
+          reject(err)
+        } else if (typeof(result) !== 'undefined'){
+          resolve(true)
+        } else {
+          resolve(false)
+        }
+      }
+    })
+}
+
+spaceSchema.statics.promifiedSave = function(space){
+  return new Promise((resolve,reject) =>{
+    space.save(function(err,resolve){
+      if(err) {
+        resolve(false)
+      } else {
+        consoloe.log("user saved to the database")
+        resolve(true)
+      }
+    })
+  }
+}
 
 spaceSchema.pre('remove', function (next) {
   return new Promise((resolve,reject) =>{
