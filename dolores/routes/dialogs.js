@@ -215,12 +215,22 @@ dialogModule.prototype.parseQuestion = Promise.coroutine(function* (query, bot){
     }
   } else if ((cleanQuestion.indexOf("-reg") !== -1)){
     //show filter keywords
-    let success = yield spaceModel.registerSpace(query);
-    if(success){
-      reply = "Welcome to SparkWorld " + query.person.nickName;
-    }else{
-      reply = "Error saving the space, try again later";
-    }
+    space.roomId = query.roomId;
+    space.roomType = query.roomType;
+    space.personName = query.person.displayName;
+    space.personEmail = query.personEmail;
+    space.nickName = query.person.nickName;
+    space.splunkReports.receive="no"
+    space.macReports.receive="no";
+    space.windowsReports.receive="no";
+    space.save(err =>{
+      let saveReply="";
+      if (err) {
+        reply = "error saving to the database, try again later"
+      } else {
+        console.log("spaced saved to database")
+        reply = "Welcome to SparkWorld" + query.person.nickName;
+      }
   } else if (alreadyRegistered && (cleanQuestion.indexOf("set as resolved crash with id") !== -1 || cleanQuestion.indexOf("-r") !==-1)){
     let crashId = cleanQuestion.replace("set as resolved crash with id","").replace("-r","").replace(" ","");
     let setFixed = yield winReportModel.setCrashAsFixed(crashId);

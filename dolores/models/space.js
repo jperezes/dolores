@@ -409,6 +409,7 @@ spaceSchema.statics.registerSpace = function(space){
     this.personName = space.person.displayName;
     this.personEmail = space.personEmail;
     this.nickName = space.person.nickName;
+    this.splunkReports.receive="no"
     this.macReports.receive="no";
     this.macReports.tags=[];
     this.windowsReports.receive="no";
