@@ -407,10 +407,12 @@ spaceSchema.statics.registerSpace = function(space) {
   return new Promise((resolve,reject) =>{
     Promise.coroutine(function* () {
       let reply = ""
-        let user = yield this.checkRegister(space.roomId);
+        let user = yield this.isSpaceRegistered(space.roomId);
         if(user){
+          console.log("user already registered")
           reply = "user already registered to the database";
         } else {
+          console.log("user not regiestered, proceeding to save it to the database")
           let register = yield this.promifiedSave(space)
           if (register) {
             reply = "Welcome to SparkWorld " + space.person.nickName
@@ -421,22 +423,6 @@ spaceSchema.statics.registerSpace = function(space) {
         return reply;
     })
   })
-}
-
-
-
-spaceSchema.statics.checkRegister = function(room_id) {
-    return new Promise((resolve,reject) =>{
-      this.findOne({roomId: room_id},function(err,result){
-        if(err) {
-          reject(err)
-        } else if (typeof(result) !== 'undefined'){
-          resolve(true)
-        } else {
-          resolve(false)
-        }
-      })
-    })
 }
 
 spaceSchema.statics.promifiedSave = function(space){
