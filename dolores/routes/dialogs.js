@@ -44,7 +44,7 @@ let cleanTempSpace = ()=>{
   tempSpace.splunkReports.receive="";
 }
 
-let registeredOptions= ["-i","-o","-r","unregister","-cv","-aw","-df","-sf","-es","-ds"];
+let registeredOptions= ["-i","-o","-r","unregister","-cv","-aw","-df","-sf","-es","-ds","-so","-sf"];
 
 let checkRegisteredOption = function(question){
   let check = ""
