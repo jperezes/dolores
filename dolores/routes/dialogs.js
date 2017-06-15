@@ -44,7 +44,7 @@ let cleanTempSpace = ()=>{
   tempSpace.splunkReports.receive="";
 }
 
-let registeredOptions= ["-i","-o","-r","unregister","-cv","-aw","-df","-sf"];
+let registeredOptions= ["-i","-o","-r","unregister","-cv","-aw","-df","-sf","-es","-ds"];
 
 let checkRegisteredOption = function(question){
   let check = ""
@@ -144,6 +144,8 @@ let showCrashOptions = function(){
                 "\n              [-sf] shows filter keywords" +
                 "\n              [-df] deletes filter keywords" +
                 "\n              [-so] shows user registration options" +
+                "\n              [-es] enable splunk alerts on the space" +
+                "\n              [-ds] disable splunk alerts on the space" +
                 "\n              [register] register space" +
                 "\n              [unregister] unregister space" +
                 "\n              [-m] show space options menu";
@@ -267,6 +269,10 @@ dialogModule.prototype.parseQuestion = Promise.coroutine(function* (query, bot){
     reply = showCrashOptions();
   } else if ((cleanQuestion.indexOf("-so") !==-1)){
     reply = yield spaceModel.showUserOptionsPromified(query.roomId);
+  } else if ((cleanQuestion.indexOf("-es") !==-1)){
+    reply = yield spaceModel.enableSplunk(query.roomId);
+  } else if ((cleanQuestion.indexOf("-ds") !==-1)){
+    reply = yield spaceModel.disableSplunk(query.roomId);
   }else if ((cleanQuestion.indexOf("-aw") !== -1)){
     //add word(s) to triage the filter
     let keyword = cleanQuestion.replace("-aw","").replace(" ","");

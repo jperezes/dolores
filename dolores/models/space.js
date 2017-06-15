@@ -401,6 +401,34 @@ spaceSchema.statics.deleteAllFilterWord = function(room_Id) {
    })
   })
 }
+spaceSchema.statics.enableSplunk = function(room_Id) {
+  return new Promise((resolve,reject) =>{
+    this.findOneAndUpdate({roomId: room_Id},{$set: {"splunkReports.receive":"yes" }},
+      {safe: true}, function(err, result) {
+        if(err) {
+          let reply = "Failed to enable splunk on the space: " + err;
+          reject(reply)
+        } else {
+          let reply = "Splunk is enabled to this space, so now can receive splunk alerts";
+          resolve(reply)
+        }
+   })
+  })
+}
+spaceSchema.statics.disableSplunk = function(room_Id) {
+  return new Promise((resolve,reject) =>{
+    this.findOneAndUpdate({roomId: room_Id},{$set: {"splunkReports.receive":"no" }},
+      {safe: true}, function(err, result) {
+        if(err) {
+          let reply = "Failed to disable splunk on the space: " + err;
+          reject(reply)
+        } else {
+          let reply = "Splunk is disabled on this space, splunk alerts can't be sent to this space";
+          resolve(reply)
+        }
+   })
+  })
+}
 
 spaceSchema.statics.registerSpace = function(space){
   return new Promise((resolve,reject) =>{
