@@ -142,6 +142,9 @@ let showCrashOptions = function(){
                 "\n              [-r <crash id>] mark crash as resolved" +
                 "\n              [-aw <word1, word2 ...>] add keyword(s) to the crash trage filter" +
                 "\n              [-sf] shows filter keywords" +
+                "\n              [-df] deletes filter keywords" +
+                "\n              [register] register space with empty options" +
+                "\n              [unregister] register space with empty options" +
                 "\n              [-m] show space options menu";
 
 
