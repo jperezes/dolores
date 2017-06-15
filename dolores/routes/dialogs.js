@@ -143,7 +143,7 @@ let showCrashOptions = function(){
                 "\n              [-aw <word1, word2 ...>] add keyword(s) to the crash trage filter" +
                 "\n              [-sf] shows filter keywords" +
                 "\n              [-df] deletes filter keywords" +
-                "\n              [register] register space with empty options" +
+                "\n              [register / -reg] register space with empty options" +
                 "\n              [unregister] register space with empty options" +
                 "\n              [-m] show space options menu";
 
@@ -236,7 +236,7 @@ dialogModule.prototype.parseQuestion = Promise.coroutine(function* (query, bot){
     } else {
       reply = "invalid crash id...";
     }
-  } else if ((cleanQuestion.indexOf("-reg") !== -1)){
+  } else if ((cleanQuestion.indexOf("-reg") !== -1 || cleanQuestion.indexOf("register") !== -1)){
     //show filter keywords
     space.roomId = query.roomId;
     space.roomType = query.roomType;
