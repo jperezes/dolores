@@ -404,7 +404,7 @@ spaceSchema.statics.deleteAllFilterWord = function(room_Id) {
 
 spaceSchema.statics.registerSpace = function(space){
   return new Promise((resolve,reject) =>{
-    space.save(function(err,resolve){
+    space.save(function(err){
       if(err) {
         resolve(false)
       } else {
