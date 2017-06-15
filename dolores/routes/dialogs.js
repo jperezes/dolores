@@ -224,14 +224,16 @@ dialogModule.prototype.parseQuestion = Promise.coroutine(function* (query, bot){
     space.macReports.receive="no";
     space.windowsReports.receive="no";
     space.save(err =>{
-      let saveReply="";
+      let reply = this.reply;
       if (err) {
         reply = "error saving to the database, try again later"
       } else {
         console.log("spaced saved to database")
         reply = "Welcome to SparkWorld" + query.person.nickName;
       }})
-  } else if (alreadyRegistered && (cleanQuestion.indexOf("set as resolved crash with id") !== -1 || cleanQuestion.indexOf("-r") !==-1)){
+  } else if (alreadyRegistered && (cleanQuestion.indexOf("unregister") !==-1)){
+    reply = yield spaceModel.deleteUserPromified(query.roomId);
+  }  else if (alreadyRegistered && (cleanQuestion.indexOf("set as resolved crash with id") !== -1 || cleanQuestion.indexOf("-r") !==-1)){
     let crashId = cleanQuestion.replace("set as resolved crash with id","").replace("-r","").replace(" ","");
     let setFixed = yield winReportModel.setCrashAsFixed(crashId);
     if(setFixed){
