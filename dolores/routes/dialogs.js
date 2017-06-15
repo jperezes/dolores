@@ -140,7 +140,7 @@ let showCrashOptions = function(){
                 "\n              [-i <crash id>] show crash info" +
                 "\n              [-o <crash id>] show crash occurrences" +
                 "\n              [-r <crash id>] mark crash as resolved" +
-                "\n              [-aw <word1, word2 ...>] add keyword(s) to the crash trage filter" +
+                "\n              [-aw <word1, word2 ...>] add keyword(s) to the crash triage filter" +
                 "\n              [-sf] shows filter keywords" +
                 "\n              [-df] deletes filter keywords" +
                 "\n              [-register] register space with empty options" +
@@ -247,12 +247,12 @@ dialogModule.prototype.parseQuestion = Promise.coroutine(function* (query, bot){
     space.macReports.receive="no";
     space.windowsReports.receive="no";
     space.save(err =>{
-      let reply = this.reply;
+      let that = this
       if (err) {
-        reply = "error saving to the database, try again later"
+        that.reply = "error saving to the database, try again later"
       } else {
         console.log("spaced saved to database")
-        reply = "Welcome to SparkWorld" + query.person.nickName;
+        that.reply = "Welcome to SparkWorld" + query.person.nickName;
       }})
   } else if ((cleanQuestion.indexOf("-unregister") !==-1)){
     reply = yield spaceModel.deleteUserPromified(query.roomId);
