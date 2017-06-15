@@ -143,8 +143,8 @@ let showCrashOptions = function(){
                 "\n              [-aw <word1, word2 ...>] add keyword(s) to the crash triage filter" +
                 "\n              [-sf] shows filter keywords" +
                 "\n              [-df] deletes filter keywords" +
-                "\n              [-register] register space with empty options" +
-                "\n              [-unregister] register space with empty options" +
+                "\n              [register] register space with empty options" +
+                "\n              [unregister] register space with empty options" +
                 "\n              [-m] show space options menu";
 
 
@@ -236,7 +236,9 @@ dialogModule.prototype.parseQuestion = Promise.coroutine(function* (query, bot){
     } else {
       reply = "invalid crash id...";
     }
-  } else if ((cleanQuestion.indexOf("-register") !== -1 )){
+  } else if ((cleanQuestion.indexOf("unregister") !==-1)){
+    reply = yield spaceModel.deleteUserPromified(query.roomId);
+  } else if ((cleanQuestion.indexOf("register") !== -1 )){
     //show filter keywords
     space.roomId = query.roomId;
     space.roomType = query.roomType;
@@ -254,8 +256,6 @@ dialogModule.prototype.parseQuestion = Promise.coroutine(function* (query, bot){
         console.log("spaced saved to database")
         that.reply = "Welcome to SparkWorld" + query.person.nickName;
       }})
-  } else if ((cleanQuestion.indexOf("-unregister") !==-1)){
-    reply = yield spaceModel.deleteUserPromified(query.roomId);
   }  else if ((cleanQuestion.indexOf("set as resolved crash with id") !== -1 || cleanQuestion.indexOf("-r") !==-1)){
     let crashId = cleanQuestion.replace("set as resolved crash with id","").replace("-r","").replace(" ","");
     let setFixed = yield winReportModel.setCrashAsFixed(crashId);
