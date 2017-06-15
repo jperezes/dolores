@@ -435,7 +435,7 @@ spaceSchema.statics.checkRegister = function(room_id) {
         } else {
           resolve(false)
         }
-      }
+      })
     })
 }
 
@@ -449,7 +449,7 @@ spaceSchema.statics.promifiedSave = function(space){
         resolve(true)
       }
     })
-  }
+  })
 }
 
 spaceSchema.pre('remove', function (next) {
