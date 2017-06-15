@@ -407,6 +407,7 @@ spaceSchema.statics.registerSpace = function(space) {
   return new Promise((resolve,reject) =>{
     Promise.coroutine(function* () {
       let reply = ""
+      console.log("about to search for space again")
         let user = yield this.isSpaceRegistered(space.roomId);
         if(user){
           console.log("user already registered")
