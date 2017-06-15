@@ -215,7 +215,12 @@ dialogModule.prototype.parseQuestion = Promise.coroutine(function* (query, bot){
     }
   } else if ((cleanQuestion.indexOf("-reg") !== -1)){
     //show filter keywords
-    let reply = yield spaceModel.registerSpace(query);
+    let success = yield spaceModel.registerSpace(query);
+    if(success){
+      reply = "Welcome to SparkWorld " + query.person.nickName;
+    }else{
+      reply = "Error saving the space, try again later";
+    }
   } else if (alreadyRegistered && (cleanQuestion.indexOf("set as resolved crash with id") !== -1 || cleanQuestion.indexOf("-r") !==-1)){
     let crashId = cleanQuestion.replace("set as resolved crash with id","").replace("-r","").replace(" ","");
     let setFixed = yield winReportModel.setCrashAsFixed(crashId);

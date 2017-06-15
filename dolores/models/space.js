@@ -402,33 +402,14 @@ spaceSchema.statics.deleteAllFilterWord = function(room_Id) {
   })
 }
 
-spaceSchema.statics.registerSpace = function(space) {
-
+spaceSchema.statics.registerSpace = function(space){
   return new Promise((resolve,reject) =>{
-    Promise.coroutine(function* () {
-      let reply = ""
-      console.log("about to search for space again")
-        let user = yield this.isSpaceRegistered(space.roomId);
-        if(user){
-          console.log("user already registered")
-          reply = "user already registered to the database";
-        } else {
-          console.log("user not regiestered, proceeding to save it to the database")
-          let register = yield this.promifiedSave(space)
-          if (register) {
-            reply = "Welcome to SparkWorld " + space.person.nickName
-          } else {
-            reply = "an error occurred saving the user to the database, pleasy try again later"
-          }
-        }
-        return reply;
-    })
-  })
-}
-
-spaceSchema.statics.promifiedSave = function(space){
-  return new Promise((resolve,reject) =>{
-    space.save(function(err,resolve){
+    this.updateTempSpace(space)
+    this.macReports.receive="no";
+    this.macReports.tags=[];
+    this.windowsReports.receive="no";
+    this.windowsReports.tags=[];
+    this.save(function(err,resolve){
       if(err) {
         resolve(false)
       } else {
