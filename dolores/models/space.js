@@ -366,7 +366,7 @@ spaceSchema.statics.addFilterKeyWord = function (room_Id,keyword) {
           let reply = "Failed to ad the keyword with following error: " + err;
           resolve(reply)
         } else {
-          let reply = "Keyword **" + keyword + "** added to the crash filter";
+          let reply = "Keyword(s) **" + keyword + "** added to the crash filter";
           resolve(reply)
         }
 
