@@ -141,9 +141,9 @@ let showCrashOptions = function(){
                 "\n              [-o <crash id>] show crash occurrences" +
                 "\n              [-r <crash id>] mark crash as resolved" +
                 "\n              [-aw <word1, word2 ...>] add keyword(s) to the crash triage filter" +
-                "\n              [-sf] shows filter keywords" +
-                "\n              [-df] deletes filter keywords" +
-                "\n              [-so] shows user registration options" +
+                "\n              [-sf] show triage filter keywords" +
+                "\n              [-df] delete trieage filter keywords" +
+                "\n              [-so] show user registration options" +
                 "\n              [-es] enable splunk alerts on the space" +
                 "\n              [-ds] disable splunk alerts on the space" +
                 "\n              [register] register space" +
