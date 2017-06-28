@@ -65,7 +65,7 @@ reports.prototype.listenForMacReports = function(bot,app){
   router.route('/fabricreports').post(function(req, res) {
     if (req.body.event === "verification") {
       res.status(200).send('Verified');
-    } else if (req.body.payload.url.indexOf(process.env.REPORT_KEY) < 0 && false) {
+    } else if (req.body.payload.url.indexOf(process.env.REPORT_KEY) < 0) {
 
       bot.sendRichTextMessage(process.env.JUAN_DOLORES_ROOM_ID,"invalid MAC report url received",function(){
         console.log("url not not valid");
