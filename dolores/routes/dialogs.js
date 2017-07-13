@@ -267,7 +267,7 @@ dialogModule.prototype.parseQuestion = Promise.coroutine(function* (query, bot){
       version = vecReply[1];
     }
 
-    let setFixed = yield winReportModel.setCrashAsFixed(vecReply[0],version);
+    let setFixed = yield winReportModel.setCrashAsFixed(crashId,version);
     if(setFixed){
       reply = "crash id " + crashId + " has been set as fixed, no reports will be sent unless is reported in a different version";
     } else {

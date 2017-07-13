@@ -95,6 +95,11 @@ winReportSchema.statics.setCrashAsFixed = function (crash_id,version){
           } else {
             crash.is_resolved = version
           }
+          crash.save(function(err) {
+            if (err) {
+              console.log("error saving the issue")
+            }// do something
+          });
          resolve(true);
        }
     });
