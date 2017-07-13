@@ -249,7 +249,7 @@ spaceSchema.statics.sendReportToWinSubscribers = function (winReport,bot){
     let lastReported= winReport.client_version.slice(-1).pop();
     let isRegression = false;
     let regressionText= "";
-    if(winReport.is_resolved !=="" && lastReported > winReport.is_resolved ) {
+    if(typeof(winReport.is_resolved) !=='undefined' && lastReported > winReport.is_resolved ) {
       console.log("possible regression detected");
       isRegression = true;
       regressionText = "\n\n- **Possible issue regressed **";
@@ -282,13 +282,12 @@ spaceSchema.statics.sendReportToWinSubscribers = function (winReport,bot){
         var roomsIdSet = new Set();
         users.forEach(function(item){
             var tags = item.macReports.tags;
-            if (tags[1] === "everything" && (winReport.is_resolved ==="" || isRegression)){
+            if (tags[1] === "everything" && (typeof(winReport.is_resolved) ==='undefined' || isRegression)){
               roomsIdSet.add(item.roomId);
             } else {
               tags.forEach(function(tag){
                   var position = stringToSearch.indexOf(tag);
-                  console.log("isResolved it should be nothing" + winReport.is_resolved);
-                  if(position >= 0 && (winReport.is_resolved ==="" || isRegression)){
+                  if(position >= 0 && (typeof(winReport.is_resolved) ==='undefined' || isRegression)){
                     console.log("USER FOUND SAVING THE ROOM ID INTO AN ARRAY");
                     roomsIdSet.add(item.roomId);
                   }
