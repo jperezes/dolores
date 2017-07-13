@@ -246,6 +246,13 @@ spaceSchema.statics.sendReportToWinSubscribers = function (winReport,bot){
       clients += item + ", ";
     })
     var stringToSearch =winReport.hashA + winReport.method;
+    let lastReported= clients.slice(-1).pop();
+    let isRegression = false;
+    let regressionText= "";
+    if(winReport.is_resolved !=="" && lastReported > winReport.is_resolved ) {
+      isRegression = true;
+      regressionText = "\n\n- **Possible issue regressed **";
+    }
     var failureReport = "Win crash received: " +
                       //"\nevent: " + req.body.event +
                       //"\npayload Type: " + req.body.payload_type +
@@ -257,7 +264,9 @@ spaceSchema.statics.sendReportToWinSubscribers = function (winReport,bot){
                       "\n\n- **method affected:** " + winReport.method +
                       "\n\n- **Feedback ID:** " + winReport.feedback_id  +
                       "\n\n- **Crashes Count:** " + winReport.crashes_count +
+                      "\n\n- **Resolved Version:** " + winReport.is_resolved +
                       "\n\n- **Client Version:** " + clients +
+                      regressionText +
                       //"\nimpacted_devices_count: " + req.body.payload.impacted_devices_count +
                       "\n\n- **url to the crash:** " + "[PRT server URL]" + "("+ winReport.url + ")";
 
@@ -272,12 +281,12 @@ spaceSchema.statics.sendReportToWinSubscribers = function (winReport,bot){
         var roomsIdSet = new Set();
         users.forEach(function(item){
             var tags = item.macReports.tags;
-            if (tags[1] === "everything"){
+            if (tags[1] === "everything" && (winReport.is_resolved ==="" || isRegression)){
               roomsIdSet.add(item.roomId);
             } else {
               tags.forEach(function(tag){
                   var position = stringToSearch.indexOf(tag);
-                  if(position >= 0){
+                  if(position >= 0 && (winReport.is_resolved ==="" || isRegression)){
                     console.log("USER FOUND SAVING THE ROOM ID INTO AN ARRAY");
                     roomsIdSet.add(item.roomId);
                   }

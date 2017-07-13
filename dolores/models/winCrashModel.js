@@ -83,18 +83,23 @@ winReportSchema.statics.getCrashById = function (crash_id) {
  })
 };
 
-winReportSchema.statics.setCrashAsFixed = function (crash_id){
+winReportSchema.statics.setCrashAsFixed = function (crash_id,version){
   return new Promise((resolve,reject)=>{
-    this.findOneAndUpdate({id:crash_id},{ $set: { is_resolved: 'true' }},function(err){
-      if(err){
-        console.log("something went wrong updating the data")
-        resolve(false);
-      }else{
-       resolve(true);
-     }
-  });
- })
-}
+      this.findOne({id:crash_id},function(err,crash){
+        if(err){
+          console.log("crash not found")
+          resolve(false);
+        }else if(crash){
+          if (version === "") {
+            crash.is_resolved = crash.client_version.sort().slice(-1).pop();
+          } else {
+            crash.is_resolved = version
+          }
+         resolve(true);
+       }
+    });
+  })
+ }
 
 //module.exports = mongoose.model('WinReport', winReportSchema);
 module.exports = winReportSchema;
