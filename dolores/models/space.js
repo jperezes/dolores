@@ -246,7 +246,7 @@ spaceSchema.statics.sendReportToWinSubscribers = function (winReport,bot){
       clients += item + ", ";
     })
     var stringToSearch =winReport.hashA + winReport.method;
-    let lastReported= clients.slice(-1).pop();
+    let lastReported= winReport.client_version.slice(-1).pop();
     let isRegression = false;
     let regressionText= "";
     if(winReport.is_resolved !=="" && lastReported > winReport.is_resolved ) {
