@@ -252,7 +252,7 @@ spaceSchema.statics.sendReportToWinSubscribers = function (winReport,bot){
     if(typeof(winReport.is_resolved) !=='undefined' && lastReported > winReport.is_resolved ) {
       console.log("possible regression detected");
       isRegression = true;
-      regressionText = "\n\n- **Possible issue regressed **";
+      regressionText = "\n\n- **Possible issue regressed!**";
     }
     var failureReport = "Win crash received: " +
                       //"\nevent: " + req.body.event +
