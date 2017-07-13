@@ -139,7 +139,7 @@ let showCrashOptions = function(){
                 "\n              [-cv <Spark version>] show crash number of the specified Spark version" +
                 "\n              [-i <crash id>] show crash info" +
                 "\n              [-o <crash id>] show crash occurrences" +
-                "\n              [-r <crash id>] mark crash as resolved" +
+                "\n              [-r <crash id> <Spark fix version>] mark crash as resolved on version" +
                 "\n              [-aw <word1, word2 ...>] add keyword(s) to the crash triage filter" +
                 "\n              [-sf] show triage filter keywords" +
                 "\n              [-df] delete trieage filter keywords" +
@@ -269,7 +269,7 @@ dialogModule.prototype.parseQuestion = Promise.coroutine(function* (query, bot){
 
     let setFixed = yield winReportModel.setCrashAsFixed(crashId,version);
     if(setFixed){
-      reply = "crash id " + crashId + " has been set as fixed, no reports will be sent unless is reported in a different version";
+      reply = "crash id " + crashId + " has been set as fixed on version " + version + ", no reports will be sent unless is reported in a newer version";
     } else {
       reply = "problem seeting the crash as fixed, pleasy try again later";
     }
