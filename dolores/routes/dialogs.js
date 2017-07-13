@@ -258,8 +258,15 @@ dialogModule.prototype.parseQuestion = Promise.coroutine(function* (query, bot){
       reply = "Failed to register the user, try again later";
     }
   }  else if ((cleanQuestion.indexOf("set as resolved crash with id") !== -1 || cleanQuestion.indexOf("-r") !==-1)){
-    let crashId = cleanQuestion.replace("set as resolved crash with id","").replace("-r","").replace(" ","");
-    let setFixed = yield winReportModel.setCrashAsFixed(crashId,"");
+    let crashAndVersion = cleanQuestion.replace("set as resolved crash with id","").replace("-r","").replace(" ","");
+    let vecReply = crashAndVersion.split(" ");
+    let crashId = vecReply[0];
+    let version="";
+    if(typeof(vecReply[1] !== 'undefined')) {
+      version = vecReply[1];
+    }
+
+    let setFixed = yield winReportModel.setCrashAsFixed(vecReply[0],version);
     if(setFixed){
       reply = "crash id " + crashId + " has been set as fixed, no reports will be sent unless is reported in a different version";
     } else {
