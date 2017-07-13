@@ -250,6 +250,7 @@ spaceSchema.statics.sendReportToWinSubscribers = function (winReport,bot){
     let isRegression = false;
     let regressionText= "";
     if(winReport.is_resolved !=="" && lastReported > winReport.is_resolved ) {
+      console.log("possible regression detected");
       isRegression = true;
       regressionText = "\n\n- **Possible issue regressed **";
     }
@@ -286,6 +287,7 @@ spaceSchema.statics.sendReportToWinSubscribers = function (winReport,bot){
             } else {
               tags.forEach(function(tag){
                   var position = stringToSearch.indexOf(tag);
+                  console.log("isResolved it should be nothing" + winReport.is_resolved);
                   if(position >= 0 && (winReport.is_resolved ==="" || isRegression)){
                     console.log("USER FOUND SAVING THE ROOM ID INTO AN ARRAY");
                     roomsIdSet.add(item.roomId);
