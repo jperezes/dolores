@@ -259,7 +259,7 @@ dialogModule.prototype.parseQuestion = Promise.coroutine(function* (query, bot){
     }
   }  else if ((cleanQuestion.indexOf("set as resolved crash with id") !== -1 || cleanQuestion.indexOf("-r") !==-1)){
     let crashId = cleanQuestion.replace("set as resolved crash with id","").replace("-r","").replace(" ","");
-    let setFixed = yield winReportModel.setCrashAsFixed(crashId);
+    let setFixed = yield winReportModel.setCrashAsFixed(crashId,"");
     if(setFixed){
       reply = "crash id " + crashId + " has been set as fixed, no reports will be sent unless is reported in a different version";
     } else {
