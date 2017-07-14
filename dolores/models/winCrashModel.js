@@ -12,6 +12,7 @@ var winReportSchema = mongoose.Schema({
     client_version: [String],
     id:String,
     is_resolved:String,
+    assined_team:String,
     url: String
 });
 

@@ -17,7 +17,23 @@ gitRoute.prototype.listenForGitUpdates = function(bot,app){
     // console.log('and it is very weird: ',req);
     next();
   });
+  let teamSpaces= [process.env.TEAM_SCRUM,process.env.CALL_SCRUM,process.env.MESSAGE_SCRUM,process.env.PROGRAM_SCRUM];
 
+  let checkForTeamSpaces = function(ghLabel){
+    let check = ""
+    teamSpaces.forEach(item=>{
+      if(ghLabel.indexOf(item) !== -1){
+        console.log("Valid team found")
+        check = "found"
+      }
+    })
+    if(check === "found"){
+      return true;
+    } else{
+      console.log("unknown question")
+      return false;
+    }
+  }
 
 
   router.route('/githubupdate').post(function(req, res) {
