@@ -88,7 +88,8 @@ let processGHCrash = function(ghIssue,teamName,bot){
         console.log("room_id not found for that team name aborting ...")
         return;
       }
-      if(ghIssue.action !== "open") {
+      console.log("GH DTO RECEIVED: " + ghIssue)
+      if((ghIssue.action !== "open") && (ghIssue.action !== "open") && (ghIssue.action !== "opened")) {
         //only new reports will be sent to the teams, any other modification shall be ignored
         console.log("action not open so message to the teams")
       }
