@@ -81,6 +81,7 @@ gitRoute.prototype.listenForGitUpdates = function(bot,app){
   }
 
 let processGHCrash = Promise.coroutine(function*(ghIssue,teamName,bot){
+      console.log("about to search id for team name: " + teamName)
       let room_id =  getTeamRoomId(teamName);
       let reply = "";
       console.log("GH DTO RECEIVED: " + JSON.stringify(ghIssue))
