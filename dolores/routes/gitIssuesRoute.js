@@ -83,14 +83,15 @@ gitRoute.prototype.listenForGitUpdates = function(bot,app){
 let processGHCrash = Promise.coroutine(function*(ghIssue,teamName,bot){
       let room_id =  getTeamRoomId(teamName);
       let reply = "";
+      console.log("GH DTO RECEIVED: " + ghIssue)
       if (room_id !==""){
         console.log("room_id not found for that team name aborting ...")
         return;
       }
-      console.log("GH DTO RECEIVED: " + ghIssue)
-      if((ghIssue.action !== "open") && (ghIssue.action !== "open") && (ghIssue.action !== "opened")) {
+      if((ghIssue.action !== "open") && (ghIssue.action !== "opened") && (ghIssue.action !== "reopened")) {
         //only new reports will be sent to the teams, any other modification shall be ignored
-        console.log("action not open so message to the teams")
+        console.log("action not open aborting ...")
+        return;
       }
 
       //check if issue has a Hash and it has been reported to dolores
