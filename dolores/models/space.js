@@ -395,20 +395,20 @@ spaceSchema.statics.addFilterKeyWordDistinct = function (room_Id,keyword) {
           let reply = "Keyword(s) **" + keyword + "** added to the crash filter"
           let found = false;
           keywordArray.forEach(item=>{
-            this.macReports.tags.forEach(item2=>{
+            result.macReports.tags.forEach(item2=>{
               if(item2 === item) {
                 console.log("keyword already present in the filter")
                 found = true;
               }
             })
             if(found === false) {
-              this.macReports.tags.add(item);
+              result.macReports.tags.add(item);
             } else {
               found = false;
             }
           })
-          this.winreports.tags = this.macReports.tags;
-          this.save(err=>{
+          result.winreports.tags = result.macReports.tags;
+          result.save(err=>{
             console.log("error saving the space");
           })
           resolve(reply)
