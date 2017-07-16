@@ -50,14 +50,25 @@ gitRoute.prototype.listenForGitUpdates = function(bot,app){
   }
 
   let checkForHash = function(message) {
-    let hash = "";
-    let hashStr = "Hash A: ";
-    let hashStrPos = message.indexOf(hashStr);
-    if(hashStrPos !== -1) {
-      //length of the hashes is 18 and Hash A: is 8
-      hash = message.substring(hashStrPos +8 ,hashStrPos+24)
+    var token1 = "Hash A";
+    var token2 = "Crash Hash";
+    var hashFound ="";
+    var n1 = message.indexOf(token1);
+    var n2 = message.indexOf(token2);
+    let n = n1 > n2 ? n1 : n2;
+    var substr = "";
+    if (n !== -1) {
+        //this is to be sure we get the hash
+        substr = message.substring(n,n+50);
+        n = substr.indexOf('0x');
+        if(n !== -1) {
+          hashFound= substr.substring(n,n+ 18);
+          console.log("crash with found, id: " + hashFound);
+        } else {
+          console.log("hash not found weird")
+        }
     }
-    return hash;
+    return hashFound;
   }
 
 
