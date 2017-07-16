@@ -94,7 +94,7 @@ let processGHCrash = Promise.coroutine(function*(ghIssue,teamName,bot){
       let hashA = checkForHash(ghIssue.issue.body);
       if ( hashA === "" ) {
         //no hash
-        reply = "Hi " + teamName + " A GH crash has been assigned to your team:\n\n" +
+        reply = "Hi *" + teamName + "* A GH crash has been assigned to your team:\n\n" +
                 "\n\n - [" + ghIssue.issue.number + "]" + "(" + ghIssue.issue.url.replace("api/v3/repos/","") + ")" + ": " + ghIssue.issue.title +
                 "\n\n This crash has not yet been reported to the crash server, please add filter key word present on the stack trace " +
                 "to identify it and get reports to this room *Dolores -aw <keywords>*";
@@ -109,7 +109,7 @@ let processGHCrash = Promise.coroutine(function*(ghIssue,teamName,bot){
           yield spaceModel.addFilterKeyWord(room_id,hashA)
           //process the reply on failure
 
-          reply = "Hi " + teamName + " A GH crash has been assigned to your team:\n\n" +
+          reply = "Hi *" + teamName + "* A GH crash has been assigned to your team:\n\n" +
                   "\n\n - [" + ghIssue.issue.number + "]" + "(" + ghIssue.issue.url.replace("api/v3/repos/","") + ")" + ": " + ghIssue.issue.title;
                   "\n\n - Reported crash id: " + crash.crash_id +
                   "\n\n - Reported crash hash: " + crash.hashA +
@@ -123,7 +123,7 @@ let processGHCrash = Promise.coroutine(function*(ghIssue,teamName,bot){
         }
         else {
           //crash not yet reported
-          reply = "Hi " + teamName + " A GH crash has been assigned to your team:\n\n" +
+          reply = "Hi *" + teamName + "* A GH crash has been assigned to your team:\n\n" +
                   "\n\n - [" + ghIssue.issue.number + "]" + "(" + ghIssue.issue.url.replace("api/v3/repos/","") + ")" + ": " + ghIssue.issue.title +
                   "\n\n This crash has not yet been reported to Dolores, adding the hash to the filter so further reports will be sent to this space ";
 
