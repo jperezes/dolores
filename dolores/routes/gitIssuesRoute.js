@@ -117,7 +117,7 @@ let processGHCrash = Promise.coroutine(function*(ghIssue,teamName,bot){
           crash.assigned_team = teamName;
 
           //Add the hash to the team id to get further crashes.
-          console.log("adding keyword to the database...");
+          console.log("adding keyword to the filter..." + hashA);
           let result = yield spaceModel.addFilterKeyWordDistinct(room_id,hashA)
           console.log(result);
           //process the reply on failure

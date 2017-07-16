@@ -387,16 +387,17 @@ spaceSchema.statics.addFilterKeyWord = function (room_Id,keyword) {
 spaceSchema.statics.addFilterKeyWordDistinct = function (room_Id,keyword) {
   return new Promise((resolve,reject) =>{
     let keywordArray = keyword.split(',');
-    this.findOneAndUpdate({roomId: room_Id}, function(err, result) {
+    this.findOne({roomId: room_Id}, function(err, result) {
         if(err) {
           let reply = "Failed to ad the keyword with following error: " + err;
           resolve(reply)
         } else {
-          let reply = "Keyword(s) **" + keyword + "** added to the crash filter";
+          let reply = "Keyword(s) **" + keyword + "** added to the crash filter"
           let found = false;
           keywordArray.forEach(item=>{
             this.macReports.tags.forEach(item2=>{
               if(item2 === item) {
+                console.log("keyword already present in the filter")
                 found = true;
               }
             })
