@@ -80,8 +80,7 @@ gitRoute.prototype.listenForGitUpdates = function(bot,app){
     return roomId;
   }
 
-let processGHCrash = function(ghIssue,teamName,bot){
-    Promise.coroutine(function*(){
+let processGHCrash = Promise.coroutine(function*(ghIssue,teamName,bot){
       let room_id =  getTeamRoomId(teamName);
       let reply = "";
       if (room_id !==""){
@@ -144,7 +143,6 @@ let processGHCrash = function(ghIssue,teamName,bot){
 
 
    })
-  }
 
   router.route('/githubupdate').post(function(req, res) {
 
@@ -220,6 +218,7 @@ let processGHCrash = function(ghIssue,teamName,bot){
       })
       if(isCrash) {
         //process issue and send notification to teamSpaces
+        console.log("is a CRASH proceding sending report to the teams")
         processGHCrash(req.body, teamName, bot)
       }
 
