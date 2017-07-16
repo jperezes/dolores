@@ -83,7 +83,7 @@ gitRoute.prototype.listenForGitUpdates = function(bot,app){
 let processGHCrash = Promise.coroutine(function*(ghIssue,teamName,bot){
       let room_id =  getTeamRoomId(teamName);
       let reply = "";
-      console.log("GH DTO RECEIVED: " + ghIssue)
+      console.log("GH DTO RECEIVED: " + JSON.stringify(ghIssue))
       if (room_id !==""){
         console.log("room_id not found for that team name aborting ...")
         return;
