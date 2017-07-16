@@ -7,6 +7,7 @@ let GitIssueSchema = require('../models/gitissuesModel');
 let WinReportSchema = require('../models/winCrashModel');
 var mongoUrl = process.env.MONGO_URL || 'mongodb://localhost:27017/spaces';
 let mongoSp = process.env.MONGO_SPACES_URL || 'mongodb://localhost:27017/spaces';
+let Promise = require('bluebird');
 
 
 var gitRoute = function(){};
