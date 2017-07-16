@@ -64,19 +64,14 @@ gitRoute.prototype.listenForGitUpdates = function(bot,app){
   let getTeamRoomId = function(teamName) {
     let roomId = "";
     console.log("getting id for team name: " + teamName)
-    switch(teamName){
-      case process.env.TEAM_SCRUM:
+    if(teamName.indexOf(process.env.TEAM_SCRUM) !== -1) {
       roomId = process.env.PROTEUS_ROOM_ID;
-      break;
-      case process.env.CALL_SCRUM:
+    } else if(teamName.indexOf(process.env.CALL_SCRUM) !== -1) {
       roomId = process.env.CALL_ROOM_ID;
-      break;
-      case process.env.MESSAGE_SCRUM:
+    } else if(teamName.indexOf(process.env.MESSAGE_SCRUM) !== -1) {
       roomId = process.env.MESSAGE_ROOM_ID;
-      break;
-      case process.env.PROGRAM_SCRUM:
+    } else if(teamName.indexOf(process.env.PROGRAM_SCRUM) !== -1) {
       roomId = process.env.PROGRAM_ROOM_ID;
-      break;
     }
     return roomId;
   }
