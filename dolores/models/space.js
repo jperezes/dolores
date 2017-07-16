@@ -383,6 +383,39 @@ spaceSchema.statics.addFilterKeyWord = function (room_Id,keyword) {
   });
   })
 }
+
+spaceSchema.statics.addFilterKeyWordDistinct = function (room_Id,keyword) {
+  return new Promise((resolve,reject) =>{
+    let keywordArray = keyword.split(',');
+    this.findOneAndUpdate({roomId: room_Id}, function(err, result) {
+        if(err) {
+          let reply = "Failed to ad the keyword with following error: " + err;
+          resolve(reply)
+        } else {
+          let reply = "Keyword(s) **" + keyword + "** added to the crash filter";
+          let found = false;
+          keywordArray.forEach(item=>{
+            this.macReports.tags.forEach(item2=>{
+              if(item2 === item) {
+                found = true;
+              }
+            })
+            if(found === false) {
+              this.macReports.tags.add(item);
+            } else {
+              found = false;
+            }
+          })
+          this.winreports.tags = this.macReports.tags;
+          this.save(err=>{
+            console.log("error saving the space");
+          })
+          resolve(reply)
+        }
+
+      });
+  })
+}
 spaceSchema.statics.showFilterWords = function (room_Id) {
   return new Promise((resolve,reject) =>{
     this.find({roomId: room_Id}, function(err, result) {
