@@ -63,6 +63,7 @@ gitRoute.prototype.listenForGitUpdates = function(bot,app){
 
   let getTeamRoomId = function(teamName) {
     let roomId = "";
+    console.log("getting id for team name: " + teamName)
     switch(teamName){
       case process.env.TEAM_SCRUM:
       roomId = process.env.PROTEUS_ROOM_ID;
