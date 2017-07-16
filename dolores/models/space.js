@@ -402,7 +402,7 @@ spaceSchema.statics.addFilterKeyWordDistinct = function (room_Id,keyword) {
               }
             })
             if(found === false) {
-              result.macReports.tags.add(item);
+              result.macReports.tags.push(item);
             } else {
               found = false;
             }
