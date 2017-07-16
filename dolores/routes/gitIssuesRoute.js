@@ -64,6 +64,12 @@ gitRoute.prototype.listenForGitUpdates = function(bot,app){
   let getTeamRoomId = function(teamName) {
     let roomId = "";
     console.log("getting id for team name: " + teamName)
+
+    console.log("team name: " + process.env.TEAM_SCRUM)
+    console.log("call name: " + process.env.CALL_SCRUM)
+    console.log("message name: " + process.env.MESSAGE_SCRUM)
+    console.log("program name: " + rocess.env.PROGRAM_SCRUM)
+
     if(teamName.indexOf(process.env.TEAM_SCRUM) !== -1) {
       roomId = process.env.PROTEUS_ROOM_ID;
     } else if(teamName.indexOf(process.env.CALL_SCRUM) !== -1) {
@@ -80,7 +86,6 @@ let processGHCrash = Promise.coroutine(function*(ghIssue,teamName,bot){
       console.log("about to search id for team name: " + teamName)
       let room_id =  getTeamRoomId(teamName);
       let reply = "";
-      console.log("GH DTO RECEIVED: " + JSON.stringify(ghIssue))
       if (room_id !==""){
         console.log("room_id not found for that team name aborting ...")
         return;
