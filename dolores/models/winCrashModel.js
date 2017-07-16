@@ -12,7 +12,7 @@ var winReportSchema = mongoose.Schema({
     client_version: [String],
     id:String,
     is_resolved:String,
-    assined_team:String,
+    assigned_team:String,
     url: String
 });
 
@@ -22,7 +22,7 @@ winReportSchema.static({
 	}
 });
 
-winReportSchema.statics.getCountAndDelete = function (hash) {
+winReportSchema.statics.getCrashByHash = function (hash) {
   return new Promise((resolve,reject)=>{
     this.findOne({hashA:hash},function(err,result){
       if(err){

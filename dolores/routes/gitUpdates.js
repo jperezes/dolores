@@ -14,6 +14,8 @@ let scheduleServer = function(bot){
 
       let tempAMessage="";
       let tempBMessage="";
+      let crashOpenedMessage="";
+      let crashClosedMessage="";
 
       let resultB = yield gitIssueModel.getOpenedIssuesByLabelNameAndDate("bug",earliest.toISOString(),latest.toISOString());
       resultB.forEach(function(item){

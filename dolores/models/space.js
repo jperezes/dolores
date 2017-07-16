@@ -504,5 +504,8 @@ spaceSchema.statics.deleteFilterWord = function (room_Id,keyword) {
 
 
 
+
+
+
 // module.exports = mongoose.model('SparkSpace', spaceSchema);
 module.exports = spaceSchema;

@@ -4,9 +4,22 @@ var mongoose = require('mongoose');
 var bodyParser = require('body-parser');
 var Space = require('../models/space');
 let GitIssueSchema = require('../models/gitissuesModel');
+let WinReportSchema = require('../models/winCrashModel');
+var mongoUrl = process.env.MONGO_URL || 'mongodb://localhost:27017/spaces';
+let mongoSp = process.env.MONGO_SPACES_URL || 'mongodb://localhost:27017/spaces';
+
 
 var gitRoute = function(){};
+
+//check if this is necessary
+let con = mongoose.createConnection(mongoUrl)
+let winReportModel = con.model('winReport', WinReportSchema);
+var conn2 = mongoose.createConnection(mongoSp)
+let spaceModel = conn2.model('SparkSpace', Space);
+
 let gitIssueModel = mongoose.model('GitIssue', GitIssueSchema);
+
+
 gitRoute.prototype.listenForGitUpdates = function(bot,app){
   this.app = app;
   this.app.use(bodyParser.urlencoded({extended: true}));
@@ -35,6 +48,101 @@ gitRoute.prototype.listenForGitUpdates = function(bot,app){
     }
   }
 
+  let checkForHash = function(message) {
+    let hash = "";
+    let hashStr = "Hash A: ";
+    let hashStrPos = message.indexOf(hashStr);
+    if(hashStrPos !== -1) {
+      //length of the hashes is 18 and Hash A: is 8
+      hash = message.substring(hashStrPos +8 ,hashStrPos+24)
+    }
+    return hash;
+  }
+
+
+  let getTeamRoomId = function(teamName) {
+    let roomId = "";
+    switch(teamName){
+      case process.env.TEAM_SCRUM:
+      roomId = process.env.PROTEUS_ROOM_ID;
+      break;
+      case process.env.CALL_SCRUM:
+      roomId = process.env.CALL_ROOM_ID;
+      break;
+      case process.env.MESSAGE_SCRUM:
+      roomId = process.env.MESSAGE_ROOM_ID;
+      break;
+      case process.env.PROGRAM_SCRUM:
+      roomId = process.env.PROGRAM_ROOM_ID;
+      break;
+    }
+    return roomId;
+  }
+
+let processGHCrash = function(ghIssue,teamName,bot){
+    Promise.coroutine(function*(){
+      let room_id =  getTeamRoomId(teamName);
+      let reply = "";
+      if (room_id !==""){
+        console.log("room_id not found for that team name aborting ...")
+        return;
+      }
+      if(ghIssue.action !== "open") {
+        //only new reports will be sent to the teams, any other modification shall be ignored
+        console.log("action not open so message to the teams")
+      }
+
+      //check if issue has a Hash and it has been reported to dolores
+      let hashA = checkForHash(ghIssue.issue.body);
+      if ( hashA === "" ) {
+        //no hash
+        reply = "Hi " + teamName + " A GH crash has been assigned to your team:\n\n" +
+                "\n\n - [" + ghIssue.issue.number + "]" + "(" + ghIssue.issue.url.replace("api/v3/repos/","") + ")" + ": " + ghIssue.issue.title +
+                "\n\n This crash has not yet been reported to the crash server, please add filter key word present on the stack trace " +
+                "to identify it and get reports to this room *Dolores -aw <keywords>*";
+      } else{
+        // hash found
+        let crash = yield winReportModel.getCrashByHash(hashA);
+        if(typeof(crash.reportDate) !== 'undefined') {
+          console.log("git hub crash found on the database")
+          crash.assigned_team = teamName;
+
+          //Add the hash to the team id to get further crashes.
+          yield spaceModel.addFilterKeyWord(room_id,hashA)
+          //process the reply on failure
+
+          reply = "Hi " + teamName + " A GH crash has been assigned to your team:\n\n" +
+                  "\n\n - [" + ghIssue.issue.number + "]" + "(" + ghIssue.issue.url.replace("api/v3/repos/","") + ")" + ": " + ghIssue.issue.title;
+                  "\n\n - Reported crash id: " + crash.crash_id +
+                  "\n\n - Reported crash hash: " + crash.hashA +
+                  "\n\n - First occurrence: " + crash.reportDate[0] +
+                  "\n\n any further occurrences of the same crash will be reported to this room, to get info about the crash type *Dolores -i <crash id>*";
+          crash.save(function(err){
+            if(err) {
+              console.log("error saving the crash")
+            }
+          });
+        }
+        else {
+          //crash not yet reported
+          reply = "Hi " + teamName + " A GH crash has been assigned to your team:\n\n" +
+                  "\n\n - [" + ghIssue.issue.number + "]" + "(" + ghIssue.issue.url.replace("api/v3/repos/","") + ")" + ": " + ghIssue.issue.title +
+                  "\n\n This crash has not yet been reported to Dolores, adding the hash to the filter so further reports will be sent to this space ";
+
+          //Add the hash to the team id to get further crashes.
+          yield spaceModel.addFilterKeyWord(room_id,hashA)
+        }
+      }
+
+      //send it to the team
+
+      bot.sendRichTextMessage(room_id,reply,function(){
+        console.log("message sent to the team");
+      });
+
+
+   })
+  }
 
   router.route('/githubupdate').post(function(req, res) {
 
@@ -68,11 +176,17 @@ gitRoute.prototype.listenForGitUpdates = function(bot,app){
 
     let saveIssue = false
     let i = 0;
+    let isCrash = false;
+    let teamName="";
     req.body.issue.labels.forEach(item =>{
       gitModel.issue.labels[i]= {};
       gitModel.issue.labels[i].name = item.name;
-      if (item.name === process.env.TEAM_SCRUM) {
+      if (item.name === 'Crash'){
+        isCrash = true;
+      }
+      if (checkForTeamSpaces(item.name)) {
         saveIssue = true
+        teamName= item.name;
         console.log("save issue set to: " + saveIssue)
       }
       i= i +1 ;
@@ -102,9 +216,13 @@ gitRoute.prototype.listenForGitUpdates = function(bot,app){
           });
         }
       })
+      if(isCrash) {
+        //process issue and send notification to teamSpaces
+        processGHCrash(req.body, teamName, bot)
+      }
 
     } else{
-      res.status(200).send('invalid github event');
+      res.status(200).send('non relevant github event');
     }
   });
 }
