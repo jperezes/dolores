@@ -370,7 +370,7 @@ spaceSchema.statics.showUserOptionsPromified = function (room_Id) {
 spaceSchema.statics.addFilterKeyWord = function (room_Id,keyword) {
   return new Promise((resolve,reject) =>{
     let keywordArray = keyword.split(',');
-    this.findOneAndUpdate({roomId: room_Id},{$pushAll: {"macReports.tags": keywordArray, "winreports.tags":keywordArray}},
+    this.findOneAndUpdate({roomId: room_Id},{$pushAll: {"macReports.tags": keywordArray, "windowsReports.tags":keywordArray}},
       {safe: true, upsert: true}, function(err, result) {
         if(err) {
           let reply = "Failed to ad the keyword with following error: " + err;
@@ -407,7 +407,7 @@ spaceSchema.statics.addFilterKeyWordDistinct = function (room_Id,keyword) {
               found = false;
             }
           })
-          result.winreports.tags = result.macReports.tags;
+          result.windowsReports.tags = result.macReports.tags;
           result.save(err=>{
             console.log("error saving the space");
           })
