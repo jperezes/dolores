@@ -31,7 +31,7 @@ gitRoute.prototype.listenForGitUpdates = function(bot,app){
     // console.log('and it is very weird: ',req);
     next();
   });
-  let teamSpaces= [process.env.TEAM_SCRUM,process.env.CALL_SCRUM,process.env.MESSAGE_SCRUM,process.env.PROGRAM_SCRUM];
+  let teamSpaces= [process.env.TEAM_SCRUM,process.env.CALL_SCRUM,process.env.MESSAGE_SCRUM];
 
   let checkForTeamSpaces = function(ghLabel){
     let check = ""
@@ -81,8 +81,6 @@ gitRoute.prototype.listenForGitUpdates = function(bot,app){
       roomId = process.env.CALL_ROOM_ID;
     } else if(teamName.indexOf(process.env.MESSAGE_SCRUM) !== -1) {
       roomId = process.env.MESSAGE_ROOM_ID;
-    } else if(teamName.indexOf(process.env.PROGRAM_SCRUM) !== -1) {
-      roomId = process.env.PROGRAM_ROOM_ID;
     }
     return roomId;
   }

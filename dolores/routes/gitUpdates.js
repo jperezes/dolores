@@ -6,7 +6,7 @@ var mongoUrl = process.env.MONGO_SPACES_URL || 'mongodb://localhost:27017/spaces
 
 let con = mongoose.createConnection(mongoUrl);
 let gitIssueModel = mongoose.model('GitIssue', mongoGit);
-let teamSpaces= [process.env.TEAM_SCRUM,process.env.CALL_SCRUM,process.env.MESSAGE_SCRUM,process.env.PROGRAM_SCRUM];
+let teamSpaces= [process.env.TEAM_SCRUM,process.env.CALL_SCRUM,process.env.MESSAGE_SCRUM];
 
 let getTeamRoomId = function(teamName) {
   let roomId = "";
@@ -17,8 +17,6 @@ let getTeamRoomId = function(teamName) {
     roomId = process.env.CALL_ROOM_ID;
   } else if(teamName.indexOf(process.env.MESSAGE_SCRUM) !== -1) {
     roomId = process.env.MESSAGE_ROOM_ID;
-  } else if(teamName.indexOf(process.env.PROGRAM_SCRUM) !== -1) {
-    roomId = process.env.PROGRAM_ROOM_ID;
   }
   return roomId;
 }
