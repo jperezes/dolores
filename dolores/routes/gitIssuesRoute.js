@@ -124,10 +124,10 @@ let processGHCrash = Promise.coroutine(function*(ghIssue,teamName,bot){
 
           reply = "Hi *" + teamName + "* A GH crash has been assigned to your team:\n\n" +
                   "\n\n > [" + ghIssue.issue.number + "]" + "(" + ghIssue.issue.url.replace("api/v3/repos/","") + ")" + ": " + ghIssue.issue.title +
-                  "\n\n > Reported crash id: " + crash.crash_id +
+                  "\n\n > Reported crash id: " + crash.id +
                   "\n\n > Reported crash hash: " + crash.hashA +
                   "\n\n > First occurrence: " + crash.reportDate[0] +
-                  "\n\n \nAny further occurrences of the same crash will be reported to this room, to get info about the crash type *Dolores -i <crash id>*";
+                  "\n\n \nAny further occurrences of the same crash will be reported to this room, to get info about the crash type *Dolores -i crash id*";
           crash.save(function(err){
             if(err) {
               console.log("error saving the crash")
