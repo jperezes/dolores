@@ -266,7 +266,7 @@ spaceSchema.statics.sendReportToWinSubscribers = function (winReport,bot){
                       "\n\n- **Feedback ID:** " + winReport.feedback_id  +
                       "\n\n- **Crashes Count:** " + winReport.crashes_count +
                       "\n\n- **Resolved Version:** " + winReport.is_resolved +
-                      "\n\n> **Team Assigned:** " + winReport.assigned_team +
+                      "\n\n- **Team Assigned:** " + winReport.assigned_team +
                       "\n\n- **Client Version:** " + clients +
                       regressionText +
                       //"\nimpacted_devices_count: " + req.body.payload.impacted_devices_count +

@@ -108,10 +108,10 @@ gitIssueSchema.statics.getIssuesByLabelNameCallback = function(labelName,callbac
 
 }
 
-gitIssueSchema.statics.getClosedIssuesByLabelNameAndDate = function(labelName,earliest,latest){
+gitIssueSchema.statics.getClosedIssuesByLabelNameAndDate = function(labelName,team, earliest,latest){
   return new Promise((resolve,reject)=>{
    console.log("about to start finding the issues")
-    this.find({"issue.closed_at":{$gte: earliest,$lte: latest}, "issue.labels.name":labelName, "issue.state":"closed"},function(err,items){
+    this.find({"issue.closed_at":{$gte: earliest,$lte: latest}, "issue.labels.name":{$all: [labelName,team]}, "issue.state":"closed"},function(err,items){
       if(err){
         console.log("first error on find" + err)
         reject(err);
@@ -126,10 +126,10 @@ gitIssueSchema.statics.getClosedIssuesByLabelNameAndDate = function(labelName,ea
     });
   })
 }
-gitIssueSchema.statics.getOpenedIssuesByLabelNameAndDate = function(labelName,earliest,latest){
+gitIssueSchema.statics.getOpenedIssuesByLabelNameAndDate = function(labelName,team, earliest,latest){
   return new Promise((resolve,reject)=>{
    console.log("about to start finding the issues")
-    this.find({"issue.created_at":{$gte: earliest,$lte: latest}, "issue.labels.name":labelName, "issue.state":"open"},function(err,items){
+    this.find({"issue.created_at":{$gte: earliest,$lte: latest},  "issue.labels.name":{$all: [labelName,team]}, "issue.state":"open"},function(err,items){
       if(err){
         console.log("first error on find" + err)
         reject(err);
