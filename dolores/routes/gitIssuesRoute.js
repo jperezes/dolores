@@ -44,7 +44,7 @@ gitRoute.prototype.listenForGitUpdates = function(bot,app){
     if(check === "found"){
       return true;
     } else{
-      console.log("unknown question")
+      console.log("valid team not found")
       return false;
     }
   }
