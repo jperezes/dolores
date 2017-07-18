@@ -1,5 +1,6 @@
 let Space = require('../models/space');
 let Dialog = require('../models/conversations')
+let gitIssue = require('../models/gitissuesModel')
 let WinReportSchema = require('../models/winCrashModel')
 let mongoose = require('mongoose');
 let bodyParser = require('body-parser');
@@ -71,7 +72,8 @@ let con = mongoose.createConnection(mongoReportUrl);
 
 let spaceModel = conn.model('SparkSpace', Space);
 let dialogModel = conn.model('Dialog', Dialog);
-let winReportModel = con.model('winReport',WinReportSchema)
+let winReportModel = con.model('winReport',WinReportSchema);
+let gitIssueModel = con.model('GitIssue',gitIssue);
 
 
 ///
@@ -294,6 +296,11 @@ dialogModule.prototype.parseQuestion = Promise.coroutine(function* (query, bot){
     //delete triage filter words, disable crash alerts.
     let keyword = cleanQuestion.replace("-df","").replace(" ","");
     reply = yield spaceModel.deleteAllFilterWord(query.roomId)
+  }else if ((cleanQuestion.indexOf("-test") !== -1)){
+    //delete triage filter words, disable crash alerts.
+    let keyword = cleanQuestion.replace("-test","").replace(" -test","");
+    let keyArray = keyworkd.split(" ");
+    reply = yield gitIssueModel.getOpenedIssuesByLabelNameAndDate(keyArray[0],keyArray[1], keyArray[2],keyArray[3])
   }
   else if (cleanQuestion !== "bring yourself back online" && (cleanQuestion.indexOf("-m") ===-1) && scope ==="") {
     //scope = "menuShown";
