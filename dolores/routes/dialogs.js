@@ -299,7 +299,7 @@ dialogModule.prototype.parseQuestion = Promise.coroutine(function* (query, bot){
   }else if ((cleanQuestion.indexOf("-test") !== -1)){
     //delete triage filter words, disable crash alerts.
     let keyword = cleanQuestion.replace("-test","").replace(" -test","");
-    let keyArray = keyword.split(",");
+    let keyArray = keyworkd.split(",");
     reply = yield gitIssueModel.getOpenedIssuesByLabelNameAndDate(keyArray[0],keyArray[1], keyArray[2],keyArray[3])
   }
   else if (cleanQuestion !== "bring yourself back online" && (cleanQuestion.indexOf("-m") ===-1) && scope ==="") {
