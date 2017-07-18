@@ -139,7 +139,7 @@ gitIssueSchema.statics.getOpenedIssuesByLabelNameAndDate = function(labelName,te
       }
       else {
         console.log("nothing found")
-        reject("label not found");
+        resolve("label not found");
       }
     });
   })
