@@ -22,7 +22,7 @@ let getTeamRoomId = function(teamName) {
 }
 
 let scheduleServer = function(bot){
-  schedule.scheduleJob('4 * * * *', Promise.coroutine(function* () {
+  schedule.scheduleJob('15 * * * *', Promise.coroutine(function* () {
       let latest = new Date();
       let earliest = new Date(latest-1.5*24*60*60*1000)
 

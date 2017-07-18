@@ -117,6 +117,7 @@ gitIssueSchema.statics.getClosedIssuesByLabelNameAndDate = function(labelName,te
         reject(err);
       }
       else if(items){
+        console.log("GIT ISSUES FOUND")
         resolve(items);
       }
       else {
