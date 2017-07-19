@@ -31,11 +31,13 @@ gitRoute.prototype.listenForGitUpdates = function(bot,app){
     // console.log('and it is very weird: ',req);
     next();
   });
-  let teamSpaces= [process.env.TEAM_SCRUM,process.env.CALL_SCRUM,process.env.MESSAGE_SCRUM];
 
-  let checkForTeamSpaces = function(ghLabel){
+  let teamLabels = process.env.TEAM_LABELS.split(",");
+  let validActions =["open","opened","labeled","unlabeled","reopened"]
+
+  let checkForTeamLabels = function(ghLabel){
     let check = ""
-    teamSpaces.forEach(item=>{
+    teamLabels.forEach(item=>{
       if(ghLabel.indexOf(item) !== -1){
         console.log("Valid team found")
         check = "found"
@@ -47,6 +49,25 @@ gitRoute.prototype.listenForGitUpdates = function(bot,app){
       console.log("valid team not found")
       return false;
     }
+  }
+  let countTeamLabels = function(labels){
+    count = 0;
+    labels.forEach(item =>{
+      if(checkForTeamLabels(item.name)) {
+        count ++;
+      }
+    })
+    return count;
+  }
+  let checkValidAction = function(action) {
+    let isValid = false;
+    validActions.forEach(item =>{
+      if(action === item) {
+        isValid = true;
+        return;
+      }
+    })
+    return isValid;
   }
 
   let checkForHash = function(message) {
@@ -71,16 +92,21 @@ gitRoute.prototype.listenForGitUpdates = function(bot,app){
     return hashFound;
   }
 
-
   let getTeamRoomId = function(teamName) {
     let roomId = "";
     console.log("getting id for team name: " + teamName)
     if(teamName.indexOf(process.env.TEAM_SCRUM) !== -1) {
       roomId = process.env.PROTEUS_ROOM_ID;
-    } else if(teamName.indexOf(process.env.CALL_SCRUM) !== -1) {
+    } else if(teamName.indexOf(process.env.CALL_TEAM) !== -1) {
       roomId = process.env.CALL_ROOM_ID;
-    } else if(teamName.indexOf(process.env.MESSAGE_SCRUM) !== -1) {
+    } else if(teamName.indexOf(process.env.MESSAGE_TEAM) !== -1) {
       roomId = process.env.MESSAGE_ROOM_ID;
+    }else if(teamName.indexOf(process.env.MEETINGS_TEAM) !== -1) {
+      roomId = process.env.MEETINGS_ROOM_ID;
+    }else if(teamName.indexOf(process.env.GUILD_TEAM) !== -1) {
+      roomId = process.env.GUILD_ROOM_ID;
+    }else if(teamName.indexOf(process.env.RECORDING_TEAM) !== -1) {
+      roomId = process.env.RECORDING_ROOM_ID;
     }
     return roomId;
   }
@@ -93,7 +119,9 @@ let processGHCrash = Promise.coroutine(function*(ghIssue,teamName,bot){
         console.log("room_id not found for that team name aborting ...")
         return;
       }
-      if((ghIssue.action !== "open") && (ghIssue.action !== "opened") && (ghIssue.action !== "reopened")) {
+
+      console.log("the action is: " + ghIssue.action)
+      if(checkValidAction(ghIssue.action) !== true) {
         //only new reports will be sent to the teams, any other modification shall be ignored
         console.log("action not open aborting ...")
         return;
@@ -142,14 +170,10 @@ let processGHCrash = Promise.coroutine(function*(ghIssue,teamName,bot){
           yield spaceModel.addFilterKeyWord(room_id,hashA)
         }
       }
-
       //send it to the team
-
       bot.sendRichTextMessage(room_id,reply,function(){
         console.log("message sent to the team");
       });
-
-
    })
 
   router.route('/githubupdate').post(function(req, res) {
@@ -186,16 +210,17 @@ let processGHCrash = Promise.coroutine(function*(ghIssue,teamName,bot){
     let i = 0;
     let isCrash = false;
     let teamName="";
+
     req.body.issue.labels.forEach(item =>{
+      let name = item.name;
       gitModel.issue.labels[i]= {};
-      gitModel.issue.labels[i].name = item.name;
-      if (item.name === 'Crash'){
+      gitModel.issue.labels[i].name = name;
+      if (name === 'Crash'){
         isCrash = true;
       }
-      if (checkForTeamSpaces(item.name)) {
+      if (checkForTeamLabels(name)) {
         saveIssue = true
-        teamName= item.name;
-        console.log("save issue set to: " + saveIssue)
+        teamName= name;
       }
       i= i +1 ;
     })
@@ -207,13 +232,43 @@ let processGHCrash = Promise.coroutine(function*(ghIssue,teamName,bot){
       j= j +1 ;
     })
 
+    if(isCrash) {
+      //don't multi labeled crashes duplicate crashes
+      if(countTeamLabels(req.body.issue.labels) > 1) {
+        console.log("crash assigned to multiple teams, not saving ...")
+        saveIssue = false;
+      }
+    }
+
     console.log("save issue is now: " + saveIssue + " proceeding to save the object")
     if (saveIssue){
-      gitIssueModel.find({'issue.id':req.body.issue.id}).remove().exec(function(err,result){
+      gitIssueModel.findOneAndRemove({'issue.id':req.body.issue.id},function(err,result){
         if(err){
           console.log("error deleting the issue");
         }
         else{
+          let teamChanged = false;
+          //check if the unlabel is the team, otherwise don't care
+          if(result && typeof(result.issue.labels !== 'undefined') && (req.body.action==="unlabeled" || req.body.action==="labeled"))
+          {
+            console.log("git issue present on the database already")
+            result.issue.labels.forEach(item=>{
+              if(checkForTeamLabels(item.name)){
+                if(item.name !== teamName)
+                {
+                  console.log("team changed proceding to send message")
+                  teamChanged = true;
+                }
+              }
+            })
+            if(!teamChanged)
+            {
+              console.log("reseting the action")
+              req.body.action = " - ";
+            }
+          }
+          //check if team label has been added, if so, remove the old one.
+          //if the label is
           gitModel.save(err =>{
             if (err) {
               res.status(500).send(err);
@@ -223,13 +278,13 @@ let processGHCrash = Promise.coroutine(function*(ghIssue,teamName,bot){
             }
           });
         }
+      }).then(function(){
+        if(isCrash) {
+          //process issue and send notification to teamSpaces
+          console.log("is a CRASH proceding sending report to the teams")
+          processGHCrash(req.body, teamName, bot)
+        }
       })
-      if(isCrash) {
-        //process issue and send notification to teamSpaces
-        console.log("is a CRASH proceding sending report to the teams")
-        processGHCrash(req.body, teamName, bot)
-      }
-
     } else{
       res.status(200).send('non relevant github event');
     }

@@ -6,17 +6,24 @@ var mongoUrl = process.env.MONGO_URL || 'mongodb://localhost:27017/spaces';
 
 let con = mongoose.createConnection(mongoUrl);
 let gitIssueModel = con.model('GitIssue', mongoGit);
-let teamSpaces= [process.env.TEAM_SCRUM,process.env.CALL_SCRUM,process.env.MESSAGE_SCRUM];
+
+let teamSpaces= [process.env.TEAM_SCRUM,process.env.CALL_TEAM,process.env.MESSAGE_TEAM,process.env.RECORDING_TEAM,process.env.MEETINGS_TEAM,process.env.GUILD_TEAM];
 
 let getTeamRoomId = function(teamName) {
   let roomId = "";
   console.log("getting id for team name: " + teamName)
   if(teamName.indexOf(process.env.TEAM_SCRUM) !== -1) {
     roomId = process.env.PROTEUS_ROOM_ID;
-  } else if(teamName.indexOf(process.env.CALL_SCRUM) !== -1) {
+  } else if(teamName.indexOf(process.env.CALL_TEAM) !== -1) {
     roomId = process.env.CALL_ROOM_ID;
-  } else if(teamName.indexOf(process.env.MESSAGE_SCRUM) !== -1) {
+  } else if(teamName.indexOf(process.env.MESSAGE_TEAM) !== -1) {
     roomId = process.env.MESSAGE_ROOM_ID;
+  }else if(teamName.indexOf(process.env.MEETINGS_TEAM) !== -1) {
+    roomId = process.env.MEETINGS_ROOM_ID;
+  }else if(teamName.indexOf(process.env.GUILD_TEAM) !== -1) {
+    roomId = process.env.GUILD_ROOM_ID;
+  }else if(teamName.indexOf(process.env.RECORDING_TEAM) !== -1) {
+    roomId = process.env.RECORDING_ROOM_ID;
   }
   return roomId;
 }
