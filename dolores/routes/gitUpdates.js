@@ -32,12 +32,11 @@ let scheduleServer = function(bot){
   schedule.scheduleJob('30 12 * * *', Promise.coroutine(function* () {
       let latest = new Date();
       let earliest = new Date(latest-24*60*60*1000)
-
-      let tempAMessage="";
-      let tempBMessage="";
-      let crashOpenedMessage="";
-      let crashClosedMessage="";
       for(let team of teamSpaces) {
+        let tempAMessage="";
+        let tempBMessage="";
+        let crashOpenedMessage="";
+        let crashClosedMessage="";
 
         let resultB = yield gitIssueModel.getOpenedIssuesByLabelNameAndDate("bug",team, earliest.toISOString(),latest.toISOString());
         resultB.forEach(function(item){
