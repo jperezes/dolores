@@ -42,7 +42,7 @@ var saveAndSendReport = Promise.coroutine(function*(req,res,bot) {
   winReport.client_version = req.body.client_version;
   winReport.url = req.body.url;
 
-  let result = yield WinReportModel.getCrashByHash(req.body.hashA);
+  let result = yield WinReportModel.getCrashByHash(req.body.hashC);
   if (typeof(result.reportDate) !== 'undefined'){
     console.log("crash already reported")
     if(result.client_version.indexOf(req.body.client_version) === -1){
@@ -89,9 +89,7 @@ var saveAndSendReport = Promise.coroutine(function*(req,res,bot) {
 })
 
 router.route('/wincrashreports').post(function(req, res) {
-    if (req.headers.authorization === process.env.AUTH_TOKEN_WIN_REPORTS) {
-      console.log("about to calculate crash ids")
-      WinReportModel.recalculateId();
+    if (req.body.event === "verification") {
       res.status(200).send('Verified');
     } else if (req.headers.authorization !== process.env.AUTH_TOKEN_WIN_REPORTS){
 

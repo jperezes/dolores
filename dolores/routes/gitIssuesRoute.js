@@ -32,7 +32,7 @@ gitRoute.prototype.listenForGitUpdates = function(bot,app){
     next();
   });
 
-  //let teamLabels = process.env.TEAM_LABELS.split(",");
+  let teamLabels = process.env.TEAM_LABELS.split(",");
   let validActions =["open","opened","labeled","unlabeled","reopened"]
 
   let checkForTeamLabels = function(ghLabel){
@@ -128,8 +128,8 @@ let processGHCrash = Promise.coroutine(function*(ghIssue,teamName,bot){
       }
 
       //check if issue has a Hash and it has been reported to dolores
-      let hashA = checkForHash(ghIssue.issue.body);
-      if ( hashA === "" ) {
+      let hashC = checkForHash(ghIssue.issue.body);
+      if ( hashC === "" ) {
         //no hash
         reply = "Hi *" + teamName + "* A GH crash has been assigned to your team:\n\n" +
                 "\n\n - [" + ghIssue.issue.number + "]" + "(" + ghIssue.issue.url.replace("api/v3/repos/","") + ")" + ": " + ghIssue.issue.title +
@@ -137,14 +137,14 @@ let processGHCrash = Promise.coroutine(function*(ghIssue,teamName,bot){
                 "to identify it and get reports to this room *Dolores -aw <keywords>*";
       } else{
         // hash found
-        let crash = yield winReportModel.getCrashByHash(hashA);
+        let crash = yield winReportModel.getCrashByHash(hashC);
         if(typeof(crash.reportDate) !== 'undefined') {
           console.log("git hub crash found on the database")
           crash.assigned_team = teamName;
 
           //Add the hash to the team id to get further crashes.
-          console.log("adding keyword to the filter..." + hashA);
-          let result = yield spaceModel.addFilterKeyWordDistinct(room_id,hashA)
+          console.log("adding keyword to the filter..." + hashC);
+          let result = yield spaceModel.addFilterKeyWordDistinct(room_id,hashC)
           console.log(result);
           //process the reply on failure
 
@@ -167,7 +167,7 @@ let processGHCrash = Promise.coroutine(function*(ghIssue,teamName,bot){
                   "\n\n This crash has not yet been reported to Dolores, adding the hash to the filter so further reports will be sent to this space ";
 
           //Add the hash to the team id to get further crashes.
-          yield spaceModel.addFilterKeyWord(room_id,hashA)
+          yield spaceModel.addFilterKeyWord(room_id,hashC)
         }
       }
       //send it to the team

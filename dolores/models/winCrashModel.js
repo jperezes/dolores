@@ -26,7 +26,7 @@ winReportSchema.static({
 
 winReportSchema.statics.getCrashByHash = function (hash) {
   return new Promise((resolve,reject)=>{
-    this.findOne({hashA:hash},function(err,result){
+    this.findOne({hashC:hash},function(err,result){
       if(err){
         reject(error);
       }
