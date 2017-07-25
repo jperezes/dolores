@@ -90,6 +90,7 @@ var saveAndSendReport = Promise.coroutine(function*(req,res,bot) {
 
 router.route('/wincrashreports').post(function(req, res) {
     if (req.headers.authorization === process.env.AUTH_TOKEN_WIN_REPORTS) {
+      console.log("about to calculate crash ids")
       WinReportModel.recalculateId();
       res.status(200).send('Verified');
     } else if (req.headers.authorization !== process.env.AUTH_TOKEN_WIN_REPORTS){
