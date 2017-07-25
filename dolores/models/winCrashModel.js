@@ -1,10 +1,12 @@
 var mongoose = require('mongoose');
 let Promise= require('bluebird')
+var md5 = require('md5');
 //mongoose.set('debug', true);
 
 var winReportSchema = mongoose.Schema({
     reportDate: [String],
     hashA: String,
+    hashC:String,
     title: String,
     method: String,
     feedback_id: String,
@@ -106,6 +108,27 @@ winReportSchema.statics.setCrashAsFixed = function (crash_id,version){
     });
   })
  }
+
+ winReportSchema.statics.calculateMd5Hash = function () {
+     this.list(function(err,result){
+       if(err){
+       }
+       else if(result !== null){
+         result.forEach(item=>{
+           let hash_A = item.hashA;
+           hash_A = hash_A.substring(0,265)
+           item.hashC = md5(hash_A)
+           item.save(err =>{
+             if (err) {
+               console.log("error saving the modified hash")
+             }
+           })
+         })
+      } else{
+        console.log("crash " + crash_id + " doesn't exit!!!!")
+      }
+   });
+ };
 
 //module.exports = mongoose.model('WinReport', winReportSchema);
 module.exports = winReportSchema;

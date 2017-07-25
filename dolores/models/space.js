@@ -262,6 +262,7 @@ spaceSchema.statics.sendReportToWinSubscribers = function (winReport,bot){
                       "\n\n- **Last Report:** " + winReport.reportDate.slice(-1).pop() +
                       "\n\n- **Title:** " + winReport.title +
                       "\n\n- **Crash Hash:** " + winReport.hashA +
+                      "\n\n- **Hash C:** " + winReport.hashC +
                       "\n\n- **method affected:** " + winReport.method +
                       "\n\n- **Feedback ID:** " + winReport.feedback_id  +
                       "\n\n- **Crashes Count:** " + winReport.crashes_count +

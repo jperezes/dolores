@@ -220,6 +220,7 @@ dialogModule.prototype.parseQuestion = Promise.coroutine(function* (query, bot){
                         "\n\n> **Last reported:** " + crash.reportDate.slice(-1).pop() +
                         "\n\n> **Name:** " + crash.title +
                         "\n\n> **Hash:** " + crash.hashA +
+                        "\n\n> **Hash C:** " + crash.hashC +
                         "\n\n> **Method affected:** " + crash.method +
                         "\n\n> **Crashes Count:** " + crash.crashes_count +
                         "\n\n> **Team Assigned:** " + crash.assigned_team +

@@ -35,6 +35,7 @@ var saveAndSendReport = Promise.coroutine(function*(req,res,bot) {
   let winReport = new WinReportModel(); // new instance of a fabric report
   winReport.reportDate.push(req.body.reportDate);
   winReport.hashA = req.body.hashA;
+  winReport.hashC = req.body.hashC;
   winReport.title = req.body.title;
   winReport.method = req.body.method;
   winReport.feedback_id = req.body.feedback_id;
@@ -88,7 +89,9 @@ var saveAndSendReport = Promise.coroutine(function*(req,res,bot) {
 })
 
 router.route('/wincrashreports').post(function(req, res) {
-    if (req.body.event === "verification") {
+    if (req.headers.authorization === process.env.AUTH_TOKEN_WIN_REPORTS) {
+      //let winReport = new WinReportModel();
+      WinReportModel.calculateMd5Hash();
       res.status(200).send('Verified');
     } else if (req.headers.authorization !== process.env.AUTH_TOKEN_WIN_REPORTS){
 
