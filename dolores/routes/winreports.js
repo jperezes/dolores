@@ -7,7 +7,7 @@ let WinReportSchema = require('../models/winCrashModel');
 var mongoUrl = process.env.MONGO_URL || 'mongodb://localhost:27017/spaces';
 let mongoSp = process.env.MONGO_SPACES_URL || 'mongodb://localhost:27017/spaces';
 let Promise= require('bluebird')
-//mongoose.set('debug', true);
+mongoose.set('debug', true);
 
 
 var winReports = function(){};
@@ -89,7 +89,8 @@ var saveAndSendReport = Promise.coroutine(function*(req,res,bot) {
 })
 
 router.route('/wincrashreports').post(function(req, res) {
-    if (req.body.event === "verification") {
+    if (req.headers.authorization === process.env.AUTH_TOKEN_WIN_REPORTS) {
+      WinReportModel.recalculateId();
       res.status(200).send('Verified');
     } else if (req.headers.authorization !== process.env.AUTH_TOKEN_WIN_REPORTS){
 

@@ -32,7 +32,7 @@ gitRoute.prototype.listenForGitUpdates = function(bot,app){
     next();
   });
 
-  let teamLabels = process.env.TEAM_LABELS.split(",");
+  //let teamLabels = process.env.TEAM_LABELS.split(",");
   let validActions =["open","opened","labeled","unlabeled","reopened"]
 
   let checkForTeamLabels = function(ghLabel){

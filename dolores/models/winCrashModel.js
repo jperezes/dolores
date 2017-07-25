@@ -116,7 +116,7 @@ winReportSchema.statics.setCrashAsFixed = function (crash_id,version){
        else if(result !== null){
          result.forEach(item=>{
            let method = item.method;
-           method = method.substring(0,265)
+           method = method.substring(0,5)
            item.hashC = md5(method)
            item.save(err =>{
              if (err) {
@@ -124,6 +124,46 @@ winReportSchema.statics.setCrashAsFixed = function (crash_id,version){
              }
            })
          })
+      } else{
+        console.log("crash " + crash_id + " doesn't exit!!!!")
+      }
+   });
+ };
+
+ winReportSchema.statics.recalculateId = function () {
+     this.list(function(err,result){
+       if(err){
+       }
+       else if(result !== null){
+         let i = 1;
+         result.forEach(item=>{
+           item.id = i;
+           item.save(err =>{
+             if (err) {
+               console.log("error saving the modified id")
+             }
+           })
+           i = i + 1 ;
+         })
+         console.log(" number of documents recalculated: " + i)
+      } else{
+        console.log("crash " + crash_id + " doesn't exit!!!!")
+      }
+   });
+ };
+
+ winReportSchema.statics.countByHashC = function () {
+     this.distinct('hashC',function(err,result){
+       if(err){
+       }
+       else if(result !== null){
+         let i = 0;
+         result.forEach(item=>{
+           console.log("hash C is:" + item.hashC)
+           console.log("crash id is: " + item.id)
+           i = i + 1;
+         })
+         console.log("number of disctinct documents is: " + i)
       } else{
         console.log("crash " + crash_id + " doesn't exit!!!!")
       }
