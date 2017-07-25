@@ -96,7 +96,7 @@ gitRoute.prototype.listenForGitUpdates = function(bot,app){
     let roomId = "";
     console.log("getting id for team name: " + teamName)
     if(teamName.indexOf(process.env.TEAM_SCRUM) !== -1) {
-      roomId = process.env.PROTEUS_ROOM_ID;
+      roomId = process.env.ROOM_SYSTEM_ID;
     } else if(teamName.indexOf(process.env.CALL_TEAM) !== -1) {
       roomId = process.env.CALL_ROOM_ID;
     } else if(teamName.indexOf(process.env.MESSAGE_TEAM) !== -1) {
