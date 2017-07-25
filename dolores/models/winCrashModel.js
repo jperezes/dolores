@@ -115,9 +115,9 @@ winReportSchema.statics.setCrashAsFixed = function (crash_id,version){
        }
        else if(result !== null){
          result.forEach(item=>{
-           let hash_A = item.hashA;
-           hash_A = hash_A.substring(0,265)
-           item.hashC = md5(hash_A)
+           let method = item.method;
+           method = method.substring(0,265)
+           item.hashC = md5(method)
            item.save(err =>{
              if (err) {
                console.log("error saving the modified hash")

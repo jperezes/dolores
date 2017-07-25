@@ -1,6 +1,6 @@
 var mongoose = require('mongoose');
 let Promise = require('bluebird');
-mongoose.set('debug', true);
+//mongoose.set('debug', true);
 
 var gitIssueSchema = mongoose.Schema({
   "action": String,
