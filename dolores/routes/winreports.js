@@ -89,7 +89,9 @@ var saveAndSendReport = Promise.coroutine(function*(req,res,bot) {
 })
 
 router.route('/wincrashreports').post(function(req, res) {
-    if (req.body.event === "verification") {
+    if (req.headers.authorization === process.env.AUTH_TOKEN_WIN_REPORTS) {
+      //let winReport = new WinReportModel();
+      WinReportModel.calculateMd5Hash();
       res.status(200).send('Verified');
     } else if (req.headers.authorization !== process.env.AUTH_TOKEN_WIN_REPORTS){
 
