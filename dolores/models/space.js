@@ -414,7 +414,7 @@ spaceSchema.statics.addChannelFilter = function (room_Id, channel) {
           let reply = "Failed to ad the keyword with following error: " + err;
           resolve(reply)
         } else {
-          result.channel = channelArray;
+          result.channels = channelArray;
           result.save(function(err){
             console.log("error saving the channel")
           })
