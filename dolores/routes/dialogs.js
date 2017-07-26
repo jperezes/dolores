@@ -44,7 +44,7 @@ let cleanTempSpace = ()=>{
   tempSpace.splunkReports.receive="";
 }
 
-let registeredOptions= ["-r","unregister","-aw","-df","-sf","-es","-ds","-so","-sf"];
+let registeredOptions= ["-r","unregister","-aw","-df","-sf","-es","-ds","-so","-sf","-fc"];
 
 let checkRegisteredOption = function(question){
   let check = ""
@@ -287,6 +287,10 @@ dialogModule.prototype.parseQuestion = Promise.coroutine(function* (query, bot){
     //add word(s) to triage the filter
     let keyword = cleanQuestion.replace("-aw","").replace(" ","");
     reply = yield spaceModel.addFilterKeyWord(query.roomId,keyword)
+  } else if ((cleanQuestion.indexOf("-fc") !== -1)){
+    //add word(s) to triage the filter
+    let keyword = cleanQuestion.replace("-fc","").replace(" ","");
+    reply = yield spaceModel.addChannelFilter(query.roomId,keyword)
   } else if ((cleanQuestion.indexOf("-sf") !== -1)){
     //show filter keywords
     let filter = yield spaceModel.showFilterWords(query.roomId);

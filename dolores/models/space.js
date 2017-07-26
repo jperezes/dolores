@@ -1,5 +1,6 @@
 var mongoose = require('mongoose');
 let Promise= require('bluebird')
+let versions = require('../routes/getClientChannels').versions;
 //mongoose.set('debug', true);
 
 var spaceSchema = mongoose.Schema({
@@ -8,6 +9,7 @@ var spaceSchema = mongoose.Schema({
     personName: String,
     personEmail: String,
     nickName: String,
+    channels:[String],
     macReports: {
       receive: String ,
       tags: [String]
@@ -238,6 +240,22 @@ spaceSchema.statics.getSplunkUsers = function(owner){
   })
 }
 
+
+let isChannelRequestedFound = function(channelsRequested,crashedVersions){
+  let result = false;
+  let colors = ["blue","purple","green","gold"]
+  channelsRequested.forEach(channel =>{
+    let numVersion = versions[colors.indexOf(channel)]
+    crashedVersions.forEach(version => {
+      if(numVersion == version) {
+        result = true;
+        return;
+      }
+    })
+  })
+  return result;
+}
+
 spaceSchema.statics.sendReportToWinSubscribers = function (winReport,bot){
   return new Promise((resolve,reject)=>{
     console.log("about to parse and send a message to found users");
@@ -285,6 +303,8 @@ spaceSchema.statics.sendReportToWinSubscribers = function (winReport,bot){
         users.forEach(function(item){
             var tags = item.macReports.tags;
             if (tags[1] === "everything" && (typeof(winReport.is_resolved) ==='undefined' || isRegression)){
+              roomsIdSet.add(item.roomId);
+            } else if(isChannelRequestedFound(item.channels, winReport.client_version)) {
               roomsIdSet.add(item.roomId);
             } else {
               tags.forEach(function(tag){
@@ -379,6 +399,27 @@ spaceSchema.statics.addFilterKeyWord = function (room_Id,keyword) {
           resolve(reply)
         } else {
           let reply = "Keyword(s) **" + keyword + "** added to the crash filter";
+          resolve(reply)
+        }
+
+  });
+  })
+}
+
+spaceSchema.statics.addChannelFilter = function (room_Id, channel) {
+  return new Promise((resolve,reject) =>{
+    let channelArray = channel.split(',');
+    this.findOneAndUpdate({roomId: room_Id}, function(err, result) {
+        if(err) {
+          let reply = "Failed to ad the keyword with following error: " + err;
+          resolve(reply)
+        } else {
+          result.channel = channelArray;
+          result.save(function(err){
+            console.log("error saving the channel")
+          })
+          let reply = "Channels **" + channelArray + "** added to the system";
+
           resolve(reply)
         }
 

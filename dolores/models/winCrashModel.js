@@ -8,6 +8,7 @@ var winReportSchema = mongoose.Schema({
     hashA: String,
     hashC:String,
     title: String,
+    channels:[String],
     method: String,
     feedback_id: String,
     crashes_count: Number,

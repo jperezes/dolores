@@ -7,6 +7,7 @@ let WinReportSchema = require('../models/winCrashModel');
 var mongoUrl = process.env.MONGO_URL || 'mongodb://localhost:27017/spaces';
 let mongoSp = process.env.MONGO_SPACES_URL || 'mongodb://localhost:27017/spaces';
 let Promise= require('bluebird')
+let updateVersions = require('./getClientChannels').updateVersions;
 mongoose.set('debug', true);
 
 
@@ -90,9 +91,10 @@ var saveAndSendReport = Promise.coroutine(function*(req,res,bot) {
 
 router.route('/wincrashreports').post(function(req, res) {
     if (req.body.event === "verification") {
+      //update the channels
       res.status(200).send('Verified');
     } else if (req.headers.authorization !== process.env.AUTH_TOKEN_WIN_REPORTS){
-
+      updateVersions();
       bot.sendRichTextMessage(process.env.JUAN_DOLORES_ROOM_ID,"invalid WIN report url received",function(){
         console.log("url not not valid");
       });
