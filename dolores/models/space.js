@@ -409,7 +409,7 @@ spaceSchema.statics.addFilterKeyWord = function (room_Id,keyword) {
 spaceSchema.statics.addChannelFilter = function (room_Id, channel) {
   return new Promise((resolve,reject) =>{
     let channelArray = channel.split(',');
-    this.findOneAndUpdate({roomId: room_Id}, function(err, result) {
+    this.findOne({roomId: room_Id}, function(err, result) {
         if(err) {
           let reply = "Failed to ad the keyword with following error: " + err;
           resolve(reply)
