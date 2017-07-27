@@ -4,6 +4,7 @@ let WinReportSchema = require('../models/winCrashModel')
 let mongoose = require('mongoose');
 let bodyParser = require('body-parser');
 let Promise= require('bluebird')
+let versions = require('./getClientChannels').versions;
 let mongoUrl = process.env.MONGO_SPACES_URL || 'mongodb://localhost:27017/spaces';
 let mongoReportUrl = process.env.MONGO_URL || 'mongodb://localhost:27017/spaces';
 
@@ -299,12 +300,19 @@ dialogModule.prototype.parseQuestion = Promise.coroutine(function* (query, bot){
       //show filter keywords
       let filter = yield spaceModel.showChannelsRegisterd(query.roomId);
       reply = "Your channels are: _" + filter + "_";
-    } else if ((cleanQuestion.indexOf("-df") !== -1)){
+  } else if ((cleanQuestion.indexOf("-df") !== -1)){
     //delete triage filter words, disable crash alerts.
     let keyword = cleanQuestion.replace("-df","").replace(" ","");
     reply = yield spaceModel.deleteAllFilterWord(query.roomId)
-  }
-  else if (cleanQuestion !== "bring yourself back online" && (cleanQuestion.indexOf("-m") ===-1) && scope ==="") {
+  } else if ((cleanQuestion.indexOf("-pc") !== -1)){
+      //show filter keywords
+      reply = "Actual channel versions are: " +
+               " \n\n - blue: " + versions[0] + 
+               " \n\n - purple: " + versions[1] +
+               " \n\n - green: " + versions[2] +
+               " \n\n - gold: " + versions[3];
+
+  }else if (cleanQuestion !== "bring yourself back online" && (cleanQuestion.indexOf("-m") ===-1) && scope ==="") {
     //scope = "menuShown";
     //lockRegistration(query.roomId);
     console.log("user already registered proceeding to find the question")
