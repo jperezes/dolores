@@ -304,7 +304,7 @@ spaceSchema.statics.sendReportToWinSubscribers = function (winReport,bot){
             var tags = item.macReports.tags;
             if (tags[1] === "everything" && (typeof(winReport.is_resolved) ==='undefined' || isRegression)){
               roomsIdSet.add(item.roomId);
-            } else if(isChannelRequestedFound(item.channels, winReport.client_version)) {
+            } else if(isChannelRequestedFound(item.channels, winReport.client_version) && (typeof(winReport.is_resolved) ==='undefined' || isRegression)) {
               roomsIdSet.add(item.roomId);
             } else {
               tags.forEach(function(tag){
