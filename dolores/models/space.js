@@ -474,6 +474,19 @@ spaceSchema.statics.showFilterWords = function (room_Id) {
   })
 }
 
+spaceSchema.statics.showChannelsRegisterd = function (room_Id) {
+  return new Promise((resolve,reject) =>{
+    this.find({roomId: room_Id}, function(err, result) {
+      if (result.length>0){
+        resolve(result[0].channels.toString());
+      }
+      else {
+        resolve("You are not yet registered");
+    }
+  });
+  })
+}
+
 spaceSchema.statics.deleteAllFilterWord = function(room_Id) {
   return new Promise((resolve,reject) =>{
     this.findOneAndUpdate({roomId: room_Id},{$set: {"macReports.tags": [], "winreports.tags":[]}},

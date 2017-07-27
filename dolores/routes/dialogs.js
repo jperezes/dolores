@@ -44,7 +44,7 @@ let cleanTempSpace = ()=>{
   tempSpace.splunkReports.receive="";
 }
 
-let registeredOptions= ["-r","unregister","-aw","-df","-sf","-es","-ds","-so","-sf","-fc"];
+let registeredOptions= ["-r","unregister","-aw","-df","-sf","-es","-ds","-so","-sf","-fc", "-sc"];
 
 let checkRegisteredOption = function(question){
   let check = ""
@@ -295,7 +295,11 @@ dialogModule.prototype.parseQuestion = Promise.coroutine(function* (query, bot){
     //show filter keywords
     let filter = yield spaceModel.showFilterWords(query.roomId);
     reply = "Keywords filter for this room are: _" + filter + "_";
-  } else if ((cleanQuestion.indexOf("-df") !== -1)){
+  } else if ((cleanQuestion.indexOf("-sc") !== -1)){
+      //show filter keywords
+      let filter = yield spaceModel.showChannelsRegisterd(query.roomId);
+      reply = "Your channels are: _" + filter + "_";
+    } else if ((cleanQuestion.indexOf("-df") !== -1)){
     //delete triage filter words, disable crash alerts.
     let keyword = cleanQuestion.replace("-df","").replace(" ","");
     reply = yield spaceModel.deleteAllFilterWord(query.roomId)
