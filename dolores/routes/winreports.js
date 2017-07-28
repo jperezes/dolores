@@ -100,6 +100,7 @@ router.route('/wincrashreports').post(function(req, res) {
       });
       res.status(401).send('Unauthorised');
     } else {
+      updateVersions();
       console.log("about to save and send the report the report to the database");
       saveAndSendReport(req,res,bot);
     }
