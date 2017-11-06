@@ -11,6 +11,7 @@ var macReportSchema = mongoose.Schema({
       impact_level: Number,
       crashes_count: Number,
       impacted_devices_count: Number,
+      assigned_team:String,
       url: String
     }
 

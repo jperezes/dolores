@@ -28,7 +28,7 @@ sparkBot.on('message', function (event)
    if (mail[1] === "cisco.com"){
      dialogModule.parseQuestion(event,sparkBot);
    } else {
-     sparkBot.sendMessage(event.roomId, "Hi, sorry to tell you that but you're not allowed to proceed",function(){});
+     sparkBot.sendMessage(event.roomId, "Hi, sorry to tell you that but you're not allowed to proceed.",function(){});
    }
   console.log(JSON.stringify(event));
 
@@ -52,3 +52,13 @@ macReports.listenForMacReports(sparkBot,sparkBot.getServer());
 gitServer.listenForGitUpdates(sparkBot,sparkBot.getServer());
 winReports.listenForWinReports(sparkBot,sparkBot.getServer());
 issueSchedule(sparkBot);
+
+// let fake_event = {
+//   roomId:"fake_romId1",
+//   message:"get me occurrences of crash with id 15",
+//   person:{
+//     nickName:"superJuan"
+//   }
+// }
+//
+// dialogModule.parseQuestion(fake_event,bot);

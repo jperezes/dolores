@@ -22,7 +22,7 @@ if (mongoUrl === 'mongodb://localhost:27017/reports'){
   var space = new spaceModel();
 } else {
   var conn = mongoose.createConnection(mongoUrl);
-  var conn2 = mongoose.createConnection(process.env.MONGO_SPACES_URL)
+  var conn2 = mongoose.createConnection(process.env.MONGO_SPACES_URL || 'mongodb://localhost:27017/spaces' )
   var spaceModel = conn2.model('SparkSpace', Space);
   var space = new spaceModel();
 }

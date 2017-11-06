@@ -1,50 +1,115 @@
 let Space = require('../models/space');
 let Dialog = require('../models/conversations')
+let WinReportSchema = require('../models/winCrashModel')
 let mongoose = require('mongoose');
 let bodyParser = require('body-parser');
+let Promise= require('bluebird')
+let versions = require('./getClientChannels').versions;
 let mongoUrl = process.env.MONGO_SPACES_URL || 'mongodb://localhost:27017/spaces';
+let mongoReportUrl = process.env.MONGO_URL || 'mongodb://localhost:27017/spaces';
 
 
 let scope = "";
+let currentRegisteringUser = "";
 let reply = "";
 let dialogModule = function(){};
+let tempSpace = {
+    roomId: "",
+    roomType: "",
+    personName: "",
+    personEmail: "",
+    nickName: "",
+    macReports: {
+      receive: "" ,
+      tags: [""]
+    },
+    splunkReports: {
+      receive: ""
+    },
+    windowsReports: {
+      receive: "",
+      tags: [""]
+    }
+};
+
+let cleanTempSpace = ()=>{
+  tempSpace.roomId = "";
+  tempSpace.roomType="";
+  tempSpace.personName="";
+  tempSpace.personEmail="";
+  tempSpace.nickName="";
+  tempSpace.macReports.tags=[""];
+  tempSpace.macReports.receive="";
+  tempSpace.windowsReports.tags=[""];
+  tempSpace.windowsReports.receive="";
+  tempSpace.splunkReports.receive="";
+}
+
+let registeredOptions= ["-r","unregister","-aw","-df","-sf","-es","-ds","-so","-sf","-fc", "-sc"];
+
+let checkRegisteredOption = function(question){
+  let check = ""
+  registeredOptions.forEach(item=>{
+    if(question.indexOf(item) !== -1){
+      console.log("Menu question found")
+      check = "found"
+    }
+  })
+  if(check === "found"){
+    return true;
+  } else{
+    console.log("unknown question")
+    return false;
+  }
+}
 
 console.log(' Attempting to connect to the database ');
 //To avoid promise warning
 mongoose.Promise = global.Promise;
 // Connect to DB
 let conn = mongoose.createConnection(mongoUrl);
+let con = mongoose.createConnection(mongoReportUrl);
 
 let spaceModel = conn.model('SparkSpace', Space);
 let dialogModel = conn.model('Dialog', Dialog);
-let space = new spaceModel();
+let winReportModel = con.model('winReport',WinReportSchema)
+
 
 ///
-let populateTempSpace = function(tempSpace){
-  if (tempSpace.roomType === "group") {
-    reply = "** ·Your name: " + tempSpace.person.displayName +
+let populateTempSpace = function(space){
+  if (space.roomType === "group") {
+    reply = "** ·Your name: " + space.person.displayName +
                             "\n** ·Room is not one to one: " +
                             "\n** ·Is this data correct? answer <yes/no>";
   } else {
-    reply = "** ·Name: " + tempSpace.person.displayName +
-                            "\n** ·Email: " + tempSpace.personEmail +
+    reply = "** ·Name: " + space.person.displayName +
+                            "\n** ·Email: " + space.personEmail +
                             "\n** ·Is this data correct? answer <yes/no>";
-    space.personName = tempSpace.person.displayName;
-    space.nickName = tempSpace.person.nickName;
+    tempSpace.personName = space.person.displayName;
+    tempSpace.nickName = space.person.nickName;
   }
-  space.personEmail = tempSpace.personEmail;
-  space.roomId = tempSpace.roomId;
-  space.roomType = tempSpace.roomType;
-  //Use the module pattern
-  return {
-    space: function() {
-      return space;
-    },
-    reply: function() {
-      return reply;
+  tempSpace.personEmail = space.personEmail;
+  tempSpace.roomId = space.roomId;
+  tempSpace.roomType = space.roomType;
+}
+
+let copySpace = space => {
+    space.roomId=tempSpace.roomId ;
+    space.roomType = tempSpace.roomType;
+    space.personName = tempSpace.personName;
+    space.personEmail = tempSpace.personEmail;
+    space.nickName = tempSpace.nickName;
+    space.macReports.tags = tempSpace.macReports.tags;
+    space.macReports.receive = tempSpace.macReports.receive;
+    space.windowsReports.tags = tempSpace.windowsReports.tags;
+    space.windowsReports.receive = tempSpace.windowsReports.receive;
+    space.splunkReports.receive = tempSpace.splunkReports.receive;
+    //Use the module pattern
+    return {
+      space: function() {
+          return space;
+      }
     }
-  }
-  console.log('[populateTempSpace:] about to go to confirmation if no error ' + space.personName + reply);
 }
 
 var showCurrentOptions = function(space) {
@@ -63,181 +128,31 @@ var showCurrentOptions = function(space) {
   }
 };
 
-// returns the entire object inside the arry, need the .id to specify the Id
-callbackQuery = function(question, dbMessage, bot) {
-
-
-  if (typeof dbMessage === 'undefined' && scope ==="") {
-    //reply = "sorry, I didn't understand that";
-    console.log('question NOT found: ');
-    return
-  }
-  else if ((typeof dbMessage != 'undefined' && dbMessage.id == '6') || scope == "menu")  {
-    reply = "What can I do for you " + question.person.nickName + "?"+ showMenu();
-      scope = "chooseMenu"
-  }
-  else if (scope !="") {
-    // User choosed between 1 Register, 2 - unregister 3 show options
-    // Next question is ask if name and email is correct
-    var cleanQuestion = question.message.toLowerCase().replace(" dolores","").replace("dolores ","").replace("?","");
-    switch(scope) {
-      // nextQuestion & space update
-
-      case "chooseMenu":
-      console.log("inside of choosing menu, so user has choosed an option first time")
-        switch (cleanQuestion) {
-          case "1":
-            var report = populateTempSpace(question);
-            //reply = report.reply();
-            space = report.space();
-            space.updateTempSpace(question);
-            reply = "Please write the tags you want to filter the crash reports separated by comma " +
-                    "for example: *whiteboard*, _auxiliaryDeviceService_,*roomsView*, so I will sent you only the ones you are interested at." +
-                    "\n\n- If you want to receive all the crashes reported type \"**everything**\"." +
-                    "\n\n- If you don't want to receive any reporte type \"**none**\"." +
-                    "\n\n- You can update these options at any time by typing \"**Bring yourself back online**\".";
-            scope = "populateMacTagsScope";
-          break;
-          case "2":
-           space.unInitSelf();
-           scope = "";
-           reply = "About to delete the user from the database"; // cleaning the reply this is a final state.
-           // TODO: hacer el metodo que borra usuario.
-           spaceModel.deleteUser(question,bot, this.callbackQuery);
-           return;
-          break;
-          case "3":
-            scope="";
-            space = populateTempSpace(question).space();
-            spaceModel.showUserOptions(space, bot, this.callbackQuery);
-            return;
-          break;
-          default:
-            space.unInitSelf();
-            scope = "";
-            reply = "Goodbye" + question.person.nickName + "!";
-          break;
-        }
-      break;
-      case "askForConfirmation":
-        //User confirmed name and email. Next question Mac report option.
-        if (cleanQuestion === 'yes') {
-          space.updateTempSpace(question);
-          reply = "Do you want me to send you Mac reports as they happen? <yes/no>";
-          scope = "askForMacReportOption";
-        }
-        else {
-          // var uninitSchema = uninitScopeSchema(space);
-          // space = uninitSchema.space();
-          reply = "Goodbye " + question.person.nickName + ", if you want to proceed just start again.";
-          scope = "";
-        }
-      break;
-      case "askForMacReportOption":
-        // User confirmed mail/name and replied mac option. Next question is options
-        if(cleanQuestion === 'yes') {
-          reply = "Please write the tags you want to filter the mac reports " +
-                  "to receive separated by comma. (i.e: whiteboard, auxiliaryDeviceService.cpp,whiteboardView.swift):";
-          scope = "populateMacTagsScope";
-        }
-        else {
-          space.macReports.receive = "no";
-          reply = "No Spark for Mac crash reports will be sent to you " + question.person.nickName +
-          "\nDo you want me to send you Windows reports? <yes/no>";
-          scope = "confirmWindowsOptions";
-        }
-      break;
-      case "populateMacTagsScope":
-        space.macReports.receive = "yes";
-        space.windowsReports.receive="yes";
-        // User said it wants to get mac reports populating options. Next question for windows option.
-        cleanQuestion = cleanQuestion.replace(" ",""); //remove spaces
-        var array = cleanQuestion.split(',');
-        if (array[0].toLowerCase() === "none") {
-          space.macReports.receive = "no";
-          space.windowsReports.receive="no";
-        }
-        for (var i in array) {
-          space.macReports.tags[i] =array[i].replace(" ","");
-          space.windowsReports.tags[i] = space.macReports.tags[i];
-        }
-        var showSpace = showCurrentOptions(space);
-        reply = "Would you like to enable this space to receive your splunk alerts?<yes/no>";
-        scope = "confirmSplunkOptions";
-      break;
-      case "confirmWindowsOptions":
-        // User replied whether to receive windows options.
-        if(cleanQuestion === 'yes') {
-          reply = "Please write the tags you want to filter the Windows reports " +
-                  "to receive separated by comma. (i.e: whiteboard, auxiliaryDeviceService.cpp,whiteboardView.swift):";
-          space.windowsReports.receive = "yes";
-          scope = "winOptionConfirmation";
-        }
-        else {
-          space.windowsReports.receive = "no";
-          reply = "No Spark for Windows crash reports will be sent to you " + question.person.nickName +
-          "\nDo you want me to send you Splunk reports? <yes/no>";
-          scope = "confirmSplunkOptions";
-        }
-
-      break;
-      case "winOptionConfirmation":
-        // User confirmed windows options and populated tags. next question for splunk Alerts
-        space.windowsReports.tags =[question.message];
-        reply = "Do you want me to send you Splunk reports? <yes/no>";
-        scope = "confirmSplunkOptions";
-      break;
-      case "confirmSplunkOptions":
-        // user replied to teh Splunk Option. Next is to show the final confirmation.
-        if (cleanQuestion === 'yes'){
-          space.splunkReports.receive = "yes";
-        }
-        else {
-          space.splunkReports.receive = "no";
-        }
-        var showSpace = showCurrentOptions(space);
-        reply = "This room will be registered with the following options " + space.nickName +":\n" + showSpace.reply() + "\n\nAre they correct?<yes/no>";
-        scope = "registrationConfirmed";
-      break;
-      case "registrationConfirmed":
-        scope = "";
-        if (cleanQuestion === 'yes') {
-          spaceModel.insertUser(space, bot, this.callbackQuery);
-          return;
-        }
-        else {
-          reply = "Sorry if something was wrong, please try again later";
-        }
-
-        //space = uninitScopeSchema(space).space();
-      break;
-      default:
-        reply = "Did not understand that, try again later" + question.person.nickName;
-        scope = "";
-      break;
-    }
-  }
-  else if (typeof dbMessage != 'undefined') {
-      reply = dbMessage.response;
-  }
-  else {
-    console.log('An error ocurred');
-  }
-
-  if (mongoUrl ==='mongodb://localhost:27017/spaces'){
-    var err = null;
-    bot(err,reply);
-  }else {
-    bot.sendRichTextMessage(question.roomId, reply , function(){
-    console.log('Message sent from Bot!');
-    });
-  }
-
-  console.log("At the end of the else if block from DB this is the result:\n" + reply);
-}
-
 var showMenu = function(){
-    return "\n\n1. Register Space \n\n2. Unregister Space" + "\n\n3. Show Space options" + "\n\n\n Select <1><2><3>";
+    return "\n\n1. Register Space \n\n2. Unregister Space" +
+    "\n\n3. Show current space registration options" +
+    "\n\n4. Show crash managements options" +
+    "\n\n\n Select <1><2><3><4>";
+}
+let showCrashOptions = function(){
+  let options = "\n\n Usage:" +
+                "\n      dolores [-h] [-help]  to print options" +
+                "\n              [-cv <Spark version>] show crash number of the specified Spark version" +
+                "\n              [-i <crash id>] show crash info" +
+                "\n              [-o <crash id>] show crash occurrences" +
+                "\n              [-r <crash id> <Spark fix version>] mark crash as resolved on version" +
+                "\n              [-aw <word1, word2 ...>] add keyword(s) to the crash triage filter" +
+                "\n              [-sf] show triage filter keywords" +
+                "\n              [-df] delete trieage filter keywords" +
+                "\n              [-so] show user registration options" +
+                "\n              [-es] enable splunk alerts on the space" +
+                "\n              [-ds] disable splunk alerts on the space" +
+                "\n              [register] register space" +
+                "\n              [unregister] unregister space" +
+                "\n              [-m] show space options menu";
+
+
+  return options;
 }
 dialogModule.prototype.showMenu = function(){
   return showMenu();
@@ -251,39 +166,259 @@ dialogModule.prototype.showCurrentOptions = function(){
 dialogModule.prototype.showSchema = function(){
   return space;
 }
-let isSpaceRegistered = space => {
-  return new Promise((resolve,reject) =>{
-    spaceModel.find({roomId:space.roomId}, function(err, space){
-      if (err) {
-        console.log('error retreiving from the database');
-        userRegistered = false;
-      } else if (space.length > 0){
-        console.log('user found in the databasae ');
-        resolve(true);
-      } else {
-        // if the scope is different than null it means we are registering a space
-        resolve(scope !== "");
-      }
-    }).limit(1);
-  });
+let lockRegistration= roomId=>{
+  currentRegisteringUser = roomId;
+}
+let unlockRegistration = () =>{
+  currentRegisteringUser = "";
+  scope = "";
 }
 
-dialogModule.prototype.parseQuestion = function(query, bot){
-  //dialogModel.retrieveResponse(query, bot, callbackQuery);
-  //this promise returns the result and it passes it to the function to process it, then name is still callbackQuery.
-  //dialogModel.retrieveResponsePromised(query).then(data => callbackQuery(query,data,bot));
-  isSpaceRegistered(query).then(result => {
-    if(result) return dialogModel.retrieveResponsePromised(query);
-    else{
-      data ={
-        id:"6",
-        response:"Done",
-        question:"bring yourself back online"
-      };
-      return Promise.resolve(data);
+dialogModule.prototype.parseQuestion = Promise.coroutine(function* (query, bot){
+  let space = new spaceModel();
+  let winReport = new winReportModel();
+   console.log("THE SCOPE IS: " + scope);
+  let cleanQuestion = query.message.toLowerCase().replace(" dolores","").replace("dolores ","").replace("?","");
+  //console.log("clean question is: " + cleanQuestion);
+  let reply ="";
+  let alreadyRegistered = yield spaceModel.isSpaceRegistered(query.roomId);
+  if(!alreadyRegistered && checkRegisteredOption(cleanQuestion)){
+    reply = "You'll need to be registered to do that mate ;)"
+  } else if ((cleanQuestion.indexOf("get crashes count on version") !== -1 || cleanQuestion.indexOf("-cv") !==-1)){
+    let version = cleanQuestion.replace("get crashes count on version","").replace("-cv","").replace(" ","");
+    let result = yield winReportModel.getCrashesByVersion(version);
+    if(result){
+      let dates = "";
+      let ids = "";
+      let count = 0;
+      result.forEach(item=>{
+        ids += item.id + ", ";
+        count += 1;
+        item.reportDate.forEach(it=>{
+          dates += it + ",";
+        })
+      });
+      dates = dates.slice(0,-1);
+      dates = dates.split(',');
+      dates.sort();
+      reply = query.person.nickName + " version " + version + " has " + count + " windows reported crash(es) between " + dates[0] +
+              " and " + dates.slice(-1).pop() + " with the following ids:" +
+              "\n\n >" + ids;
+    } else {
+      reply = "Client version " + version + " has no crashes reported";
     }
-  }).then(data => callbackQuery(query,data,bot)).catch("error");
-}
+  } else if ((cleanQuestion.indexOf("get me crash with id") !== -1 || cleanQuestion.indexOf("-i") !==-1)){
+    let crashId = cleanQuestion.replace("get me crash with id","").replace("-i","").replace(" ","");
+    let crash = yield winReportModel.getCrashById(crashId);
+    if(crash){
+      let clients= "";
+      crash.client_version.forEach(item =>{
+        clients += item + ", ";
+      })
+      reply = "Here we go: " +
+                        "\n\n> **Crash Id:** " + crash.id +
+                        "\n\n> **First reported:** " + crash.reportDate[0] +
+                        "\n\n> **Last reported:** " + crash.reportDate.slice(-1).pop() +
+                        "\n\n> **Name:** " + crash.title +
+                        "\n\n> **Hash:** " + crash.hashA +
+                        "\n\n> **Hash C:** " + crash.hashC +
+                        "\n\n> **Method affected:** " + crash.method +
+                        "\n\n> **Crashes Count:** " + crash.crashes_count +
+                        "\n\n> **Team Assigned:** " + crash.assigned_team +
+                        "\n\n> **Fixed version:** " + crash.is_resolved +
+                        "\n\n> **Client versions afected:** " + clients;
+    } else {
+      reply = "invalid crash id...";
+    }
+  }else if ((cleanQuestion.indexOf("get me occurrences of crash with id") !== -1 || cleanQuestion.indexOf("-o") !==-1)){
+    let crashId = cleanQuestion.replace("get me occurrences of crash with id","").replace("-o","").replace(" ","");
+    let crash = yield winReportModel.getCrashById(crashId);
+    if(crash){
+      let dates= "";
+      crash.reportDate.forEach(item =>{
+        dates += item + ", ";
+      })
+      reply = "Crash id " + crash.id + " has been reported " + crash.crashes_count + " times on the followind dates:" +
+              "\n\n> " + dates;
+    } else {
+      reply = "invalid crash id...";
+    }
+  } else if ((cleanQuestion.indexOf("unregister") !==-1)){
+    reply = yield spaceModel.deleteUserPromified(query.roomId);
+  } else if ((cleanQuestion.indexOf("register") !== -1 )){
+    //show filter keywords
+    space.roomId = query.roomId;
+    space.roomType = query.roomType;
+    space.personName = query.person.displayName;
+    space.personEmail = query.personEmail;
+    space.nickName = query.person.nickName;
+    space.splunkReports.receive="no"
+    space.macReports.receive="no";
+    space.windowsReports.receive="no";
+    let registration = yield spaceModel.registerSpace(space);
+    if(registration){
+      reply = "Welcome to SparkWorld " + query.person.nickName + "!";
+    } else{
+      reply = "Failed to register the user, try again later";
+    }
+  }  else if ((cleanQuestion.indexOf("set as resolved crash with id") !== -1 || cleanQuestion.indexOf("-r") !==-1)){
+    let crashAndVersion = cleanQuestion.replace("set as resolved crash with id","").replace("-r","").replace(" ","");
+    let vecReply = crashAndVersion.split(" ");
+    let crashId = vecReply[0];
+    let version="";
+    if(typeof(vecReply[1] !== 'undefined')) {
+      version = vecReply[1];
+    }
+
+    let setFixed = yield winReportModel.setCrashAsFixed(crashId,version);
+    if(setFixed){
+      reply = "crash id " + crashId + " has been set as fixed on version " + version + ", no reports will be sent unless is reported in a newer version";
+    } else {
+      reply = "problem seeting the crash as fixed, pleasy try again later";
+    }
+  } else if ((cleanQuestion.indexOf("help") !== -1 || cleanQuestion.indexOf("-h") !==-1)){
+    reply = showCrashOptions();
+  } else if ((cleanQuestion.indexOf("-so") !==-1)){
+    reply = yield spaceModel.showUserOptionsPromified(query.roomId);
+  } else if ((cleanQuestion.indexOf("-es") !==-1)){
+    reply = yield spaceModel.enableSplunk(query.roomId);
+  } else if ((cleanQuestion.indexOf("-ds") !==-1)){
+    reply = yield spaceModel.disableSplunk(query.roomId);
+  }else if ((cleanQuestion.indexOf("-aw") !== -1)){
+    //add word(s) to triage the filter
+    let keyword = cleanQuestion.replace("-aw","").replace(" ","");
+    reply = yield spaceModel.addFilterKeyWord(query.roomId,keyword)
+  } else if ((cleanQuestion.indexOf("-fc") !== -1)){
+    //add word(s) to triage the filter
+    let keyword = cleanQuestion.replace("-fc","").replace(" ","");
+    reply = yield spaceModel.addChannelFilter(query.roomId,keyword)
+  } else if ((cleanQuestion.indexOf("-sf") !== -1)){
+    //show filter keywords
+    let filter = yield spaceModel.showFilterWords(query.roomId);
+    reply = "Keywords filter for this room are: _" + filter + "_";
+  } else if ((cleanQuestion.indexOf("-sc") !== -1)){
+      //show filter keywords
+      let filter = yield spaceModel.showChannelsRegisterd(query.roomId);
+      reply = "Your channels are: _" + filter + "_";
+  } else if ((cleanQuestion.indexOf("-df") !== -1)){
+    //delete triage filter words, disable crash alerts.
+    let keyword = cleanQuestion.replace("-df","").replace(" ","");
+    reply = yield spaceModel.deleteAllFilterWord(query.roomId)
+  } else if ((cleanQuestion.indexOf("-pc") !== -1)){
+      //show filter keywords
+      reply = "Actual channel versions are: " +
+               " \n\n - blue: " + versions[0] + 
+               " \n\n - purple: " + versions[1] +
+               " \n\n - green: " + versions[2] +
+               " \n\n - gold: " + versions[3];
+
+  }else if (cleanQuestion !== "bring yourself back online" && (cleanQuestion.indexOf("-m") ===-1) && scope ==="") {
+    //scope = "menuShown";
+    //lockRegistration(query.roomId);
+    console.log("user already registered proceeding to find the question")
+    reply = yield dialogModel.retrieveResponsePromised(query);
+  }else if(currentRegisteringUser !== query.roomId && currentRegisteringUser !== "" ){
+      reply = "sorry " + query.person.nickName + ", there is a user currently registering, try again later...";
+  }else if(cleanQuestion === "bring yourself back online" || cleanQuestion.indexOf("-m") !==-1 || (!alreadyRegistered && scope ==="")) {
+    console.log("newUser add asking for menu");
+    reply = "What can I do for you " + query.person.nickName + "?"+ showMenu();
+    scope = "menuShown"
+    lockRegistration(query.roomId);
+  } else if (scope !=="") {
+      switch(scope) {
+        case "menuShown":
+          if(cleanQuestion == "1"){
+            populateTempSpace(query);
+            reply = "Please write the tags you want to filter the crash reports separated by comma, " +
+                    "for example: *whiteboard*, _auxiliaryDeviceService_,*roomsView*, so I will sent you only the ones you are interested at." +
+                    "\n\n- If you want to receive all MAC crashes reported type \"**everything**\" " +
+                    "\n\n- To get all Windows crashes only type \"**none, everything**\"" +
+                    "\n\n- To get ALL crashes on MAC and Win type \"**everything,everything**\" ( is not recomended as there is \"**All Spark Crashes**\" room for that)" +
+                    "\n\n- If you don't want to receive anything type \"**none**\" (You'll still be able to use the bot to query crashes or chat when bored)." +
+                    "\n\n- You can update these options at any time by typing \"**Bring yourself back online**\" or \"**-m**\".";
+            scope = "tagsAsked";
+          }else if(cleanQuestion == "2"){
+            console.log("about to delete the user")
+            unlockRegistration();
+            reply = yield spaceModel.deleteUserPromified(query.roomId);
+          }else if(cleanQuestion == "3"){
+            unlockRegistration();
+            reply = yield spaceModel.showUserOptionsPromified(query.roomId);
+          }else if (cleanQuestion === "4"){
+            unlockRegistration();
+            reply = showCrashOptions();
+          }
+          else{
+            unlockRegistration();
+            reply = "incorrect answer";
+          }
+        break;
+        case "tagsAsked":
+          tempSpace.macReports.receive = "yes";
+          tempSpace.windowsReports.receive="yes";
+          // User said it wants to get mac reports populating options. Next question for windows option.
+          cleanQuestion = cleanQuestion.replace(" ",""); //remove spaces
+          var array = cleanQuestion.split(',');
+          if (array[0].toLowerCase() === "none") {
+            tempSpace.macReports.receive = "no";
+            tempSpace.windowsReports.receive="no";
+          }
+          for (var i in array) {
+            tempSpace.macReports.tags[i] =array[i];
+            tempSpace.windowsReports.tags[i] = tempSpace.macReports.tags[i];
+          }
+          reply = "Would you like to enable this space to receive your splunk alerts?<yes/no>";
+          scope = "splunkAsked";
+        break;
+        case "splunkAsked":
+          // user replied to teh Splunk Option. Next is to show the final confirmation.
+          if (cleanQuestion === 'yes'){
+            tempSpace.splunkReports.receive = "yes";
+          }
+          else {
+            tempSpace.splunkReports.receive = "no";
+          }
+          var showSpace = showCurrentOptions(tempSpace);
+          reply = "This room will be registered with the following options " + space.nickName +":\n" + showSpace.reply() + "\n\nAre they correct?<yes/no>";
+          scope = "askedForConfirmation";
+        break;
+        case "askedForConfirmation":
+          scope = "";
+          if (cleanQuestion === 'yes') {
+            space = copySpace(space).space();
+            cleanTempSpace();
+            space.save(err =>{
+              let saveReply="";
+              if (err) {
+                saveReply = "error saving to the database, try again later"
+              } else {
+                console.log("spaced saved to database")
+                saveReply = "Welcome to SparkWorld";
+              }
+              bot.sendRichTextMessage(query.roomId, saveReply , function(){
+                                      console.log('Message sent from Bot!');
+                                      });
+            });
+            unlockRegistration();
+
+            return;
+          }
+          else {
+            reply = "Sorry if something was wrong, please try again later";
+          }
+        break;
+      }
+  }
+  if (mongoUrl ==='mongodb://localhost:27017/spaces'){
+      var err = null;
+      bot(reply);
+  }else {
+      bot.sendRichTextMessage(query.roomId, reply , function(){
+                              console.log('Message sent from Bot!');
+                              });
+  }
+  return;
+})
 
 
 dialogModule.prototype.getUser = (user) =>{

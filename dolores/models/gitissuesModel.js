@@ -1,6 +1,6 @@
 var mongoose = require('mongoose');
 let Promise = require('bluebird');
-mongoose.set('debug', true);
+//mongoose.set('debug', true);
 
 var gitIssueSchema = mongoose.Schema({
   "action": String,
@@ -63,7 +63,6 @@ var gitIssueSchema = mongoose.Schema({
 
 });
 
-
 gitIssueSchema.static({
 	list: function(callback) {
 		this.find({}, null, {}, callback);
@@ -105,18 +104,18 @@ gitIssueSchema.statics.getIssuesByLabelNameCallback = function(labelName,callbac
        console.log("label not found");
      }
    });
-
 }
 
-gitIssueSchema.statics.getClosedIssuesByLabelNameAndDate = function(labelName,earliest,latest){
+gitIssueSchema.statics.getClosedIssuesByLabelNameAndDate = function(labelName,team, earliest,latest){
   return new Promise((resolve,reject)=>{
    console.log("about to start finding the issues")
-    this.find({"issue.closed_at":{$gte: earliest,$lte: latest}, "issue.labels.name":labelName, "issue.state":"closed"},function(err,items){
+    this.find({"issue.closed_at":{$gte: earliest,$lte: latest}, "issue.labels.name":{$all: [labelName,new RegExp(team + '$',"i")]}, "issue.state":"closed"},function(err,items){
       if(err){
         console.log("first error on find" + err)
         reject(err);
       }
       else if(items){
+        console.log("GIT ISSUES FOUND")
         resolve(items);
       }
       else {
@@ -126,10 +125,10 @@ gitIssueSchema.statics.getClosedIssuesByLabelNameAndDate = function(labelName,ea
     });
   })
 }
-gitIssueSchema.statics.getOpenedIssuesByLabelNameAndDate = function(labelName,earliest,latest){
+gitIssueSchema.statics.getOpenedIssuesByLabelNameAndDate = function(labelName,team, earliest,latest){
   return new Promise((resolve,reject)=>{
    console.log("about to start finding the issues")
-    this.find({"issue.created_at":{$gte: earliest,$lte: latest}, "issue.labels.name":labelName, "issue.state":"open"},function(err,items){
+    this.find({"issue.created_at":{$gte: earliest,$lte: latest},  "issue.labels.name":{$all: [labelName,new RegExp(team + '$',"i")]}, "issue.state":"open"},function(err,items){
       if(err){
         console.log("first error on find" + err)
         reject(err);

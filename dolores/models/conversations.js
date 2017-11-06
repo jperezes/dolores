@@ -31,13 +31,17 @@ DialogSchema.statics.retrieveResponsePromised = function (question) {
   return new Promise((resolve,reject) =>{
     var cleanQuestion = question.message.toLowerCase().replace(" dolores","").replace("dolores ","").replace("?","");
     console.log('question cleaned : ' + cleanQuestion);
-    this.find({question: cleanQuestion}).lean().exec(function(err, result) {
+    this.findOne({question: cleanQuestion}).lean().exec(function(err, result) {
       if (err) {
         reject(err);
         console.log('Error retrieving the dialog from the DB');
+      } else if(result !== null) {
+        resolve(result.response);
+      } else {
+        console.log('question not found ');
+        resolve("sorry I did not get that, to see command options type *-h* or *-help*");
       }
-      console.log('question properly parsed, response: ' + result[0]);
-      resolve(result[0]);
+
     });
   })
 }
