@@ -267,10 +267,14 @@ spaceSchema.statics.sendReportToWinSubscribers = function (winReport,bot){
     let lastReported= winReport.client_version.slice(-1).pop();
     let isRegression = false;
     let regressionText= "";
+    let gitHubUrlText = "";
     if(typeof(winReport.is_resolved) !=='undefined' && lastReported > winReport.is_resolved ) {
       console.log("possible regression detected");
       isRegression = true;
       regressionText = "\n\n- **Possible issue regressed!**";
+    }
+    if(typeof(winReport.githubUrl) !== 'undefined') {
+      gitHubUrlText = "\n\n- **Git Hub Issue URL:** " + "[Git Url]" + "("+ winReport.githubUrl + ")";
     }
     var failureReport = "Win crash received: " +
                       //"\nevent: " + req.body.event +
@@ -284,7 +288,9 @@ spaceSchema.statics.sendReportToWinSubscribers = function (winReport,bot){
                       "\n\n- **method affected:** " + winReport.method +
                       "\n\n- **Feedback ID:** " + winReport.feedback_id  +
                       "\n\n- **Crashes Count:** " + winReport.crashes_count +
+                      "\n\n- **Users Afected:** " + winReport.usersAfected.length +
                       "\n\n- **Resolved Version:** " + winReport.is_resolved +
+                      gitHubUrlText +
                       "\n\n- **Team Assigned:** " + winReport.assigned_team +
                       "\n\n- **Client Version:** " + clients +
                       regressionText +

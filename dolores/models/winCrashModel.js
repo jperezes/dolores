@@ -14,6 +14,8 @@ var winReportSchema = mongoose.Schema({
     crashes_count: Number,
     client_version: [String],
     id:String,
+    githubUrl:String,
+    usersAfected:[String],
     is_resolved:String,
     assigned_team:String,
     url: String

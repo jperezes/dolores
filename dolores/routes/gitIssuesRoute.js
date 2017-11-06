@@ -141,6 +141,10 @@ let processGHCrash = Promise.coroutine(function*(ghIssue,teamName,bot){
         if(typeof(crash.reportDate) !== 'undefined') {
           console.log("git hub crash found on the database")
           crash.assigned_team = teamName;
+          if (crash.githubUrl === "") {
+            console.log("updating git hub crash url")
+            crash.githubUrl = ghIssue.issue.url;
+          }
 
           //Add the hash to the team id to get further crashes.
           console.log("adding keyword to the filter..." + hashC);

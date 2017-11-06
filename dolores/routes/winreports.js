@@ -42,6 +42,7 @@ var saveAndSendReport = Promise.coroutine(function*(req,res,bot) {
   winReport.feedback_id = req.body.feedback_id;
   winReport.client_version = req.body.client_version;
   winReport.url = req.body.url;
+  winReport.usersAfected = req.body.userId
 
   let result = yield WinReportModel.getCrashByHash(req.body.hashC);
   if (typeof(result.reportDate) !== 'undefined'){
@@ -55,6 +56,10 @@ var saveAndSendReport = Promise.coroutine(function*(req,res,bot) {
       //   console.log("possible regression")
       //   result.is_resolved = "false";
       // }
+    }
+    //check if usersId is not present in the array already
+    if(typeof(req.body.usersAfected) !== 'undefined' && result.usersAfected.indexOf(req.body.usersAfected) === -1){
+      result.usersAfected.push(req.body.usersAfected);
     }
     result.reportDate.push(req.body.reportDate);
     result.reportDate.sort();
