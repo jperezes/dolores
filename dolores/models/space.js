@@ -279,7 +279,7 @@ spaceSchema.statics.sendReportToWinSubscribers = function (winReport,bot){
       resolvedVersion = "\n\n- **Resolved Version:** " + winReport.is_resolved;
     }
 
-    if(typeof(winReport.assigned_team !== 'undefined')) {
+    if(typeof(winReport.assigned_team) !== 'undefined') {
       assignedTeam = "\n\n- **Team Assigned:** " + winReport.assigned_team ;
     }
 
