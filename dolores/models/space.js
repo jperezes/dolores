@@ -268,11 +268,21 @@ spaceSchema.statics.sendReportToWinSubscribers = function (winReport,bot){
     let isRegression = false;
     let regressionText= "";
     let gitHubUrlText = "";
+    let resolvedVersion = "";
+    let assignedTeam = "";
     if(typeof(winReport.is_resolved) !=='undefined' && lastReported > winReport.is_resolved ) {
       console.log("possible regression detected");
       isRegression = true;
       regressionText = "\n\n- **Possible issue regressed!**";
+      resolvedVersion = "\n\n- **Resolved Version:** " + winReport.is_resolved;
+    } else if (typeof(winReport.is_resolved) !=='undefined') {
+      resolvedVersion = "\n\n- **Resolved Version:** " + winReport.is_resolved;
     }
+
+    if(typeof(winReport.assigned_team !== 'undefined')) {
+      assignedTeam = "\n\n- **Team Assigned:** " + winReport.assigned_team ;
+    }
+
     if(typeof(winReport.githubUrl) !== 'undefined') {
       gitHubUrlText = "\n\n- **Git Hub Issue URL:** " + "[Git Url]" + "("+ winReport.githubUrl + ")";
     }
@@ -289,9 +299,9 @@ spaceSchema.statics.sendReportToWinSubscribers = function (winReport,bot){
                       "\n\n- **Feedback ID:** " + winReport.feedback_id  +
                       "\n\n- **Crashes Count:** " + winReport.crashes_count +
                       "\n\n- **Users Afected:** " + winReport.usersAfected.length +
-                      "\n\n- **Resolved Version:** " + winReport.is_resolved +
+                      resolvedVersion +
                       gitHubUrlText +
-                      "\n\n- **Team Assigned:** " + winReport.assigned_team +
+                      assignedTeam +
                       "\n\n- **Client Version:** " + clients +
                       regressionText +
                       //"\nimpacted_devices_count: " + req.body.payload.impacted_devices_count +
