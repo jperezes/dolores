@@ -263,6 +263,7 @@ spaceSchema.statics.sendReportToWinSubscribers = function (winReport,bot){
     winReport.client_version.forEach(item =>{
       clients += item + ", ";
     })
+    let colors = ["blue","purple","green","gold"]
     var stringToSearch =winReport.hashA + winReport.method;
     let lastReported= winReport.client_version.slice(-1).pop();
     let isRegression = false;
@@ -270,6 +271,8 @@ spaceSchema.statics.sendReportToWinSubscribers = function (winReport,bot){
     let gitHubUrlText = "";
     let resolvedVersion = "";
     let assignedTeam = "";
+    let channelIndex = versions.indexOf(lastReported);
+    let lastReportedChannel = ""
     if(typeof(winReport.is_resolved) !=='undefined' && lastReported > winReport.is_resolved ) {
       console.log("possible regression detected");
       isRegression = true;
@@ -277,6 +280,9 @@ spaceSchema.statics.sendReportToWinSubscribers = function (winReport,bot){
       resolvedVersion = "\n\n- **Resolved Version:** " + winReport.is_resolved;
     } else if (typeof(winReport.is_resolved) !=='undefined') {
       resolvedVersion = "\n\n- **Resolved Version:** " + winReport.is_resolved;
+    }
+    if(channelIndex !== -1) {
+      lastReportedChannel = "\n\n- **Latest reported Channel:** " + colors[channelIndex];
     }
 
     if(typeof(winReport.assigned_team) !== 'undefined') {
@@ -303,6 +309,7 @@ spaceSchema.statics.sendReportToWinSubscribers = function (winReport,bot){
                       gitHubUrlText +
                       assignedTeam +
                       "\n\n- **Client Version:** " + clients +
+                      lastReportedChannel +
                       regressionText +
                       //"\nimpacted_devices_count: " + req.body.payload.impacted_devices_count +
                       "\n\n- **url to the crash:** " + "[PRT server URL]" + "("+ winReport.url + ")";
