@@ -58,8 +58,8 @@ var saveAndSendReport = Promise.coroutine(function*(req,res,bot) {
       // }
     }
     //check if usersId is not present in the array already
-    if(typeof(req.body.usersAfected) !== 'undefined' && result.usersAfected.indexOf(req.body.usersAfected) === -1){
-      result.usersAfected.push(req.body.usersAfected);
+    if(typeof(req.body.userId) !== 'undefined' && result.usersAfected.indexOf(req.body.userId) === -1){
+      result.usersAfected.push(req.body.userId);
     }
     result.reportDate.push(req.body.reportDate);
     result.reportDate.sort();
