@@ -226,6 +226,7 @@ dialogModule.prototype.parseQuestion = Promise.coroutine(function* (query, bot){
                         "\n\n> **Crashes Count:** " + crash.crashes_count +
                         "\n\n> **Team Assigned:** " + crash.assigned_team +
                         "\n\n> **Fixed version:** " + crash.is_resolved +
+                        "\n\n> **Github issue url:** " + crash.githubUrl +
                         "\n\n> **Client versions afected:** " + clients;
     } else {
       reply = "invalid crash id...";
