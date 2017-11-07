@@ -45,7 +45,7 @@ let cleanTempSpace = ()=>{
   tempSpace.splunkReports.receive="";
 }
 
-let registeredOptions= ["-r","unregister","-aw","-df","-sf","-es","-ds","-so","-sf","-fc", "-sc"];
+let registeredOptions= ["-r","unregister","-aw","-df","-sf","-es","-ds","-so","-sf","-fc", "-sc","-ag"];
 
 let checkRegisteredOption = function(question){
   let check = ""
@@ -300,14 +300,23 @@ dialogModule.prototype.parseQuestion = Promise.coroutine(function* (query, bot){
       //show filter keywords
       let filter = yield spaceModel.showChannelsRegisterd(query.roomId);
       reply = "Your channels are: _" + filter + "_";
-  } else if ((cleanQuestion.indexOf("-df") !== -1)){
+  }  else if ((cleanQuestion.indexOf("-ag") !== -1)){
+    //add github url to the crash
+    let keywords = cleanQuestion.split(" ");
+    let crashId = keywords[1]
+    let url = keywords[2]
+    let log = "crashId is: " + crashId + " url is: " + url;
+    console.log(log)
+    //let keyword = cleanQuestion.replace("-ag","").replace(" ","");
+    reply = yield winReportModel.addGitHubUrl(crashId,url);
+  }else if ((cleanQuestion.indexOf("-df") !== -1)){
     //delete triage filter words, disable crash alerts.
     let keyword = cleanQuestion.replace("-df","").replace(" ","");
     reply = yield spaceModel.deleteAllFilterWord(query.roomId)
   } else if ((cleanQuestion.indexOf("-pc") !== -1)){
       //show filter keywords
       reply = "Actual channel versions are: " +
-               " \n\n - blue: " + versions[0] + 
+               " \n\n - blue: " + versions[0] +
                " \n\n - purple: " + versions[1] +
                " \n\n - green: " + versions[2] +
                " \n\n - gold: " + versions[3];

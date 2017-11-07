@@ -112,6 +112,28 @@ winReportSchema.statics.setCrashAsFixed = function (crash_id,version){
   })
  }
 
+ winReportSchema.statics.addGitHubUrl = function(crash_id,gitUrl) {
+   return new Promise((resolve,reject) =>{
+     this.findOne({id:crash_id},function(err, crash) {
+         if(err) {
+           let reply = "Failed to add the git crash url: " + err;
+           reject(reply)
+         } else if(crash) {
+           if (typeof(crash.githubUrl) !=='undefined' && crash.githubUrl !== gitUrl)  {
+             let reply = "there is already a git hub assigned to this crash: " + crash.githubUrl  +
+             "\n Please close it or set is as dup. Updating new to new url... ";
+             crash.githubUrl = gitUrl ;
+             resolve(reply);
+           } else {
+             crash.githubUrl = gitUrl;
+             let reply = "github issue url added the the crash";
+             resolve(reply)
+           }
+         }
+    })
+   })
+ }
+
  winReportSchema.statics.calculateMd5Hash = function () {
      this.list(function(err,result){
        if(err){
