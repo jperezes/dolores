@@ -123,10 +123,20 @@ winReportSchema.statics.setCrashAsFixed = function (crash_id,version){
              let reply = "there is already a git hub assigned to this crash: " + crash.githubUrl  +
              "\n Please close it or set is as dup. Updating new to new url... ";
              crash.githubUrl = gitUrl ;
+             crash.save(function(err) {
+               if (err) {
+                 console.log("error saving the issue")
+               }// do something
+             });
              resolve(reply);
            } else {
              crash.githubUrl = gitUrl;
-             let reply = "github issue url added the the crash";
+             crash.save(function(err) {
+               if (err) {
+                 console.log("error saving the issue")
+               }// do something
+             });
+             let reply = "Github issue url added the the crash.";
              resolve(reply)
            }
          }
