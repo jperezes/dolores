@@ -121,7 +121,7 @@ winReportSchema.statics.setCrashAsFixed = function (crash_id,version){
          } else if(crash) {
            if (typeof(crash.githubUrl) !=='undefined' && crash.githubUrl !== gitUrl)  {
              let reply = "there is already a git hub assigned to this crash: " + crash.githubUrl  +
-             "\n Please close it or set is as dup. Updating new to new url... ";
+             "\n\n Please close it or set is as dup. Updating new to new url... ";
              crash.githubUrl = gitUrl ;
              crash.save(function(err) {
                if (err) {
@@ -136,7 +136,7 @@ winReportSchema.statics.setCrashAsFixed = function (crash_id,version){
                  console.log("error saving the issue")
                }// do something
              });
-             let reply = "Github issue url added the the crash.";
+             let reply = "Github issue url added the the crash. \n\nRemember to add \"hashC: _hashC_ \" or \"Crash Id: _crash id_ \" to the git issue body so I get the updates of it. Thans ;)";
              resolve(reply)
            }
          }

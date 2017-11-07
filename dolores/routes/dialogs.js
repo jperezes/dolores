@@ -147,6 +147,7 @@ let showCrashOptions = function(){
                 "\n              [-so] show user registration options" +
                 "\n              [-es] enable splunk alerts on the space" +
                 "\n              [-ds] disable splunk alerts on the space" +
+                "\n              [-ag] <crash id> add github url to the crash" +
                 "\n              [register] register space" +
                 "\n              [unregister] unregister space" +
                 "\n              [-m] show space options menu";
