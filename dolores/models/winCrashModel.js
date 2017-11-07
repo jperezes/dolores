@@ -136,7 +136,7 @@ winReportSchema.statics.setCrashAsFixed = function (crash_id,version){
                  console.log("error saving the issue")
                }// do something
              });
-             let reply = "Github issue url added the the crash. \n\nRemember to add \"hashC: _hashC_ \" or \"Crash Id: _crash id_ \" to the git issue body so I get the updates of it. Thans ;)";
+             let reply = "Github issue url added the the crash. \n\nRemember to add \"**hashC:** _hashC_ \" or \"**Crash Id:** _crash id_ \" to the git issue body so I get the updates of it. Thanks ;)";
              resolve(reply)
            }
          }
