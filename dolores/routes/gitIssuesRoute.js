@@ -169,7 +169,7 @@ let processGHCrash = Promise.coroutine(function*(ghIssue,teamName,bot){
         else if(typeof(crash.reportDate) !== 'undefined') {
           console.log("git hub crash found on the database")
           crash.assigned_team = teamName;
-          if (typeOf(crash.githubUrl) === 'undefined' || crash.githubUrl === "") {
+          if (typeof(crash.githubUrl) === 'undefined' || crash.githubUrl === "") {
             console.log("updating git hub crash url")
             crash.githubUrl = ghIssue.issue.url;
           }
