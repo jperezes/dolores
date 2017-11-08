@@ -161,7 +161,6 @@ let processGHCrash = Promise.coroutine(function*(ghIssue,teamName,bot){
             reply = "Hi *" + teamName + "* A GH crash has been closed:\n\n" +
                     "\n\n > [" + ghIssue.issue.number + "]" + "(" + ghIssue.issue.url.replace("api/v3/repos/","") + ")" + ": " + ghIssue.issue.title +
                     "\n\n > Reported crash id: " + crash.id;
-
           } else {
             reply = "error closing the crash"
           }
@@ -169,16 +168,21 @@ let processGHCrash = Promise.coroutine(function*(ghIssue,teamName,bot){
         else if(typeof(crash.reportDate) !== 'undefined') {
           console.log("git hub crash found on the database")
           crash.assigned_team = teamName;
+          alreadyOpenedGHIssue = ""
           if (typeof(crash.githubUrl) === 'undefined' || crash.githubUrl === "") {
             console.log("updating git hub crash url")
             crash.githubUrl = ghIssue.issue.url;
+          } else {
+            alreadyOpenedGHIssue = "\n\n> **Important: ** this crash is associated with a different GH issue: " +
+            "[" + ghIssue.issue.number + "]" + "(" + ghIssue.issue.url + ")" + ". Please close duplicates";
+            crash.githubUrl = ghIssue.issue.url;
           }
-          reply = "Hi *" + teamName + "* A GH crash has been assigned to your team:\n\n" +
+          reply = "Hi *" + teamName + "* A GH crash issue has been assigned to your team:\n\n" +
                   "\n\n > [" + ghIssue.issue.number + "]" + "(" + ghIssue.issue.url.replace("api/v3/repos/","") + ")" + ": " + ghIssue.issue.title +
                   "\n\n > Reported crash id: " + crash.id +
-                  "\n\n > Reported crash hash: " + crash.hashA +
-                  "\n\n > First occurrence: " + crash.reportDate[0] +
-                  "\n\n \nAny further occurrences of the same crash will be reported to this room, to get info about the crash type *Dolores -i crash id*";
+                  "\n\n > Last occurrence: " + crash.reportDate.slice(-1).pop() +
+                  alreadyOpenedGHIssue +
+                  "\n\n > Type Dolores -i " + crash.id + " for more info";
           crash.save(function(err){
             if(err) {
               console.log("error saving the crash")
