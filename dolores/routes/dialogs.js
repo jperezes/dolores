@@ -225,6 +225,7 @@ dialogModule.prototype.parseQuestion = Promise.coroutine(function* (query, bot){
                         "\n\n> **Hash C:** " + crash.hashC +
                         "\n\n> **Method affected:** " + crash.method +
                         "\n\n> **Crashes Count:** " + crash.crashes_count +
+                        "\n\n> **Distinct users Afected:** " + crash.usersAfected.length +
                         "\n\n> **Team Assigned:** " + crash.assigned_team +
                         "\n\n> **Fixed version:** " + crash.is_resolved +
                         "\n\n> **Github issue url:** " + crash.githubUrl +
