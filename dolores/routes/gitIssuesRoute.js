@@ -33,7 +33,7 @@ gitRoute.prototype.listenForGitUpdates = function(bot,app){
   });
 
   let teamLabels = process.env.TEAM_LABELS.split(",");
-  let validActions =["open","opened","labeled","unlabeled","reopened"]
+  let validActions =["open","opened","labeled","unlabeled","reopened","closed"]
 
   let checkForTeamLabels = function(ghLabel){
     let check = ""
@@ -70,24 +70,39 @@ gitRoute.prototype.listenForGitUpdates = function(bot,app){
     return isValid;
   }
 
+  let checkReportedCrash
+
   let checkForHash = function(message) {
-    var token1 = "Hash A";
-    var token2 = "Crash Hash";
+
+    var token = "hash c: "
+    var tokenLength= token.length;
+    var hash_sample= "c9c1e92e295e0c7bbb0efd9b267442b1";
+    var hashLength= hash_sample.length
     var hashFound ="";
-    var n1 = message.indexOf(token1);
-    var n2 = message.indexOf(token2);
-    let n = n1 > n2 ? n1 : n2;
+    var n = message.toLowerCase.indexOf(token);
     var substr = "";
     if (n !== -1) {
         //this is to be sure we get the hash
-        substr = message.substring(n,n+50);
-        n = substr.indexOf('0x');
-        if(n !== -1) {
-          hashFound= substr.substring(n,n+ 18);
-          console.log("crash with found, id: " + hashFound);
-        } else {
-          console.log("hash not found weird")
-        }
+        hashFound= message.substring(n + tokenLength, n + tokenLength + hashLength);
+        console.log("crash with found, id: " + hashFound);
+    }
+    return hashFound;
+  }
+
+  let checkForId = function(message) {
+
+    var token = "crash id: "
+    var tokenLength= token.length;
+    var patt = new RegExp("[^(0-9)]");
+    var idFound ="";
+    var n = message.toLowerCase.indexOf(token);
+    var substr = "";
+    if (n !== -1) {
+        //this is to be sure we get the hash
+        var filterdId = message.substring(n+tokenLength , n+tokenLength + 10)
+        var end = str.indexOf(patt.exec(str));
+        hashFound= filteredId.substring(0, end);
+        console.log("crash with found, id: " + hashFound);
     }
     return hashFound;
   }
@@ -138,20 +153,23 @@ let processGHCrash = Promise.coroutine(function*(ghIssue,teamName,bot){
       } else{
         // hash found
         let crash = yield winReportModel.getCrashByHash(hashC);
-        if(typeof(crash.reportDate) !== 'undefined') {
+        if (gitIssue.action === "closed") {
+          //about to set the issue as closed based on the current blue
+          let result = yield winReportModel.setCrashAsFixed(crash.crash_id,"");
+          if(result) {
+            reply = "Hi *" + teamName + "* A GH crash has been closed:\n\n" +
+                    "\n\n > [" + ghIssue.issue.number + "]" + "(" + ghIssue.issue.url.replace("api/v3/repos/","") + ")" + ": " + ghIssue.issue.title +
+                    "\n\n > Reported crash id: " + crash.id;
+
+          }
+        }
+        else if(typeof(crash.reportDate) !== 'undefined') {
           console.log("git hub crash found on the database")
           crash.assigned_team = teamName;
           if (crash.githubUrl === "") {
             console.log("updating git hub crash url")
             crash.githubUrl = ghIssue.issue.url;
           }
-
-          //Add the hash to the team id to get further crashes.
-          console.log("adding keyword to the filter..." + hashC);
-          let result = yield spaceModel.addFilterKeyWordDistinct(room_id,hashC)
-          console.log(result);
-          //process the reply on failure
-
           reply = "Hi *" + teamName + "* A GH crash has been assigned to your team:\n\n" +
                   "\n\n > [" + ghIssue.issue.number + "]" + "(" + ghIssue.issue.url.replace("api/v3/repos/","") + ")" + ": " + ghIssue.issue.title +
                   "\n\n > Reported crash id: " + crash.id +
@@ -165,13 +183,11 @@ let processGHCrash = Promise.coroutine(function*(ghIssue,teamName,bot){
           });
         }
         else {
+            console.log("git hub crash found on the database but report date is null")
           //crash not yet reported
           reply = "Hi *" + teamName + "* A GH crash has been assigned to your team:\n\n" +
                   "\n\n - [" + ghIssue.issue.number + "]" + "(" + ghIssue.issue.url.replace("api/v3/repos/","") + ")" + ": " + ghIssue.issue.title +
                   "\n\n This crash has not yet been reported to Dolores, adding the hash to the filter so further reports will be sent to this space ";
-
-          //Add the hash to the team id to get further crashes.
-          yield spaceModel.addFilterKeyWord(room_id,hashC)
         }
       }
       //send it to the team

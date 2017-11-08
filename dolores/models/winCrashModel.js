@@ -112,6 +112,7 @@ winReportSchema.statics.setCrashAsFixed = function (crash_id,version){
   })
  }
 
+
  winReportSchema.statics.addGitHubUrl = function(crash_id,gitUrl) {
    return new Promise((resolve,reject) =>{
      this.findOne({id:crash_id},function(err, crash) {
@@ -143,6 +144,29 @@ winReportSchema.statics.setCrashAsFixed = function (crash_id,version){
     })
    })
  }
+
+ winReportSchema.statics.setCrashAsFixedByHash = function (hash_c,version){
+   return new Promise((resolve,reject)=>{
+       this.findOne({hashC:hash_c},function(err,crash){
+         if(err){
+           console.log("crash not found")
+           resolve(false);
+         }else if(crash){
+           if (version === "") {
+             crash.is_resolved = crash.client_version.sort().slice(-1).pop();
+           } else {
+             crash.is_resolved = version
+           }
+           crash.save(function(err) {
+             if (err) {
+               console.log("error saving the issue")
+             }// do something
+           });
+          resolve(true);
+        }
+     });
+   })
+  }
 
  winReportSchema.statics.calculateMd5Hash = function () {
      this.list(function(err,result){
