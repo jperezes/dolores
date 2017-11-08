@@ -146,7 +146,7 @@ let processDoloresTagissue = Promise.coroutine(function*(ghIssue){
     return;
   }
   let hashC = checkForHash(ghIssue.issue.body);
-  let crashId = checkForId(ghIssue.issue.body);
+
   if(hashC !== "") {
     //update crash
     let crash = yield winReportModel.getCrashByHash(hashC);
@@ -167,24 +167,27 @@ let processDoloresTagissue = Promise.coroutine(function*(ghIssue){
         }
       });
     }
-  } else if(crashId !== "") {
-    let crash = yield winReportModel.getCrashById(crashId);
-    if (ghIssue.action === "closed") {
-      //about to set the issue as closed based on the current blue
-      console.log("closing the issue as it has been fixed on GH")
-      let result = yield winReportModel.setCrashAsFixed(crash.id,"");
-      if(result) {
-        console.log("crash updated")
-      } else {
-        console.lot("error finding the crash for the update")
-      }
-    } else if(ghIssue.action === "open" || ghIssue.action === "opened" || ghIssue.action === "reopened") {
-      crash.githubUrl = ghIssue.issue.url.replace("api/v3/repos/","");
-      crash.save(function(err){
-        if(err) {
-          console.log("error saving the crash")
+  } else {
+    let crashId = checkForId(ghIssue.issue.body);
+    if(crashId !== "") {
+      let crash = yield winReportModel.getCrashById(crashId);
+      if (ghIssue.action === "closed") {
+        //about to set the issue as closed based on the current blue
+        console.log("closing the issue as it has been fixed on GH")
+        let result = yield winReportModel.setCrashAsFixed(crash.id,"");
+        if(result) {
+          console.log("crash updated")
+        } else {
+          console.lot("error finding the crash for the update")
         }
-      });
+      } else if(ghIssue.action === "open" || ghIssue.action === "opened" || ghIssue.action === "reopened") {
+        crash.githubUrl = ghIssue.issue.url.replace("api/v3/repos/","");
+        crash.save(function(err){
+          if(err) {
+            console.log("error saving the crash")
+          }
+        });
+      }
     }
   }
 
@@ -263,7 +266,7 @@ let processGHCrash = Promise.coroutine(function*(ghIssue,teamName,bot){
         }
       }
       //send it to the team
-      bot.sendRichTextMessage(process.env.JUAN_DOLORES_ROOM_ID/*room_id*/,reply,function(){
+      bot.sendRichTextMessage(room_id,reply,function(){
         console.log("message sent to the team");
       });
    })
