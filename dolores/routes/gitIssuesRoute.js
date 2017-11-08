@@ -330,7 +330,8 @@ let processGHCrash = Promise.coroutine(function*(ghIssue,teamName,bot){
         console.log("crash assigned to multiple teams, not saving ...")
         saveIssue = false;
       }
-    } else if(checkDoloresLabel(req.body.issue.labels)) {
+    }
+    if(checkDoloresLabel(req.body.issue.labels)) {
       hasDoloresLabel = true
     }
 
