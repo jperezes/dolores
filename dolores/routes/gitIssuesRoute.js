@@ -79,7 +79,7 @@ gitRoute.prototype.listenForGitUpdates = function(bot,app){
     var hash_sample= "c9c1e92e295e0c7bbb0efd9b267442b1";
     var hashLength= hash_sample.length
     var hashFound ="";
-    var n = message.toLowerCase.indexOf(token);
+    var n = message.toLowerCase().indexOf(token);
     var substr = "";
     if (n !== -1) {
         //this is to be sure we get the hash
@@ -95,7 +95,7 @@ gitRoute.prototype.listenForGitUpdates = function(bot,app){
     var tokenLength= token.length;
     var patt = new RegExp("[^(0-9)]");
     var idFound ="";
-    var n = message.toLowerCase.indexOf(token);
+    var n = message.toLowerCase().indexOf(token);
     var substr = "";
     if (n !== -1) {
         //this is to be sure we get the hash
