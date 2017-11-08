@@ -171,10 +171,10 @@ let processGHCrash = Promise.coroutine(function*(ghIssue,teamName,bot){
           alreadyOpenedGHIssue = ""
           if (typeof(crash.githubUrl) === 'undefined' || crash.githubUrl === "") {
             console.log("updating git hub crash url")
-            crash.githubUrl = ghIssue.issue.url;
+            crash.githubUrl = ghIssue.issue.url.replace("api/v3/repos/","");
           } else {
             alreadyOpenedGHIssue = "\n\n> **Important: ** this crash is associated with a different GH issue: " +
-            "[" + ghIssue.issue.number + "]" + "(" + ghIssue.issue.url + ")" + ". Please close duplicates";
+            "[" + ghIssue.issue.number + "]" + "(" +   crash.githubUrl + ")" + ". Please close duplicates";
             crash.githubUrl = ghIssue.issue.url;
           }
           reply = "Hi *" + teamName + "* A GH crash issue has been assigned to your team:\n\n" +
