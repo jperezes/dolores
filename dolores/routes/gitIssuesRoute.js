@@ -113,7 +113,7 @@ gitRoute.prototype.listenForGitUpdates = function(bot,app){
     if (n !== -1) {
         //this is to be sure we get the hash
         var filterdId = message.substring(n+tokenLength , n+tokenLength + 10)
-        var end = filterdId.indexOf(patt.exec(str));
+        var end = filterdId.indexOf(patt.exec(filterdId));
         hashFound= filteredId.substring(0, end);
         console.log("crash with found, id: " + hashFound);
     }
