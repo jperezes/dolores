@@ -62,13 +62,14 @@ gitRoute.prototype.listenForGitUpdates = function(bot,app){
   }
 
   let checkDoloresLabel = function(labels) {
+    count = 0
     labels.forEach(item=>{
-      if(item.indexOf(doloresLabel) !== -1) {
-        return true;
+      if(item.name.indexOf(doloresLabel) !== -1) {
+        count ++;
       }
     })
 
-    return false;
+    return count;
   }
 
   let checkValidAction = function(action) {
@@ -331,7 +332,7 @@ let processGHCrash = Promise.coroutine(function*(ghIssue,teamName,bot){
         saveIssue = false;
       }
     }
-    if(checkDoloresLabel(req.body.issue.labels)) {
+    if(checkDoloresLabel(req.body.issue.labels) > 0) {
       hasDoloresLabel = true
     }
 
