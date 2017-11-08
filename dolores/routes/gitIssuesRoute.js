@@ -156,18 +156,20 @@ let processGHCrash = Promise.coroutine(function*(ghIssue,teamName,bot){
         if (ghIssue.action === "closed") {
           //about to set the issue as closed based on the current blue
           console.log("closing the issue as it has been fixed on GH")
-          let result = yield winReportModel.setCrashAsFixed(crash.crash_id,"");
+          let result = yield winReportModel.setCrashAsFixed(crash.id,"");
           if(result) {
             reply = "Hi *" + teamName + "* A GH crash has been closed:\n\n" +
                     "\n\n > [" + ghIssue.issue.number + "]" + "(" + ghIssue.issue.url.replace("api/v3/repos/","") + ")" + ": " + ghIssue.issue.title +
                     "\n\n > Reported crash id: " + crash.id;
 
+          } else {
+            reply = "error closing the crash"
           }
         }
         else if(typeof(crash.reportDate) !== 'undefined') {
           console.log("git hub crash found on the database")
           crash.assigned_team = teamName;
-          if (crash.githubUrl === "") {
+          if (typeOf(crash.githubUrl) === 'undefined' || crash.githubUrl === "") {
             console.log("updating git hub crash url")
             crash.githubUrl = ghIssue.issue.url;
           }
@@ -192,7 +194,7 @@ let processGHCrash = Promise.coroutine(function*(ghIssue,teamName,bot){
         }
       }
       //send it to the team
-      bot.sendRichTextMessage(room_id,reply,function(){
+      bot.sendRichTextMessage(process.env.JUAN_DOLORES_ROOM_ID/*room_id*/,reply,function(){
         console.log("message sent to the team");
       });
    })
