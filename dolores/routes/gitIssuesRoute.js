@@ -153,7 +153,7 @@ let processGHCrash = Promise.coroutine(function*(ghIssue,teamName,bot){
       } else{
         // hash found
         let crash = yield winReportModel.getCrashByHash(hashC);
-        if (gitIssue.action === "closed") {
+        if (ghIssue.action === "closed") {
           //about to set the issue as closed based on the current blue
           console.log("closing the issue as it has been fixed on GH")
           let result = yield winReportModel.setCrashAsFixed(crash.crash_id,"");
