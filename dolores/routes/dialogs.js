@@ -216,6 +216,14 @@ dialogModule.prototype.parseQuestion = Promise.coroutine(function* (query, bot){
       crash.client_version.forEach(item =>{
         clients += item + ", ";
       })
+      let fixedVersion = ""
+      let team_assigned = ""
+      if (typeof(crash.assigned_team) !== 'undefined') {
+        team_assigned = "\n\n> **Team Assigned:** " + crash.assigned_team;
+      }
+      if (typeof(crash.is_resolved ) !== 'undefined') {
+        fixedVersion = "\n\n> **Fixed version:** " + crash.is_resolved;
+      }
       reply = "Here we go: " +
                         "\n\n> **Crash Id:** " + crash.id +
                         "\n\n> **First reported:** " + crash.reportDate[0] +
@@ -225,9 +233,9 @@ dialogModule.prototype.parseQuestion = Promise.coroutine(function* (query, bot){
                         "\n\n> **Hash C:** " + crash.hashC +
                         "\n\n> **Method affected:** " + crash.method +
                         "\n\n> **Crashes Count:** " + crash.crashes_count +
-                        "\n\n> **Distinct users Afected:** " + crash.usersAfected.length +
-                        "\n\n> **Team Assigned:** " + crash.assigned_team +
-                        "\n\n> **Fixed version:** " + crash.is_resolved +
+                        "\n\n> **Distinct users afected:** " + crash.usersAfected.length +
+                        team_assigned +
+                        fixedVersion +
                         "\n\n> **Github issue url:** " + crash.githubUrl +
                         "\n\n> **Client versions afected:** " + clients;
     } else {
