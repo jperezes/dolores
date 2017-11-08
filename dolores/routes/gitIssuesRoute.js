@@ -175,7 +175,7 @@ let processGHCrash = Promise.coroutine(function*(ghIssue,teamName,bot){
           } else {
             alreadyOpenedGHIssue = "\n\n> **Important: ** this crash is associated with a different GH issue: " +
             "[" + ghIssue.issue.number + "]" + "(" +   crash.githubUrl + ")" + ". Please close duplicates";
-            crash.githubUrl = ghIssue.issue.url;
+            crash.githubUrl = ghIssue.issue.url.replace("api/v3/repos/","");
           }
           reply = "Hi *" + teamName + "* A GH crash issue has been assigned to your team:\n\n" +
                   "\n\n > [" + ghIssue.issue.number + "]" + "(" + ghIssue.issue.url.replace("api/v3/repos/","") + ")" + ": " + ghIssue.issue.title +
