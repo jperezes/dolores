@@ -34,6 +34,7 @@ gitRoute.prototype.listenForGitUpdates = function(bot,app){
 
   let teamLabels = process.env.TEAM_LABELS.split(",");
   let validActions =["open","opened","labeled","unlabeled","reopened","closed"]
+  let doloresLabel = "dolores-reported"
 
   let checkForTeamLabels = function(ghLabel){
     let check = ""
@@ -59,6 +60,17 @@ gitRoute.prototype.listenForGitUpdates = function(bot,app){
     })
     return count;
   }
+
+  let checkDoloresLabel = function(labels) {
+    labels.forEach(item=>{
+      if(item.indexOf(doloresLabel) !== -1) {
+        return true;
+      }
+    })
+
+    return false;
+  }
+
   let checkValidAction = function(action) {
     let isValid = false;
     validActions.forEach(item =>{
@@ -125,6 +137,58 @@ gitRoute.prototype.listenForGitUpdates = function(bot,app){
     }
     return roomId;
   }
+
+let processDoloresTagissue = Promise.coroutine(function*(ghIssue){
+  if(checkValidAction(ghIssue.action) !== true) {
+    //only new reports will be sent to the teams, any other modification shall be ignored
+    console.log("action not open aborting ...")
+    return;
+  }
+  let hashC = checkForHash(ghIssue.issue.body);
+  let crashId = checkForId(ghIssue.issue.body);
+  if(hashC !== "") {
+    //update crash
+    let crash = yield winReportModel.getCrashByHash(hashC);
+    if (ghIssue.action === "closed") {
+      //about to set the issue as closed based on the current blue
+      console.log("closing the issue as it has been fixed on GH")
+      let result = yield winReportModel.setCrashAsFixed(crash.id,"");
+      if(result) {
+        console.log("crash updated")
+      } else {
+        console.lot("error finding the crash for the update")
+      }
+    } else if(ghIssue.action === "open" || ghIssue.action === "opened" || ghIssue.action === "reopened") {
+      crash.githubUrl = ghIssue.issue.url.replace("api/v3/repos/","");
+      crash.save(function(err){
+        if(err) {
+          console.log("error saving the crash")
+        }
+      });
+    }
+  } else if(crashId !== "") {
+    let crash = yield winReportModel.getCrashById(crashId);
+    if (ghIssue.action === "closed") {
+      //about to set the issue as closed based on the current blue
+      console.log("closing the issue as it has been fixed on GH")
+      let result = yield winReportModel.setCrashAsFixed(crash.id,"");
+      if(result) {
+        console.log("crash updated")
+      } else {
+        console.lot("error finding the crash for the update")
+      }
+    } else if(ghIssue.action === "open" || ghIssue.action === "opened" || ghIssue.action === "reopened") {
+      crash.githubUrl = ghIssue.issue.url.replace("api/v3/repos/","");
+      crash.save(function(err){
+        if(err) {
+          console.log("error saving the crash")
+        }
+      });
+    }
+  }
+
+})
+
 
 let processGHCrash = Promise.coroutine(function*(ghIssue,teamName,bot){
       console.log("about to search id for team name: " + teamName)
@@ -237,6 +301,7 @@ let processGHCrash = Promise.coroutine(function*(ghIssue,teamName,bot){
     let i = 0;
     let isCrash = false;
     let teamName="";
+    let hasDoloresLabel = false
 
     req.body.issue.labels.forEach(item =>{
       let name = item.name;
@@ -265,6 +330,8 @@ let processGHCrash = Promise.coroutine(function*(ghIssue,teamName,bot){
         console.log("crash assigned to multiple teams, not saving ...")
         saveIssue = false;
       }
+    } else if(checkDoloresLabel(req.body.issue.labels)) {
+      hasDoloresLabel = true
     }
 
     console.log("save issue is now: " + saveIssue + " proceeding to save the object")
@@ -312,7 +379,11 @@ let processGHCrash = Promise.coroutine(function*(ghIssue,teamName,bot){
           processGHCrash(req.body, teamName, bot)
         }
       })
-    } else{
+    }
+    else if(hasDoloresLabel) {
+      processDoloresTagissue(req.body)
+    }
+    else{
       res.status(200).send('non relevant github event');
     }
   });
