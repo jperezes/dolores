@@ -193,7 +193,17 @@ let processDoloresTagissue = Promise.coroutine(function*(ghIssue){
 
 })
 
-
+let sendWarningNoTeamLabel = function(ghIssue) {
+  if(ghIssue.action === "open" || ghIssue.action === "opened" || ghIssue.action === "reopened") {
+    let userMail = ghIssue.issue.user.login + process.env.mailExt;
+    let ghUrl = "[" + ghIssue.issue.number + "]" + "(" + ghIssue.issue.url.replace("api/v3/repos/","") + ")";
+    let message = "Hey mate, you have opened a git hub issue: " + ghUrl + " but is not assigned to any team, please label a scrum team.";
+    //send it to the user
+    bot.sendRichTextMessageToDirectPerson(userMail,message,function(){
+      console.log("message sent to the team");
+    });
+  }
+}
 let processGHCrash = Promise.coroutine(function*(ghIssue,teamName,bot){
       console.log("about to search id for team name: " + teamName)
       let room_id =  getTeamRoomId(teamName);
@@ -387,6 +397,9 @@ let processGHCrash = Promise.coroutine(function*(ghIssue,teamName,bot){
     }
     else if(hasDoloresLabel) {
       processDoloresTagissue(req.body)
+    }
+    if (teamName === "") {
+      sendWarningNoTeamLabel(req.body)
     }
     else{
       res.status(200).send('non relevant github event');
