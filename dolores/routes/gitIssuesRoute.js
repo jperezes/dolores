@@ -197,7 +197,7 @@ let sendWarningNoTeamLabel = function(ghIssue) {
   if(ghIssue.action === "open" || ghIssue.action === "opened" || ghIssue.action === "reopened") {
     let userMail = ghIssue.issue.user.login + process.env.mailExt;
     let ghUrl = "[" + ghIssue.issue.number + "]" + "(" + ghIssue.issue.url.replace("api/v3/repos/","") + ")";
-    let message = "Hey mate, you have opened a git hub issue: " + ghUrl + " but is not assigned to any team, please label a scrum team.";
+    let message = "Hey mate, you have opened a git hub issue: " + ghUrl + " but have not assigned to any team, please add a label for the appropriate scrum team. For example: \"scrum - Calling\" or \"scrum - guild\". Thanks.";
     //send it to the user
     bot.sendRichTextMessageToDirectPerson(userMail,message,function(){
       console.log("message sent to the team");
