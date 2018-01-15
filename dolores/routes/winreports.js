@@ -66,6 +66,9 @@ var saveAndSendReport = Promise.coroutine(function*(req,res,bot) {
     result.reportDate.sort();
     result.feedback_id=req.body.feedback_id;
     result.crashes_count = result.crashes_count +1;
+    if(typeof(req.body.dump_available) !== 'undefined') {
+      result.crashDumpUrl = req.body.dump_available;
+    }
 
     result.save(function(err){
       if(err){
