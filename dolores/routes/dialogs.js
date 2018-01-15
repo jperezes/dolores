@@ -218,11 +218,15 @@ dialogModule.prototype.parseQuestion = Promise.coroutine(function* (query, bot){
       })
       let fixedVersion = ""
       let team_assigned = ""
+      let crashDumpUrlText = ""
       if (typeof(crash.assigned_team) !== 'undefined') {
         team_assigned = "\n\n> **Team Assigned:** " + crash.assigned_team;
       }
       if (typeof(crash.is_resolved ) !== 'undefined') {
         fixedVersion = "\n\n> **Fixed version:** " + crash.is_resolved;
+      }
+      if(typeof(crash.crashDumpUrl) !== 'undefined') {
+        crashDumpUrlText = "\n\n- **Link to crash dump:** " + "[Download dump file]" + "("+ crash.crashDumpUrl + ")";
       }
       reply = "Here we go: " +
                         "\n\n> **Crash Id:** " + crash.id +
@@ -236,6 +240,7 @@ dialogModule.prototype.parseQuestion = Promise.coroutine(function* (query, bot){
                         "\n\n> **Distinct users afected:** " + crash.usersAfected.length +
                         team_assigned +
                         fixedVersion +
+                        crashDumpUrlText +
                         "\n\n> **Github issue url:** " + crash.githubUrl +
                         "\n\n> **Client versions afected:** " + clients;
     } else {

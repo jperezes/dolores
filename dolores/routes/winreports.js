@@ -41,6 +41,7 @@ var saveAndSendReport = Promise.coroutine(function*(req,res,bot) {
   winReport.method = req.body.method;
   winReport.feedback_id = req.body.feedback_id;
   winReport.client_version = req.body.client_version;
+  winReport.crashDumpUrl = req.body.dump_available;
   winReport.url = req.body.url;
   winReport.usersAfected = req.body.userId
 
