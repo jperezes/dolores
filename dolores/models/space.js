@@ -292,7 +292,7 @@ spaceSchema.statics.sendReportToWinSubscribers = function (winReport,bot){
     if(typeof(winReport.githubUrl) !== 'undefined') {
       gitHubUrlText = "\n\n- **Git Hub Issue URL:** " + "[Git Url]" + "("+ winReport.githubUrl + ")";
     }
-    if(typeof(winReport.crashDumpUrl) !== 'undefined') {
+    if(typeof(winReport.crashDumpUrl) !== 'undefined' && winReport.crashDumpUrl !== "" ) {
       crashDumpUrlText = "\n\n- **Link to crash dump:** " + "[Download dump file]" + "("+ winReport.crashDumpUrl + ")";
     }
     var failureReport = "Win crash received: " +
