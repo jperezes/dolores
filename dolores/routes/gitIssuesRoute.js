@@ -383,7 +383,7 @@ let processGHCrash = Promise.coroutine(function*(ghIssue,teamName,bot){
               res.status(500).send(err);
             } else {
               console.log("git issue change saved on the database")
-              res.status(200).send('github event saved to the database');
+              //res.status(200).send('github event saved to the database');
             }
           });
         }
