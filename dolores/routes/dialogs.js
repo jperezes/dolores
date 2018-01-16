@@ -226,7 +226,7 @@ dialogModule.prototype.parseQuestion = Promise.coroutine(function* (query, bot){
         fixedVersion = "\n\n> **Fixed version:** " + crash.is_resolved;
       }
       if(typeof(crash.crashDumpUrl) !== 'undefined') {
-        crashDumpUrlText = "\n\n- **Link to crash dump:** " + "[Download dump file]" + "("+ crash.crashDumpUrl + ")";
+        crashDumpUrlText = "\n\n> **Link to crash dump:** " + "[Download dump file]" + "("+ crash.crashDumpUrl + ")";
       }
       reply = "Here we go: " +
                         "\n\n> **Crash Id:** " + crash.id +
