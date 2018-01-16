@@ -8,7 +8,7 @@ var mongoUrl = process.env.MONGO_URL || 'mongodb://localhost:27017/spaces';
 let mongoSp = process.env.MONGO_SPACES_URL || 'mongodb://localhost:27017/spaces';
 let Promise= require('bluebird')
 let updateVersions = require('./getClientChannels').updateVersions;
-mongoose.set('debug', true);
+//mongoose.set('debug', true);
 
 
 var winReports = function(){};
