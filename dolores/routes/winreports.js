@@ -68,7 +68,10 @@ var saveAndSendReport = Promise.coroutine(function*(req,res,bot) {
     result.crashes_count = result.crashes_count +1;
     let splitUrl = req.body.dump_available.split(":")
     if(typeof(splitUrl[1]) !== 'undefined') {
+      console.log("JOAN:  the url is: " + splitUrl[1])
       result.crashDumpUrl = req.body.dump_available;
+    } else {
+
     }
 
     result.save(function(err){
