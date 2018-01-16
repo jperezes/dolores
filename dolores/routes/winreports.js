@@ -66,14 +66,15 @@ var saveAndSendReport = Promise.coroutine(function*(req,res,bot) {
     result.reportDate.sort();
     result.feedback_id=req.body.feedback_id;
     result.crashes_count = result.crashes_count +1;
-    let splitUrl = req.body.dump_available.split(":")
-    if(typeof(splitUrl[1]) !== 'undefined') {
-      console.log("JOAN:  the url is: " + splitUrl[1])
-      result.crashDumpUrl = req.body.dump_available;
-    } else {
+    if(typeof(req.body.dump_available) !== 'undefined') {
+      let splitUrl = req.body.dump_available.split(":")
+      if(typeof(splitUrl[1]) !== 'undefined') {
+        console.log("JOAN:  the url is: " + splitUrl[1])
+        result.crashDumpUrl = req.body.dump_available;
+      } else {
 
+      }
     }
-
     result.save(function(err){
       if(err){
         res.status(500).send("error updating the crash into the database" + err);
