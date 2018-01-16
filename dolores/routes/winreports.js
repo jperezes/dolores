@@ -90,6 +90,7 @@ var saveAndSendReport = Promise.coroutine(function*(req,res,bot) {
   } else {
     console.log("New crash! ")
     winReport.crashes_count = 1;
+    console.log("JOAN new crash dump link: " + winReport.crashDumpUrl)
     result = yield WinReportModel.getCountId();
     winReport.id = result + 1;
     winReport.save(err =>{
