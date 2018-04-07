@@ -263,14 +263,37 @@ spaceSchema.statics.sendReportToWinSubscribers = function (winReport,bot){
     winReport.client_version.forEach(item =>{
       clients += item + ", ";
     })
+    let colors = ["blue","purple","green","gold"]
     var stringToSearch =winReport.hashA + winReport.method;
     let lastReported= winReport.client_version.slice(-1).pop();
     let isRegression = false;
     let regressionText= "";
+    let gitHubUrlText = "";
+    let resolvedVersion = "";
+    let assignedTeam = "";
+    let channelIndex = versions.indexOf(lastReported);
+    let lastReportedChannel = ""
+    let crashDumpUrlText = "";
     if(typeof(winReport.is_resolved) !=='undefined' && lastReported > winReport.is_resolved ) {
       console.log("possible regression detected");
       isRegression = true;
       regressionText = "\n\n- **Possible issue regressed!**";
+      resolvedVersion = "\n\n- **Resolved Version:** " + winReport.is_resolved;
+    } else if (typeof(winReport.is_resolved) !=='undefined') {
+      resolvedVersion = "\n\n- **Resolved Version:** " + winReport.is_resolved;
+    }
+    if(channelIndex !== -1) {
+      lastReportedChannel = "\n\n- **Latest reported Channel:** " + colors[channelIndex];
+    }
+
+    if(typeof(winReport.assigned_team) !== 'undefined') {
+      assignedTeam = "\n\n- **Team Assigned:** " + winReport.assigned_team ;
+    }
+    if(typeof(winReport.githubUrl) !== 'undefined') {
+      gitHubUrlText = "\n\n- **Git Hub Issue URL:** " + "[Git Url]" + "("+ winReport.githubUrl + ")";
+    }
+    if(typeof(winReport.crashDumpUrl) !== 'undefined' && winReport.crashDumpUrl !== "" ) {
+      crashDumpUrlText = "\n\n- **Link to crash dump:** " + "[Download dump file]" + "("+ winReport.crashDumpUrl + ")";
     }
     var failureReport = "Win crash received: " +
                       //"\nevent: " + req.body.event +
@@ -284,9 +307,13 @@ spaceSchema.statics.sendReportToWinSubscribers = function (winReport,bot){
                       "\n\n- **method affected:** " + winReport.method +
                       "\n\n- **Feedback ID:** " + winReport.feedback_id  +
                       "\n\n- **Crashes Count:** " + winReport.crashes_count +
-                      "\n\n- **Resolved Version:** " + winReport.is_resolved +
-                      "\n\n- **Team Assigned:** " + winReport.assigned_team +
+                      "\n\n- **Users Afected:** " + winReport.usersAfected.length +
+                      resolvedVersion +
+                      gitHubUrlText +
+                      crashDumpUrlText +
+                      assignedTeam +
                       "\n\n- **Client Version:** " + clients +
+                      lastReportedChannel +
                       regressionText +
                       //"\nimpacted_devices_count: " + req.body.payload.impacted_devices_count +
                       "\n\n- **url to the crash:** " + "[PRT server URL]" + "("+ winReport.url + ")";

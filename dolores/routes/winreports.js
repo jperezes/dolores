@@ -8,7 +8,7 @@ var mongoUrl = process.env.MONGO_URL || 'mongodb://localhost:27017/spaces';
 let mongoSp = process.env.MONGO_SPACES_URL || 'mongodb://localhost:27017/spaces';
 let Promise= require('bluebird')
 let updateVersions = require('./getClientChannels').updateVersions;
-mongoose.set('debug', true);
+//mongoose.set('debug', true);
 
 
 var winReports = function(){};
@@ -41,7 +41,9 @@ var saveAndSendReport = Promise.coroutine(function*(req,res,bot) {
   winReport.method = req.body.method;
   winReport.feedback_id = req.body.feedback_id;
   winReport.client_version = req.body.client_version;
+  winReport.crashDumpUrl = req.body.dump_available;
   winReport.url = req.body.url;
+  winReport.usersAfected = req.body.userId
 
   let result = yield WinReportModel.getCrashByHash(req.body.hashC);
   if (typeof(result.reportDate) !== 'undefined'){
@@ -56,11 +58,24 @@ var saveAndSendReport = Promise.coroutine(function*(req,res,bot) {
       //   result.is_resolved = "false";
       // }
     }
+    //check if usersId is not present in the array already
+    if(typeof(req.body.userId) !== 'undefined' && result.usersAfected.indexOf(req.body.userId) === -1){
+      result.usersAfected.push(req.body.userId);
+    }
     result.reportDate.push(req.body.reportDate);
     result.reportDate.sort();
     result.feedback_id=req.body.feedback_id;
     result.crashes_count = result.crashes_count +1;
+    if(typeof(req.body.dump_available) !== 'undefined') {
+      let splitUrl = req.body.dump_available.split(":")
+      console.log("JOAN:  the received url is: " + req.body.dump_available)
+      if(typeof(splitUrl[1]) !== 'undefined') {
+        console.log("JOAN:  the url is: " + splitUrl[1])
+        result.crashDumpUrl = req.body.dump_available;
+      } else {
 
+      }
+    }
     result.save(function(err){
       if(err){
         res.status(500).send("error updating the crash into the database" + err);
@@ -75,6 +90,7 @@ var saveAndSendReport = Promise.coroutine(function*(req,res,bot) {
   } else {
     console.log("New crash! ")
     winReport.crashes_count = 1;
+    console.log("JOAN new crash dump link: " + winReport.crashDumpUrl)
     result = yield WinReportModel.getCountId();
     winReport.id = result + 1;
     winReport.save(err =>{

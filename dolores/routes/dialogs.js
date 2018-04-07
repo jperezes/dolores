@@ -45,7 +45,7 @@ let cleanTempSpace = ()=>{
   tempSpace.splunkReports.receive="";
 }
 
-let registeredOptions= ["-r","unregister","-aw","-df","-sf","-es","-ds","-so","-sf","-fc", "-sc"];
+let registeredOptions= ["-r","unregister","-aw","-df","-sf","-es","-ds","-so","-sf","-fc", "-sc","-ag"];
 
 let checkRegisteredOption = function(question){
   let check = ""
@@ -147,6 +147,7 @@ let showCrashOptions = function(){
                 "\n              [-so] show user registration options" +
                 "\n              [-es] enable splunk alerts on the space" +
                 "\n              [-ds] disable splunk alerts on the space" +
+                "\n              [-ag] <crash id> add github url to the crash" +
                 "\n              [register] register space" +
                 "\n              [unregister] unregister space" +
                 "\n              [-m] show space options menu";
@@ -215,6 +216,18 @@ dialogModule.prototype.parseQuestion = Promise.coroutine(function* (query, bot){
       crash.client_version.forEach(item =>{
         clients += item + ", ";
       })
+      let fixedVersion = ""
+      let team_assigned = ""
+      let crashDumpUrlText = ""
+      if (typeof(crash.assigned_team) !== 'undefined') {
+        team_assigned = "\n\n> **Team Assigned:** " + crash.assigned_team;
+      }
+      if (typeof(crash.is_resolved ) !== 'undefined') {
+        fixedVersion = "\n\n> **Fixed version:** " + crash.is_resolved;
+      }
+      if(typeof(crash.crashDumpUrl) !== 'undefined') {
+        crashDumpUrlText = "\n\n> **Link to crash dump:** " + "[Download dump file]" + "("+ crash.crashDumpUrl + ")";
+      }
       reply = "Here we go: " +
                         "\n\n> **Crash Id:** " + crash.id +
                         "\n\n> **First reported:** " + crash.reportDate[0] +
@@ -224,8 +237,11 @@ dialogModule.prototype.parseQuestion = Promise.coroutine(function* (query, bot){
                         "\n\n> **Hash C:** " + crash.hashC +
                         "\n\n> **Method affected:** " + crash.method +
                         "\n\n> **Crashes Count:** " + crash.crashes_count +
-                        "\n\n> **Team Assigned:** " + crash.assigned_team +
-                        "\n\n> **Fixed version:** " + crash.is_resolved +
+                        "\n\n> **Distinct users afected:** " + crash.usersAfected.length +
+                        team_assigned +
+                        fixedVersion +
+                        crashDumpUrlText +
+                        "\n\n> **Github issue url:** " + crash.githubUrl +
                         "\n\n> **Client versions afected:** " + clients;
     } else {
       reply = "invalid crash id...";
@@ -300,14 +316,23 @@ dialogModule.prototype.parseQuestion = Promise.coroutine(function* (query, bot){
       //show filter keywords
       let filter = yield spaceModel.showChannelsRegisterd(query.roomId);
       reply = "Your channels are: _" + filter + "_";
-  } else if ((cleanQuestion.indexOf("-df") !== -1)){
+  }  else if ((cleanQuestion.indexOf("-ag") !== -1)){
+    //add github url to the crash
+    let keywords = cleanQuestion.split(" ");
+    let crashId = keywords[1]
+    let url = keywords[2]
+    let log = "crashId is: " + crashId + " url is: " + url;
+    console.log(log)
+    //let keyword = cleanQuestion.replace("-ag","").replace(" ","");
+    reply = yield winReportModel.addGitHubUrl(crashId,url);
+  }else if ((cleanQuestion.indexOf("-df") !== -1)){
     //delete triage filter words, disable crash alerts.
     let keyword = cleanQuestion.replace("-df","").replace(" ","");
     reply = yield spaceModel.deleteAllFilterWord(query.roomId)
   } else if ((cleanQuestion.indexOf("-pc") !== -1)){
       //show filter keywords
       reply = "Actual channel versions are: " +
-               " \n\n - blue: " + versions[0] + 
+               " \n\n - blue: " + versions[0] +
                " \n\n - purple: " + versions[1] +
                " \n\n - green: " + versions[2] +
                " \n\n - gold: " + versions[3];

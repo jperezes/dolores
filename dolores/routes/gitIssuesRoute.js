@@ -32,8 +32,9 @@ gitRoute.prototype.listenForGitUpdates = function(bot,app){
     next();
   });
 
-  //let teamLabels = process.env.TEAM_LABELS.split(",");
-  let validActions =["open","opened","labeled","unlabeled","reopened"]
+  let teamLabels = process.env.TEAM_LABELS.split(",");
+  let validActions =["open","opened","labeled","unlabeled","reopened","closed"]
+  let doloresLabel = "dolores-reported"
 
   let checkForTeamLabels = function(ghLabel){
     let check = ""
@@ -59,6 +60,18 @@ gitRoute.prototype.listenForGitUpdates = function(bot,app){
     })
     return count;
   }
+
+  let checkDoloresLabel = function(labels) {
+    count = 0
+    labels.forEach(item=>{
+      if(item.name.indexOf(doloresLabel) !== -1) {
+        count ++;
+      }
+    })
+
+    return count;
+  }
+
   let checkValidAction = function(action) {
     let isValid = false;
     validActions.forEach(item =>{
@@ -70,24 +83,39 @@ gitRoute.prototype.listenForGitUpdates = function(bot,app){
     return isValid;
   }
 
+  let checkReportedCrash
+
   let checkForHash = function(message) {
-    var token1 = "Hash A";
-    var token2 = "Crash Hash";
+
+    var token = "hash c: "
+    var tokenLength= token.length;
+    var hash_sample= "c9c1e92e295e0c7bbb0efd9b267442b1";
+    var hashLength= hash_sample.length
     var hashFound ="";
-    var n1 = message.indexOf(token1);
-    var n2 = message.indexOf(token2);
-    let n = n1 > n2 ? n1 : n2;
+    var n = message.toLowerCase().indexOf(token);
     var substr = "";
     if (n !== -1) {
         //this is to be sure we get the hash
-        substr = message.substring(n,n+50);
-        n = substr.indexOf('0x');
-        if(n !== -1) {
-          hashFound= substr.substring(n,n+ 18);
-          console.log("crash with found, id: " + hashFound);
-        } else {
-          console.log("hash not found weird")
-        }
+        hashFound= message.substring(n + tokenLength, n + tokenLength + hashLength);
+        console.log("crash with found, id: " + hashFound);
+    }
+    return hashFound;
+  }
+
+  let checkForId = function(message) {
+
+    var token = "crash id: "
+    var tokenLength= token.length;
+    var patt = new RegExp("[^(0-9)]");
+    var idFound ="";
+    var n = message.toLowerCase().indexOf(token);
+    var substr = "";
+    if (n !== -1) {
+        //this is to be sure we get the hash
+        var filteredId = message.substring(n+tokenLength , n+tokenLength + 10)
+        var end = filteredId.indexOf(patt.exec(filteredId));
+        hashFound= filteredId.substring(0, end);
+        console.log("crash with found, id: " + hashFound);
     }
     return hashFound;
   }
@@ -111,6 +139,71 @@ gitRoute.prototype.listenForGitUpdates = function(bot,app){
     return roomId;
   }
 
+let processDoloresTagissue = Promise.coroutine(function*(ghIssue){
+  if(checkValidAction(ghIssue.action) !== true) {
+    //only new reports will be sent to the teams, any other modification shall be ignored
+    console.log("action not open aborting ...")
+    return;
+  }
+  let hashC = checkForHash(ghIssue.issue.body);
+
+  if(hashC !== "") {
+    //update crash
+    let crash = yield winReportModel.getCrashByHash(hashC);
+    if (ghIssue.action === "closed") {
+      //about to set the issue as closed based on the current blue
+      console.log("closing the issue as it has been fixed on GH")
+      let result = yield winReportModel.setCrashAsFixed(crash.id,"");
+      if(result) {
+        console.log("crash updated")
+      } else {
+        console.lot("error finding the crash for the update")
+      }
+    } else if(ghIssue.action === "open" || ghIssue.action === "opened" || ghIssue.action === "reopened") {
+      crash.githubUrl = ghIssue.issue.url.replace("api/v3/repos/","");
+      crash.save(function(err){
+        if(err) {
+          console.log("error saving the crash")
+        }
+      });
+    }
+  } else {
+    let crashId = checkForId(ghIssue.issue.body);
+    if(crashId !== "") {
+      let crash = yield winReportModel.getCrashById(crashId);
+      if (ghIssue.action === "closed") {
+        //about to set the issue as closed based on the current blue
+        console.log("closing the issue as it has been fixed on GH")
+        let result = yield winReportModel.setCrashAsFixed(crash.id,"");
+        if(result) {
+          console.log("crash updated")
+        } else {
+          console.lot("error finding the crash for the update")
+        }
+      } else if(ghIssue.action === "open" || ghIssue.action === "opened" || ghIssue.action === "reopened") {
+        crash.githubUrl = ghIssue.issue.url.replace("api/v3/repos/","");
+        crash.save(function(err){
+          if(err) {
+            console.log("error saving the crash")
+          }
+        });
+      }
+    }
+  }
+
+})
+
+let sendWarningNoTeamLabel = function(ghIssue) {
+  if(ghIssue.action === "open" || ghIssue.action === "opened" || ghIssue.action === "reopened") {
+    let userMail = ghIssue.issue.user.login + process.env.mailExt;
+    let ghUrl = "[" + ghIssue.issue.number + "]" + "(" + ghIssue.issue.url.replace("api/v3/repos/","") + ")";
+    let message = "Hey mate, you have opened a git hub issue: " + ghUrl + " but have not assigned to any team, please add a label for the appropriate scrum team. For example: \"scrum - Calling\" or \"scrum - guild\". Thanks.";
+    //send it to the user
+    bot.sendRichTextMessageToDirectPerson(userMail,message,function(){
+      console.log("message sent to the team");
+    });
+  }
+}
 let processGHCrash = Promise.coroutine(function*(ghIssue,teamName,bot){
       console.log("about to search id for team name: " + teamName)
       let room_id =  getTeamRoomId(teamName);
@@ -138,22 +231,36 @@ let processGHCrash = Promise.coroutine(function*(ghIssue,teamName,bot){
       } else{
         // hash found
         let crash = yield winReportModel.getCrashByHash(hashC);
-        if(typeof(crash.reportDate) !== 'undefined') {
+        if (ghIssue.action === "closed") {
+          //about to set the issue as closed based on the current blue
+          console.log("closing the issue as it has been fixed on GH")
+          let result = yield winReportModel.setCrashAsFixed(crash.id,"");
+          if(result) {
+            reply = "Hi *" + teamName + "* A GH crash has been closed:\n\n" +
+                    "\n\n > [" + ghIssue.issue.number + "]" + "(" + ghIssue.issue.url.replace("api/v3/repos/","") + ")" + ": " + ghIssue.issue.title +
+                    "\n\n > Reported crash id: " + crash.id;
+          } else {
+            reply = "error closing the crash"
+          }
+        }
+        else if(typeof(crash.reportDate) !== 'undefined') {
           console.log("git hub crash found on the database")
           crash.assigned_team = teamName;
-
-          //Add the hash to the team id to get further crashes.
-          console.log("adding keyword to the filter..." + hashC);
-          let result = yield spaceModel.addFilterKeyWordDistinct(room_id,hashC)
-          console.log(result);
-          //process the reply on failure
-
-          reply = "Hi *" + teamName + "* A GH crash has been assigned to your team:\n\n" +
+          alreadyOpenedGHIssue = ""
+          if (typeof(crash.githubUrl) === 'undefined' || crash.githubUrl === "") {
+            console.log("updating git hub crash url")
+            crash.githubUrl = ghIssue.issue.url.replace("api/v3/repos/","");
+          } else {
+            alreadyOpenedGHIssue = "\n\n> **Important: ** this crash is associated with a different GH issue: " +
+            "[" + ghIssue.issue.number + "]" + "(" +   crash.githubUrl + ")" + ". Please close duplicates";
+            crash.githubUrl = ghIssue.issue.url.replace("api/v3/repos/","");
+          }
+          reply = "Hi *" + teamName + "* A GH crash issue has been assigned to your team:\n\n" +
                   "\n\n > [" + ghIssue.issue.number + "]" + "(" + ghIssue.issue.url.replace("api/v3/repos/","") + ")" + ": " + ghIssue.issue.title +
                   "\n\n > Reported crash id: " + crash.id +
-                  "\n\n > Reported crash hash: " + crash.hashA +
-                  "\n\n > First occurrence: " + crash.reportDate[0] +
-                  "\n\n \nAny further occurrences of the same crash will be reported to this room, to get info about the crash type *Dolores -i crash id*";
+                  "\n\n > Last occurrence: " + crash.reportDate.slice(-1).pop() +
+                  alreadyOpenedGHIssue +
+                  "\n\n > Type Dolores -i " + crash.id + " for more info";
           crash.save(function(err){
             if(err) {
               console.log("error saving the crash")
@@ -161,13 +268,11 @@ let processGHCrash = Promise.coroutine(function*(ghIssue,teamName,bot){
           });
         }
         else {
+            console.log("git hub crash found on the database but report date is null")
           //crash not yet reported
           reply = "Hi *" + teamName + "* A GH crash has been assigned to your team:\n\n" +
                   "\n\n - [" + ghIssue.issue.number + "]" + "(" + ghIssue.issue.url.replace("api/v3/repos/","") + ")" + ": " + ghIssue.issue.title +
                   "\n\n This crash has not yet been reported to Dolores, adding the hash to the filter so further reports will be sent to this space ";
-
-          //Add the hash to the team id to get further crashes.
-          yield spaceModel.addFilterKeyWord(room_id,hashC)
         }
       }
       //send it to the team
@@ -210,6 +315,7 @@ let processGHCrash = Promise.coroutine(function*(ghIssue,teamName,bot){
     let i = 0;
     let isCrash = false;
     let teamName="";
+    let hasDoloresLabel = false
 
     req.body.issue.labels.forEach(item =>{
       let name = item.name;
@@ -238,6 +344,9 @@ let processGHCrash = Promise.coroutine(function*(ghIssue,teamName,bot){
         console.log("crash assigned to multiple teams, not saving ...")
         saveIssue = false;
       }
+    }
+    if(checkDoloresLabel(req.body.issue.labels) > 0) {
+      hasDoloresLabel = true
     }
 
     console.log("save issue is now: " + saveIssue + " proceeding to save the object")
@@ -274,7 +383,7 @@ let processGHCrash = Promise.coroutine(function*(ghIssue,teamName,bot){
               res.status(500).send(err);
             } else {
               console.log("git issue change saved on the database")
-              res.status(200).send('github event saved to the database');
+              //res.status(200).send('github event saved to the database');
             }
           });
         }
@@ -285,7 +394,14 @@ let processGHCrash = Promise.coroutine(function*(ghIssue,teamName,bot){
           processGHCrash(req.body, teamName, bot)
         }
       })
-    } else{
+    }
+    else if(hasDoloresLabel) {
+      processDoloresTagissue(req.body)
+    }
+    if (teamName === "") {
+      sendWarningNoTeamLabel(req.body)
+    }
+    else{
       res.status(200).send('non relevant github event');
     }
   });

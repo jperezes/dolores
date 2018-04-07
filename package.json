@@ -8,7 +8,7 @@
     "promise": "^7.1.1",
     "request-promise": "^4.2.0",
     "schedule": "^0.1.0",
-    "sparklite": "^1.0.53",
+    "sparklite": "^1.0.55",
     "splunk-sdk": "^1.8.2",
     "md5":"^2.2.1"
   },
