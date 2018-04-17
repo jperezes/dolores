@@ -142,6 +142,9 @@ let showCrashOptions = function(){
                 "\n              [-o <crash id>] show crash occurrences" +
                 "\n              [-r <crash id> <Spark fix version>] mark crash as resolved on version" +
                 "\n              [-aw <word1, word2 ...>] add keyword(s) to the crash triage filter" +
+                "\n              [-fc] <color1, color2, ...> filter by channels" +
+                "\n              [-sf] show channel filter" +
+                "\n              [-pc] show current channel client versions" +
                 "\n              [-sf] show triage filter keywords" +
                 "\n              [-df] delete trieage filter keywords" +
                 "\n              [-so] show user registration options" +
