@@ -330,7 +330,7 @@ spaceSchema.statics.sendReportToWinSubscribers = function (winReport,bot){
         var roomsIdSet = new Set();
         users.forEach(function(item){
             var tags = item.macReports.tags;
-            if (typeof(item.maxReproReports) !=='undefined' && item.maxReproReports > winReport.crashes_count) {
+            if (typeof(item.maxReproReports) !=='undefined' && winReport.crashes_count > item.maxReproReports) {
               console.log("max number of reports reached, not sending the crash")
             }
             else if (tags[1] === "everything" && (typeof(winReport.is_resolved) ==='undefined' || isRegression)){
