@@ -564,7 +564,7 @@ spaceSchema.statics.showMaxReproductionsToReport = function(room_Id) {
   return new Promise((resolve,reject) =>{
     this.find({roomId: room_Id}, function(err, result) {
       if (result.length>0){
-        resolve(result[0].maxReproReports);
+        resolve(result[0].maxReproReports.toString());
       }
       else {
         resolve("You are not yet registered");
