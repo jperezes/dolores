@@ -10,6 +10,7 @@ var spaceSchema = mongoose.Schema({
     personEmail: String,
     nickName: String,
     channels:[String],
+    maxReproReports: Number,
     macReports: {
       receive: String ,
       tags: [String]
@@ -329,7 +330,10 @@ spaceSchema.statics.sendReportToWinSubscribers = function (winReport,bot){
         var roomsIdSet = new Set();
         users.forEach(function(item){
             var tags = item.macReports.tags;
-            if (tags[1] === "everything" && (typeof(winReport.is_resolved) ==='undefined' || isRegression)){
+            if (typeof(item.maxReproReports) !=='undefined' && item.maxReproReports > winReport.crashes_count) {
+              console.log("max number of reports reached, not sending the crash")
+            }
+            else if (tags[1] === "everything" && (typeof(winReport.is_resolved) ==='undefined' || isRegression)){
               roomsIdSet.add(item.roomId);
             } else if(isChannelRequestedFound(item.channels, winReport.client_version) && (typeof(winReport.is_resolved) ==='undefined' || isRegression)) {
               roomsIdSet.add(item.roomId);
@@ -542,6 +546,33 @@ spaceSchema.statics.enableSplunk = function(room_Id) {
    })
   })
 }
+spaceSchema.statics.setMaxReproductionsToReport = function(room_Id, number) {
+  return new Promise((resolve,reject) =>{
+    this.findOneAndUpdate({roomId: room_Id},{$set: {maxReports:number }},
+      {safe: true}, function(err, result) {
+        if(err) {
+          let reply = "Failed specify the max number of reports " + err;
+          reject(reply)
+        } else {
+          let reply = "Max number of crashes count to be reported have been set to: " + number + " once exceeded crash won't be reported to this room";
+          resolve(reply)
+        }
+   })
+  })
+}
+spaceSchema.statics.showMaxReproductionsToReport = function(room_Id) {
+  return new Promise((resolve,reject) =>{
+    this.find({roomId: room_Id}, function(err, result) {
+      if (result.length>0){
+        resolve(result[0].maxReports);
+      }
+      else {
+        resolve("You are not yet registered");
+    }
+  });
+  })
+}
+
 spaceSchema.statics.disableSplunk = function(room_Id) {
   return new Promise((resolve,reject) =>{
     this.findOneAndUpdate({roomId: room_Id},{$set: {"splunkReports.receive":"no" }},

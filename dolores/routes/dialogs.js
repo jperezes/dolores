@@ -45,7 +45,7 @@ let cleanTempSpace = ()=>{
   tempSpace.splunkReports.receive="";
 }
 
-let registeredOptions= ["-r","unregister","-aw","-df","-sf","-es","-ds","-so","-sf","-fc", "-sc","-ag"];
+let registeredOptions= ["-r","unregister","-aw","-df","-sf","-es","-ds","-so","-sf","-fc", "-sc","-ag", "-mr", "-smr"];
 
 let checkRegisteredOption = function(question){
   let check = ""
@@ -142,6 +142,7 @@ let showCrashOptions = function(){
                 "\n              [-o <crash id>] show crash occurrences" +
                 "\n              [-r <crash id> <Spark fix version>] mark crash as resolved on version" +
                 "\n              [-aw <word1, word2 ...>] add keyword(s) to the crash triage filter" +
+                "\n              [-mr] <number> max number of crash reproductions to be reported to this room" +
                 "\n              [-fc] <color1, color2, ...> filter by channels" +
                 "\n              [-sf] show channel filter" +
                 "\n              [-pc] show current channel client versions" +
@@ -315,7 +316,15 @@ dialogModule.prototype.parseQuestion = Promise.coroutine(function* (query, bot){
     //show filter keywords
     let filter = yield spaceModel.showFilterWords(query.roomId);
     reply = "Keywords filter for this room are: _" + filter + "_";
-  } else if ((cleanQuestion.indexOf("-sc") !== -1)){
+  }else if ((cleanQuestion.indexOf("-mr") !== -1)){
+    let maxReports = cleanQuestion.replace("-mr","").replace(" ","");
+    let maxReportInt = parseInt(maxReports,10)
+    let success = yield spaceModel.setMaxReproductionsToReport(query.roomId, maxReportInt);
+    reply = success;
+  } else if ((cleanQuestion.indexOf("-smr") !== -1)){
+    let success = yield spaceModel.showMaxReproductionsToReport(query.roomId);
+    reply = "max number of crash reproductions is:" + success;
+  }else if ((cleanQuestion.indexOf("-sc") !== -1)){
       //show filter keywords
       let filter = yield spaceModel.showChannelsRegisterd(query.roomId);
       reply = "Your channels are: _" + filter + "_";
