@@ -333,6 +333,10 @@ spaceSchema.statics.sendReportToWinSubscribers = function (winReport,bot){
             if (typeof(item.maxReproReports) !=='undefined' && winReport.crashes_count > item.maxReproReports) {
               console.log("max number of reports reached, not sending the crash")
             }
+            else if(winReport.method.indexOf("ERROR: Failed to find symbols") >= 0)
+            {
+              console.log("no symbol found for the crash ignoring")
+            }
             else if (tags[1] === "everything" && (typeof(winReport.is_resolved) ==='undefined' || isRegression)){
               roomsIdSet.add(item.roomId);
             } else if(isChannelRequestedFound(item.channels, winReport.client_version) && (typeof(winReport.is_resolved) ==='undefined' || isRegression)) {
