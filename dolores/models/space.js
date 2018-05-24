@@ -291,7 +291,7 @@ spaceSchema.statics.sendReportToWinSubscribers = function (winReport,bot){
       assignedTeam = "\n\n- **Team Assigned:** " + winReport.assigned_team ;
     }
     if(typeof(winReport.githubUrl) !== 'undefined') {
-      gitHubUrlText = "\n\n- **Git Hub Issue URL:** " + "[Git Url]" + "("+ winReport.githubUrl + ")";
+      gitHubUrlText = "\n\n- **Jira assigned URL:** " + "[Jira assigned]" + "("+ winReport.githubUrl + ")";
     }
     if(typeof(winReport.crashDumpUrl) !== 'undefined' && winReport.crashDumpUrl !== "" ) {
       crashDumpUrlText = "\n\n- **Link to crash dump:** " + "[Download dump file]" + "("+ winReport.crashDumpUrl + ")";
