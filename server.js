@@ -40,7 +40,7 @@ sparkBot.on('rooms', function (event)
 
 sparkBot.on('memberships', function (event)
 {
-    console.log(JSON.stringify(event));
+    console.log("JOAN TEST COLIE ISSUE - " + JSON.stringify(event));
 })
 
 let bot = function(result){
