@@ -316,9 +316,9 @@ dialogModule.prototype.parseQuestion = Promise.coroutine(function* (query, bot){
     //show filter keywords
     let filter = yield spaceModel.showFilterWords(query.roomId);
     reply = "Keywords filter for this room are: _" + filter + "_";
-  }else if ((cleanQuestion.indexOf("-su") !== -1)){
+  }else if ((cleanQuestion.indexOf("-sul") !== -1)){
     //show filter keywords
-    let crashID = cleanQuestion.replace("-su","").replace(" ","");
+    let crashID = cleanQuestion.replace("-sul","").replace(" ","");
     let arrayUsers = yield winReportModel.getCrashUserList(crashID);
     reply = "users affected by this crash are: _" + arrayUsers + "_";
   }else if ((cleanQuestion.indexOf("-sids") !== -1)){
