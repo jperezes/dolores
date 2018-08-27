@@ -57,6 +57,25 @@ winReportSchema.statics.getCountId = function() {
  })
 };
 
+winReportSchema.statics.getCrashUserList = function(crash_id) {
+  return new Promise((resolve,reject)=>{
+    this.find({id:crash_id},function(err,result){
+      if(err){
+        reject(error);
+      }
+      else if(typeof(result[0]) !== 'undefined'){
+        console.log("crash found userAfected " + result[0].usersAfected[0])
+        let usersAfected = result[0].usersAfected
+        resolve(usersAfected);
+     } else{
+       console.log("client version " + clientVersion + " has no crashes!!!!")
+       resolve(false);
+     }
+  });
+ })
+};
+
+
 winReportSchema.statics.getCrashesByVersion = function (clientVersion) {
   return new Promise((resolve,reject)=>{
     this.find({client_version:clientVersion},function(err,result){
