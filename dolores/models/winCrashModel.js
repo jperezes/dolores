@@ -93,6 +93,31 @@ winReportSchema.statics.getCrashesByVersion = function (clientVersion) {
   });
  })
 };
+
+
+winReportSchema.statics.getCrashesIdsByStackTraceKeyword = function (keyword) {
+  return new Promise((resolve,reject)=>{
+    this.find({method: new RegExp('.*'+keyword+'.*', "i")},function(err,result){
+      if(err){
+        reject(error);
+      }
+      else if(typeof(result[0]) !== 'undefined'){
+        console.log("crash found: " + result[0].id)
+        let ids[]
+        for(let i = 0; i < result.length; i ++) {
+          ids[i] = result[i].id
+        }
+
+        resolve(ids);
+
+     } else{
+       console.log("client version " + clientVersion + " has no crashes!!!!")
+       resolve(false);
+     }
+  });
+ })
+};
+
 winReportSchema.statics.getCrashById = function (crash_id) {
   return new Promise((resolve,reject)=>{
     this.findOne({id:crash_id},function(err,result){

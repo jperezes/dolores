@@ -321,6 +321,11 @@ dialogModule.prototype.parseQuestion = Promise.coroutine(function* (query, bot){
     let crashID = cleanQuestion.replace("-su","").replace(" ","");
     let arrayUsers = yield winReportModel.getCrashUserList(crashID);
     reply = "users affected by this crash are: _" + arrayUsers + "_";
+  }else if ((cleanQuestion.indexOf("-sids") !== -1)){
+    //show filter keywords
+    let keyword = cleanQuestion.replace("-sids","").replace(" ","");
+    let crashIds = yield winReportModel.getCrashesIdsByStackTraceKeyword(keyword);
+    reply = "crashes ids with " + keyword +  " in the stacktrace are: _" + crashIds + "_";
   }else if ((cleanQuestion.indexOf("-mr") !== -1)){
     let maxReports = cleanQuestion.replace("-mr","").replace(" ","");
     let maxReportInt = parseInt(maxReports,10)
