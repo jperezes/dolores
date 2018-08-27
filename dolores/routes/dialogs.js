@@ -326,7 +326,12 @@ dialogModule.prototype.parseQuestion = Promise.coroutine(function* (query, bot){
     let keyword = cleanQuestion.replace("-sids","").replace(" ","");
     let crashIds = yield winReportModel.getCrashesIdsByStackTraceKeyword(keyword);
     reply = "crashes ids with " + keyword +  " in the stacktrace are: _" + crashIds + "_";
-  }else if ((cleanQuestion.indexOf("-mr") !== -1)){
+  } else if ((cleanQuestion.indexOf("-suid") !== -1)){
+    //show filter keywords
+    let userId = cleanQuestion.replace("-suid","").replace(" ","");
+    let crashIds = yield winReportModel.getCrashesByUserId(userId);
+    reply = "crashes ids with " + keyword +  " in the stacktrace are: _" + crashIds + "_";
+  } else if ((cleanQuestion.indexOf("-mr") !== -1)){
     let maxReports = cleanQuestion.replace("-mr","").replace(" ","");
     let maxReportInt = parseInt(maxReports,10)
     let success = yield spaceModel.setMaxReproductionsToReport(query.roomId, maxReportInt);

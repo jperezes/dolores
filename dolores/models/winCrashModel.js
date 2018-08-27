@@ -111,7 +111,29 @@ winReportSchema.statics.getCrashesIdsByStackTraceKeyword = function (keyword) {
         resolve(ids);
 
      } else{
-       console.log("client version " + clientVersion + " has no crashes!!!!")
+       console.log("no ids found with this keyword ")
+       resolve(false);
+     }
+  });
+ })
+};
+
+winReportSchema.statics.getCrashesByUserId = function (userId) {
+  return new Promise((resolve,reject)=>{
+    this.find({usersAfected: userId},function(err,result){
+      if(err){
+        reject(error);
+      }
+      else if(typeof(result[0]) !== 'undefined'){
+        console.log("crash found: " + result[0].id)
+        let ids = []
+        for(let i = 0; i < result.length; i ++) {
+          ids[i] = result[i].id
+        }
+
+        resolve(ids);
+     } else{
+       console.log("no ids found for this user")
        resolve(false);
      }
   });
