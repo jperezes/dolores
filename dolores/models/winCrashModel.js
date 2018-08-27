@@ -68,7 +68,7 @@ winReportSchema.statics.getCrashUserList = function(crash_id) {
         let usersAfected = result[0].usersAfected
         resolve(usersAfected);
      } else{
-       console.log("client version " + clientVersion + " has no crashes!!!!")
+       console.log("crash ID has no users something wrong!!!!")
        resolve(false);
      }
   });
@@ -130,7 +130,6 @@ winReportSchema.statics.getCrashesByUserId = function (userId) {
         for(let i = 0; i < result.length; i ++) {
           ids[i] = result[i].id
         }
-
         resolve(ids);
      } else{
        console.log("no ids found for this user")

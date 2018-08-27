@@ -330,7 +330,7 @@ dialogModule.prototype.parseQuestion = Promise.coroutine(function* (query, bot){
     //show filter keywords
     let userId = cleanQuestion.replace("-suid","").replace(" ","");
     let crashIds = yield winReportModel.getCrashesByUserId(userId);
-    reply = "crashes ids with " + keyword +  " in the stacktrace are: _" + crashIds + "_";
+    reply = "crashes ids for user id " + userId +  " are: _" + crashIds + "_";
   } else if ((cleanQuestion.indexOf("-mr") !== -1)){
     let maxReports = cleanQuestion.replace("-mr","").replace(" ","");
     let maxReportInt = parseInt(maxReports,10)
