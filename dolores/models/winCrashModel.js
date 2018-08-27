@@ -132,8 +132,8 @@ winReportSchema.statics.getCrashesByUserId = function (userId) {
         }
         resolve(ids);
      } else{
-       console.log("no ids found for this user")
-       resolve(false);
+       console.log("no ids found for user")
+       resolve("no ids found for user" + userId);
      }
   });
  })
