@@ -319,7 +319,7 @@ dialogModule.prototype.parseQuestion = Promise.coroutine(function* (query, bot){
   }else if ((cleanQuestion.indexOf("-su") !== -1)){
     //show filter keywords
     let crashID = cleanQuestion.replace("-su","").replace(" ","");
-    let arrayUsers = yield spaceModel.getCrashUserList(crashID);
+    let arrayUsers = yield winReportModel.getCrashUserList(crashID);
     reply = "users affected by this crash are: _" + arrayUsers + "_";
   }else if ((cleanQuestion.indexOf("-mr") !== -1)){
     let maxReports = cleanQuestion.replace("-mr","").replace(" ","");
