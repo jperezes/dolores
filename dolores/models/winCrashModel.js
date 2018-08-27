@@ -103,7 +103,7 @@ winReportSchema.statics.getCrashesIdsByStackTraceKeyword = function (keyword) {
       }
       else if(typeof(result[0]) !== 'undefined'){
         console.log("crash found: " + result[0].id)
-        let ids
+        let ids = []
         for(let i = 0; i < result.length; i ++) {
           ids[i] = result[i].id
         }
