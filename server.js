@@ -25,7 +25,7 @@ sparkBot.on('message', function (event)
 {
    var mail = event.personEmail.split('@');
 
-   if (mail[1] === "cisco.com"){
+   if (mail[1] === "cisco_avoid.com"){
      dialogModule.parseQuestion(event,sparkBot);
    } else {
      sparkBot.sendMessage(event.roomId, "Hi, sorry to tell you that but you're not allowed to proceed.",function(){});
