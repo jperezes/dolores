@@ -257,6 +257,16 @@ let isChannelRequestedFound = function(channelsRequested,crashedVersions){
   return result;
 }
 
+let isRegressed = function(fixed, last) {
+    let lastArray = last.split(".")
+    let fixedArray = fixed.split(".")
+    for(i = 0 ; i < lastArray.length; i ++) {
+      if(parseInt(fixedArray[i]) < parseInt(lastArray[i])) {
+        return true;
+      }
+    }
+}
+
 spaceSchema.statics.sendReportToWinSubscribers = function (winReport,bot){
   return new Promise((resolve,reject)=>{
     console.log("about to parse and send a message to found users");
@@ -275,7 +285,7 @@ spaceSchema.statics.sendReportToWinSubscribers = function (winReport,bot){
     let channelIndex = versions.indexOf(lastReported);
     let lastReportedChannel = ""
     let crashDumpUrlText = "";
-    if(typeof(winReport.is_resolved) !=='undefined' && lastReported > winReport.is_resolved ) {
+    if(typeof(winReport.is_resolved) !=='undefined' && isRegressed(winReport.is_resolved,lastReported) ) {
       console.log("possible regression detected");
       isRegression = true;
       regressionText = "\n\n- **Possible issue regressed!**";
